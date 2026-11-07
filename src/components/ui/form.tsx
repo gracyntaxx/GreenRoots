@@ -1,0 +1,72 @@
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+export const Label = React.forwardRef<
+  HTMLLabelElement,
+  React.LabelHTMLAttributes<HTMLLabelElement>
+>(({ className, ...props }, ref) => (
+  <label
+    ref={ref}
+    className={cn("mb-1.5 block text-sm font-semibold text-ink dark:text-portal-ink", className)}
+    {...props}
+  />
+));
+Label.displayName = "Label";
+
+export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+  ({ className, ...props }, ref) => (
+    <input
+      ref={ref}
+      className={cn(
+        "flex min-h-14 w-full rounded-field border-[1.5px] border-line bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-forest focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/30 disabled:bg-canvas",
+        "dark:border-portal-line dark:bg-portal-bg dark:text-portal-ink dark:placeholder:text-portal-muted",
+        className
+      )}
+      {...props}
+    />
+  )
+);
+Input.displayName = "Input";
+
+export const Textarea = React.forwardRef<
+  HTMLTextAreaElement,
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>
+>(({ className, ...props }, ref) => (
+  <textarea
+    ref={ref}
+    className={cn(
+      "flex min-h-28 w-full rounded-field border-[1.5px] border-line bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-forest focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/30",
+      "dark:border-portal-line dark:bg-portal-bg dark:text-portal-ink dark:placeholder:text-portal-muted",
+      className
+    )}
+    {...props}
+  />
+));
+Textarea.displayName = "Textarea";
+
+export const Select = React.forwardRef<
+  HTMLSelectElement,
+  React.SelectHTMLAttributes<HTMLSelectElement>
+>(({ className, ...props }, ref) => (
+  <select
+    ref={ref}
+    className={cn(
+      "flex min-h-14 w-full appearance-none rounded-field border-[1.5px] border-line bg-surface px-4 py-3 text-base text-ink focus:border-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/30",
+      "bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22m5%208%205%205%205-5%22/%3E%3C/svg%3E')] bg-[right_1rem_center] bg-no-repeat pr-10",
+      "dark:border-portal-line dark:bg-portal-bg dark:text-portal-ink",
+      className
+    )}
+    {...props}
+  />
+));
+Select.displayName = "Select";
+
+export function FieldError({ children }: { children?: React.ReactNode }) {
+  if (!children) return null;
+  return <p className="mt-1.5 text-sm font-medium text-error">{children}</p>;
+}
+
+export function FieldHint({ children, className }: { children?: React.ReactNode; className?: string }) {
+  if (!children) return null;
+  return <p className={cn("mt-1.5 text-[13px] text-muted dark:text-portal-muted", className)}>{children}</p>;
+}

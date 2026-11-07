@@ -1,0 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --forest: #15803d;
+  --growth: #22c55e;
+  --meadow: #dcfce7;
+  --escrow: #0070ba;
+  --navy: #003087;
+  --settle: #f59e0b;
+  --error: #dc2626;
+  --ai: #6d5bd0;
+  --ai-tint: #f1eeff;
+  --canvas: #f8fafc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #cbd5e1;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: "Inter", "Noto Sans Devanagari", "Noto Sans Gurmukhi", "Noto Sans Telugu", "Noto Sans Tamil", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.lang-indic {
+  line-height: 1.6;
+}
+
+:focus-visible {
+  outline: 3px solid var(--forest);
+  outline-offset: 2px;
+}
+
+.num {
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.field-tap {
+  min-height: 56px;
+  min-width: 56px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 14px;
+  font-family: inherit;
+  z-index: 0;
+}
+
+.leaflet-control-attribution {
+  font-size: 9px !important;
+}
+
+.phone-surround {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(21, 128, 61, 0.08), transparent 32%),
+    radial-gradient(circle at 88% 82%, rgba(0, 48, 135, 0.07), transparent 36%),
+    #e7ebef;
+}
+
+.ai-tint {
+  background: var(--ai-tint);
+  color: #4b3f97;
+  border-color: #d9d2f7;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
