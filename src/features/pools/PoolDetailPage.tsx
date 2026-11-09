@@ -25,6 +25,7 @@ import { MapView, type MapMarker } from "@/components/shared/MapView";
 import { ConfirmSheet } from "@/components/shared/ConfirmSheet";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { Input, Label, Select } from "@/components/ui/form";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -173,190 +174,232 @@ export default function PoolDetailPage() {
   };
 
   return (
-    <div className="px-4 pt-4 pb-4">
+    <PageContainer className="pb-8">
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="mb-3 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-muted hover:text-forest"
+        className="mb-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-muted hover:text-forest dark:text-portal-muted dark:hover:text-growth"
       >
         <ArrowLeft className="h-4 w-4" /> {t("common.back")}
       </button>
 
-      <Card className="p-4">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <h1 className="text-xl font-bold text-ink">{WASTE_LABELS[p.wasteType]}</h1>
-              {p.industryVerified && <VerifiedMark />}
+      <div className="grid gap-6 lg:grid-cols-5">
+        {/* Left Column: Pool Progress & Map */}
+        <div className="space-y-4 lg:col-span-3">
+          <Card className="p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[p.wasteType]}</h1>
+                  {p.industryVerified && <VerifiedMark />}
+                </div>
+                <p className="mt-1 text-sm font-semibold text-muted dark:text-portal-muted">{p.industryName}</p>
+                <p className="mt-1 flex items-center gap-1.5 text-xs text-muted dark:text-portal-muted">
+                  <MapPin className="h-4 w-4 text-forest" /> {p.village} · {p.distanceKm.toFixed(0)} km away
+                </p>
+              </div>
+              <div className="shrink-0 text-right">
+                <RateText rate={p.ratePerUnit} unit={p.rateUnit} className="text-xl sm:text-2xl font-bold text-forest dark:text-growth" />
+                <p className="mt-1 flex items-center justify-end gap-1.5 text-xs font-semibold text-muted dark:text-portal-muted">
+                  <CalendarClock className="h-4 w-4 text-settle" />
+                  {p.daysLeft > 0 ? `${p.daysLeft} days left` : t("home.overdue")}
+                </p>
+              </div>
             </div>
-            <p className="mt-0.5 text-[12px] text-muted">{p.industryName}</p>
-            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted">
-              <MapPin className="h-3 w-3" /> {p.village} · {p.distanceKm.toFixed(0)} km
-            </p>
-          </div>
-          <div className="shrink-0 text-right">
-            <RateText rate={p.ratePerUnit} unit={p.rateUnit} className="text-[14px] font-bold text-forest" />
-            <p className="mt-1 flex items-center justify-end gap-1 text-[11px] font-medium text-muted">
-              <CalendarClock className="h-3 w-3" />
-              {p.daysLeft > 0 ? `${p.daysLeft} days left` : t("home.overdue")}
-            </p>
-          </div>
-        </div>
 
-        <PoolProgress committedKg={p.committedKg} targetKg={p.targetKg} status={p.status} className="mt-3" />
+            <PoolProgress committedKg={p.committedKg} targetKg={p.targetKg} status={p.status} className="mt-4" />
 
-        {p.expanded && p.expandedToKm && (
-          <p className="mt-2 rounded-lg bg-meadow/60 px-2.5 py-1.5 text-[12px] font-medium text-forest">
-            {t("pools.areaExpanded", { km: p.expandedToKm })}
-          </p>
-        )}
+            {p.expanded && p.expandedToKm && (
+              <p className="mt-3 rounded-xl bg-meadow/70 px-3 py-2 text-xs font-semibold text-forest dark:bg-[#123524] dark:text-growth">
+                {t("pools.areaExpanded", { km: p.expandedToKm })}
+              </p>
+            )}
 
-        <div className="mt-3 flex gap-2">
-          <Button variant="ai" size="sm" className="flex-1" onClick={doExplain}>
-            <Sparkles className="h-4 w-4" /> {t("pools.explainPool")}
-          </Button>
-        </div>
-      </Card>
-
-      <Card className="mt-3 overflow-hidden p-0">
-        <MapView center={p.location} zoom={9} height={200} markers={markers} showLegend className="rounded-none border-0" />
-      </Card>
-
-      {isFarmer && myContribution ? (
-        <Card className="mt-3 border-forest/30 bg-meadow/40 p-4">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-6 w-6 text-forest" aria-hidden="true" />
-            <div>
-              <p className="text-[15px] font-bold text-forest">{t("pools.yourCommitment")}</p>
-              <p className="num text-[12px] text-forest/80">{t("pools.committedByYou", { qty: `${myContribution.committedKg} kg` })}</p>
-            </div>
-          </div>
-          <div className="mt-3 grid grid-cols-3 gap-1.5">
-            <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-muted">{t("status.fulfilment")}</p>
-              <StatusChip status={myContribution.fulfilment} size="sm" />
-            </div>
-            <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-muted">{t("status.payment")}</p>
-              <StatusChip status={myContribution.payment} size="sm" />
-            </div>
-            <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-muted">{t("status.payout")}</p>
-              <StatusChip status={myContribution.payout} size="sm" />
-            </div>
-          </div>
-          <p className="mt-3 text-[11px] leading-relaxed text-muted">{t("pools.feeNote")}</p>
-        </Card>
-      ) : isFarmer ? (
-        <Card className="mt-3 p-4">
-          <p className="text-[15px] font-bold text-ink">{t("pools.joinPool")}</p>
-          <p className="mt-0.5 text-[12px] text-muted">{t("pools.eligibility", { qty: `${p.remainingKg} kg` })}</p>
-
-          {full ? (
-            <div className="mt-3 rounded-xl border border-settle/40 bg-[#FFFBEB] p-3 text-[12px] text-[#92400E]">
-              <p className="font-semibold">{t("pools.poolFull")}</p>
-              <p>{t("pools.poolFullBody")}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2 border-settle/40 bg-white text-[#92400E]"
-                onClick={() => pushToast({ title: t("pools.joinWaitlist"), description: "We will notify you if space opens.", variant: "info" })}
-              >
-                {t("pools.joinWaitlist")}
+            <div className="mt-4 flex gap-2">
+              <Button variant="ai" size="portal" className="font-semibold" onClick={doExplain}>
+                <Sparkles className="h-4 w-4" /> {t("pools.explainPool")}
               </Button>
             </div>
-          ) : deadlinePassed || !open ? (
-            <div className="mt-3 rounded-xl border border-line bg-canvas p-3 text-[12px] text-muted">
-              {deadlinePassed ? t("pools.deadlinePassed") : "This pool is not accepting commitments."}
-            </div>
-          ) : (
-            <>
-              <div className="mt-3">
-                <Label htmlFor="commit-qty">{t("pools.quantityToCommit")}</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="commit-qty"
-                    type="number"
-                    min={1}
-                    max={p.remainingKg}
-                    value={qty || ""}
-                    onChange={(e) => setQty(Math.max(0, Number(e.target.value)))}
-                    className="num min-h-12 text-lg font-semibold"
-                  />
-                  <span className="text-sm font-semibold text-muted">kg</span>
+          </Card>
+
+          <Card className="overflow-hidden p-0">
+            <MapView center={p.location} zoom={9} height={240} markers={markers} showLegend className="rounded-none border-0" />
+          </Card>
+
+          <section className="mt-6">
+            <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-ink dark:text-portal-ink">
+              <Users className="h-4 w-4 text-forest" /> Farmers in this pool ({contributions.data?.length ?? 0})
+            </h2>
+            <div className="space-y-2">
+              {(contributions.data ?? []).length === 0 && (
+                <p className="rounded-xl border border-line bg-surface p-4 text-xs text-muted dark:border-portal-line dark:bg-portal-surface dark:text-portal-muted">
+                  No contributions recorded yet.
+                </p>
+              )}
+              {(contributions.data ?? []).map((c) => (
+                <div key={c.id} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3.5 dark:border-portal-line dark:bg-portal-surface">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-ink dark:text-portal-ink">{c.farmerName}</p>
+                    <p className="text-xs text-muted dark:text-portal-muted">{c.farmerVillage}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="num text-sm font-bold text-ink dark:text-portal-ink">{c.committedKg} kg</p>
+                    <div className="mt-1 flex justify-end gap-1.5">
+                      <StatusChip status={c.payment} size="sm" />
+                      <StatusChip status={c.payout} size="sm" />
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-1.5 flex gap-1.5">
-                  {[0.25, 0.5, 1].map((f) => (
-                    <button
-                      key={f}
-                      type="button"
-                      onClick={() => setQty(Math.max(1, Math.round(p.remainingKg * f)))}
-                      className="rounded-lg border border-line bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted"
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* Right Column: Commitment Action or Status */}
+        <div className="space-y-4 lg:col-span-2">
+          {isFarmer && myContribution ? (
+            <Card className="border-forest/40 bg-meadow/40 p-5 dark:border-forest/30 dark:bg-[#0F2A1B]">
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="h-7 w-7 text-forest dark:text-growth" aria-hidden="true" />
+                <div>
+                  <p className="text-base font-bold text-forest dark:text-growth">{t("pools.yourCommitment")}</p>
+                  <p className="num text-xs text-forest/90 dark:text-growth/90">{t("pools.committedByYou", { qty: `${myContribution.committedKg} kg` })}</p>
+                </div>
+              </div>
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                <div>
+                  <p className="mb-1 text-[10px] font-bold uppercase text-muted dark:text-portal-muted">{t("status.fulfilment")}</p>
+                  <StatusChip status={myContribution.fulfilment} size="sm" />
+                </div>
+                <div>
+                  <p className="mb-1 text-[10px] font-bold uppercase text-muted dark:text-portal-muted">{t("status.payment")}</p>
+                  <StatusChip status={myContribution.payment} size="sm" />
+                </div>
+                <div>
+                  <p className="mb-1 text-[10px] font-bold uppercase text-muted dark:text-portal-muted">{t("status.payout")}</p>
+                  <StatusChip status={myContribution.payout} size="sm" />
+                </div>
+              </div>
+              <p className="mt-4 text-xs leading-relaxed text-muted dark:text-portal-muted">{t("pools.feeNote")}</p>
+            </Card>
+          ) : isFarmer ? (
+            <Card className="p-5 shadow-md">
+              <p className="text-base font-bold text-ink dark:text-portal-ink">{t("pools.joinPool")}</p>
+              <p className="mt-1 text-xs text-muted dark:text-portal-muted">{t("pools.eligibility", { qty: `${p.remainingKg} kg` })}</p>
+
+              {full ? (
+                <div className="mt-4 rounded-xl border border-settle/40 bg-[#FFFBEB] p-4 text-xs text-[#92400E] dark:bg-[#2A2110]">
+                  <p className="font-bold">{t("pools.poolFull")}</p>
+                  <p className="mt-0.5">{t("pools.poolFullBody")}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 border-settle/40 bg-white text-[#92400E] dark:bg-portal-surface"
+                    onClick={() => pushToast({ title: t("pools.joinWaitlist"), description: "We will notify you if space opens.", variant: "info" })}
+                  >
+                    {t("pools.joinWaitlist")}
+                  </Button>
+                </div>
+              ) : deadlinePassed || !open ? (
+                <div className="mt-4 rounded-xl border border-line bg-canvas p-4 text-xs text-muted dark:border-portal-line dark:bg-portal-bg">
+                  {deadlinePassed ? t("pools.deadlinePassed") : "This pool is not accepting commitments."}
+                </div>
+              ) : (
+                <>
+                  <div className="mt-4">
+                    <Label htmlFor="commit-qty" className="font-bold">{t("pools.quantityToCommit")}</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="commit-qty"
+                        type="number"
+                        min={1}
+                        max={p.remainingKg}
+                        value={qty || ""}
+                        onChange={(e) => setQty(Math.max(0, Number(e.target.value)))}
+                        className="num min-h-12 text-lg font-bold"
+                      />
+                      <span className="text-sm font-bold text-muted dark:text-portal-muted">kg</span>
+                    </div>
+                    <div className="mt-2 flex gap-1.5">
+                      {[0.25, 0.5, 1].map((f) => (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => setQty(Math.max(1, Math.round(p.remainingKg * f)))}
+                          className="rounded-xl border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-muted hover:text-ink hover:bg-canvas transition-colors dark:border-portal-line dark:bg-portal-surface dark:text-portal-muted"
+                        >
+                          {f === 1 ? "All" : `${f * 100}%`}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <Label htmlFor="commit-point" className="font-bold">{t("pools.collectionPoint")}</Label>
+                    <Select id="commit-point" value={pointId} onChange={(e) => setPointId(e.target.value)}>
+                      <option value="">{t("voice.selectPoint")}</option>
+                      {(points.data ?? [])
+                        .filter((pt) => pt.active)
+                        .map((pt) => (
+                          <option key={pt.id} value={pt.id}>
+                            {pt.name} · {pt.village} ({pt.distanceKm.toFixed(0)} km)
+                          </option>
+                        ))}
+                    </Select>
+                  </div>
+
+                  <div className="mt-4 rounded-xl border border-line bg-canvas p-3.5 dark:border-portal-line dark:bg-portal-bg">
+                    <div className="flex items-center justify-between">
+                      <p className="flex items-center gap-1.5 text-xs font-semibold text-muted dark:text-portal-muted">
+                        <Wallet className="h-4 w-4 text-forest" /> {t("pools.estimatedEarnings")}
+                      </p>
+                      <EstimateLabel explanation="Based on agreed rate minus 5% platform fee." />
+                    </div>
+                    <div className="mt-2 space-y-1.5 text-xs">
+                      <div className="flex justify-between text-muted dark:text-portal-muted">
+                        <span>{t("pools.gross")}</span>
+                        <span className="num font-semibold text-ink dark:text-portal-ink">{formatMoney(gross)}</span>
+                      </div>
+                      <div className="flex justify-between text-muted dark:text-portal-muted">
+                        <span>{t("pools.platformFee", { percent: PLATFORM_FEE_PERCENT })}</span>
+                        <span className="num font-semibold text-ink dark:text-portal-ink">−{formatMoney(fee)}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-line pt-2 text-sm font-bold text-ink dark:border-portal-line dark:text-portal-ink">
+                        <span>{t("pools.estimatedNet")}</span>
+                        <span className="num text-base font-bold text-forest dark:text-growth">{formatMoney(net)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 sticky bottom-20 sm:static">
+                    <Button
+                      variant="primary"
+                      size="field"
+                      className="w-full shadow-lg"
+                      disabled={!canCommit}
+                      onClick={() => setConfirmOpen(true)}
                     >
-                      {f === 1 ? "All" : `${f * 100}%`}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <Label htmlFor="commit-point">{t("pools.collectionPoint")}</Label>
-                <Select id="commit-point" value={pointId} onChange={(e) => setPointId(e.target.value)}>
-                  <option value="">{t("voice.selectPoint")}</option>
-                  {(points.data ?? [])
-                    .filter((pt) => pt.active)
-                    .map((pt) => (
-                      <option key={pt.id} value={pt.id}>
-                        {pt.name} · {pt.village} ({pt.distanceKm.toFixed(0)} km)
-                      </option>
-                    ))}
-                </Select>
-              </div>
-
-              <div className="mt-3 rounded-xl border border-line bg-canvas p-3">
-                <div className="flex items-center justify-between">
-                  <p className="flex items-center gap-1 text-[12px] font-semibold text-muted">
-                    <Wallet className="h-3.5 w-3.5" /> {t("pools.estimatedEarnings")}
-                  </p>
-                  <EstimateLabel />
-                </div>
-                <div className="mt-2 space-y-1 text-[12px]">
-                  <div className="flex justify-between">
-                    <span className="text-muted">{t("pools.gross")}</span>
-                    <span className="num font-semibold text-ink">{formatMoney(gross)}</span>
+                      {t("pools.reviewCommit")}
+                    </Button>
+                    {!online && (
+                      <p className="mt-1.5 text-center text-xs font-semibold text-settle">
+                        Reconnect to commit to this pool.
+                      </p>
+                    )}
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted">{t("pools.platformFee", { percent: PLATFORM_FEE_PERCENT })}</span>
-                    <span className="num font-semibold text-ink">−{formatMoney(fee)}</span>
-                  </div>
-                  <div className="flex justify-between border-t border-line pt-1.5">
-                    <span className="font-semibold text-ink">{t("pools.estimatedNet")}</span>
-                    <span className="num text-lg font-bold text-forest">{formatMoney(net)}</span>
-                  </div>
-                </div>
-                <p className="mt-1.5 text-[11px] leading-relaxed text-muted">{t("pools.feeNote")}</p>
-              </div>
-
-              <Button
-                variant="primary"
-                size="field"
-                className="mt-3 w-full"
-                disabled={!canCommit}
-                onClick={() => setConfirmOpen(true)}
-              >
-                {t("pools.reviewCommit")}
-              </Button>
-              {!online && <p className="mt-1.5 text-center text-[11px] font-semibold text-settle">Reconnect to commit.</p>}
-            </>
+                </>
+              )}
+            </Card>
+          ) : (
+            <Card className="p-5 text-center">
+              <p className="text-sm font-semibold text-ink dark:text-portal-ink">Viewing supply pool</p>
+              <p className="mt-1 text-xs text-muted dark:text-portal-muted">Farmers commit crop residue to this industry pool.</p>
+            </Card>
           )}
-        </Card>
-      ) : (
-        <Card className="mt-3 p-4 text-center text-[13px] text-muted">
-          Only farmers can commit quantity to a pool. You can still follow the pool progress.
-        </Card>
-      )}
+        </div>
+      </div>
 
-      <section className="mt-4">
+      <section className="mt-6">
         <h2 className="mb-2 flex items-center gap-1.5 text-[15px] font-bold text-ink">
           <Users className="h-4 w-4" /> Farmers in this pool
         </h2>
@@ -442,6 +485,6 @@ export default function PoolDetailPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

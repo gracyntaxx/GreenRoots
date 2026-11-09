@@ -66,7 +66,7 @@ export function OnboardingDialog({ open, onOpenChange }: { open: boolean; onOpen
 
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? onOpenChange(true) : skip())}>
-      <DialogContent variant="center" className="max-w-md">
+      <DialogContent variant="sheet" className="sm:max-w-md">
         <DialogHeader>
           <div className="mb-1 flex items-center gap-1.5">
             {steps.map((_, i) => (

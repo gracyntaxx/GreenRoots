@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import type { CollectionPoint } from "@/types";
 import { formatNumber } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 type FormState = Partial<CollectionPoint> & { id?: string };
 
@@ -88,7 +89,7 @@ export default function AdminCollectionPointsPage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Collection points"
         description="Physical drop-off hubs used by farmers and buyers. Inactive points are hidden from suggestions but kept on record."
@@ -106,7 +107,7 @@ export default function AdminCollectionPointsPage() {
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Total points" value={all.length} icon={<MapPin className="h-5 w-5 text-forest" />} />
         <StatCard label="Active" value={all.filter((p) => p.active).length} tone="success" />
         <StatCard label="Capacity" value={`${formatNumber(all.reduce((s, p) => s + p.capacityTonnes, 0))} t`} sub="Combined daily capacity" />
@@ -130,63 +131,118 @@ export default function AdminCollectionPointsPage() {
 
       {all.length > 0 && (
         <PortalCard className="mt-4 overflow-hidden">
-          <Table>
-            <THead>
-              <TR>
-                <TH>Point</TH>
-                <TH>Village</TH>
-                <TH>Capacity</TH>
-                <TH>Hours</TH>
-                <TH>Drop-offs today</TH>
-                <TH>Active</TH>
-                <TH className="text-right">Edit</TH>
-              </TR>
-            </THead>
-            <TBody>
-              {all.map((p) => (
-                <TR key={p.id}>
-                  <TD>
-                    <p className="font-semibold">{p.name}</p>
-                    <p className="num text-[10px] text-muted dark:text-portal-muted">{p.id}</p>
-                  </TD>
-                  <TD className="text-[12px]">
-                    {p.village}
-                    <span className="block text-[10px] text-muted dark:text-portal-muted">
-                      {p.district}, {p.state}
+          {/* Mobile card stack */}
+          <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
+            {all.map((p) => (
+              <div key={p.id} className="p-3.5 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-semibold text-sm">{p.name}</p>
+                    <p className="text-xs text-muted dark:text-portal-muted">{p.village}, {p.district}, {p.state}</p>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Switch
+                      checked={p.active}
+                      onCheckedChange={() => toggle(p)}
+                      disabled={togglingId === p.id}
+                      aria-label={`Toggle ${p.name}`}
+                    />
+                    <span className={cn("text-[10px] font-semibold", p.active ? "text-forest dark:text-growth" : "text-muted dark:text-portal-muted")}>
+                      {togglingId === p.id ? "…" : p.active ? "Active" : "Inactive"}
                     </span>
-                  </TD>
-                  <TD className="num">{p.capacityTonnes} t</TD>
-                  <TD className="text-[12px]">{p.hours}</TD>
-                  <TD className="num">{p.dropOffsToday}</TD>
-                  <TD>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={p.active}
-                        onCheckedChange={() => toggle(p)}
-                        disabled={togglingId === p.id}
-                        aria-label={`Toggle ${p.name}`}
-                      />
-                      <span className={cn("text-[11px] font-semibold", p.active ? "text-forest dark:text-growth" : "text-muted dark:text-portal-muted")}>
-                        {togglingId === p.id ? "Saving…" : p.active ? "Active" : "Inactive"}
-                      </span>
-                    </div>
-                  </TD>
-                  <TD className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setForm({ ...p });
-                        setError(null);
-                      }}
-                    >
-                      <Pencil className="h-3.5 w-3.5" /> Edit
-                    </Button>
-                  </TD>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Capacity: </span>
+                    <span className="num font-medium">{p.capacityTonnes} t</span>
+                  </div>
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Hours: </span>
+                    <span className="font-medium">{p.hours}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Drop-offs: </span>
+                    <span className="num font-medium">{p.dropOffsToday}</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-end pt-1 border-t border-line/60 dark:border-portal-line/60">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs h-7 px-2"
+                    onClick={() => {
+                      setForm({ ...p });
+                      setError(null);
+                    }}
+                  >
+                    <Pencil className="h-3.5 w-3.5" /> Edit hub
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
+            <Table>
+              <THead>
+                <TR>
+                  <TH>Point</TH>
+                  <TH>Village</TH>
+                  <TH>Capacity</TH>
+                  <TH>Hours</TH>
+                  <TH>Drop-offs today</TH>
+                  <TH>Active</TH>
+                  <TH className="text-right">Edit</TH>
                 </TR>
-              ))}
-            </TBody>
-          </Table>
+              </THead>
+              <TBody>
+                {all.map((p) => (
+                  <TR key={p.id}>
+                    <TD>
+                      <p className="font-semibold">{p.name}</p>
+                      <p className="num text-[10px] text-muted dark:text-portal-muted">{p.id}</p>
+                    </TD>
+                    <TD className="text-[12px]">
+                      {p.village}
+                      <span className="block text-[10px] text-muted dark:text-portal-muted">
+                        {p.district}, {p.state}
+                      </span>
+                    </TD>
+                    <TD className="num">{p.capacityTonnes} t</TD>
+                    <TD className="text-[12px]">{p.hours}</TD>
+                    <TD className="num">{p.dropOffsToday}</TD>
+                    <TD>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={p.active}
+                          onCheckedChange={() => toggle(p)}
+                          disabled={togglingId === p.id}
+                          aria-label={`Toggle ${p.name}`}
+                        />
+                        <span className={cn("text-[11px] font-semibold", p.active ? "text-forest dark:text-growth" : "text-muted dark:text-portal-muted")}>
+                          {togglingId === p.id ? "Saving…" : p.active ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                    </TD>
+                    <TD className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setForm({ ...p });
+                          setError(null);
+                        }}
+                      >
+                        <Pencil className="h-3.5 w-3.5" /> Edit
+                      </Button>
+                    </TD>
+                  </TR>
+                ))}
+              </TBody>
+            </Table>
+          </div>
         </PortalCard>
       )}
 
@@ -289,6 +345,6 @@ export default function AdminCollectionPointsPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

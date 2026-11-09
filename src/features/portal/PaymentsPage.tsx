@@ -15,6 +15,7 @@ import { formatMoney } from "@/lib/money";
 import { formatDateTime } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { WASTE_LABELS } from "@/types";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 export default function PaymentsPage() {
   const profile = useSession((s) => s.profile)!;
@@ -40,13 +41,13 @@ export default function PaymentsPage() {
   const paidNet = myPayables.filter((p) => p.payout === "Completed" || p.payout === "Simulated").reduce((s, p) => s + p.net, 0);
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Payments & payouts"
         description="Every pool settlement uses PayPal Sandbox. A redirect is never treated as proof; the capture reference comes from PayPal."
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard
           label="Captured"
           value={formatMoney(captured.reduce((s, p) => s + p.amount, 0))}
@@ -112,43 +113,78 @@ export default function PaymentsPage() {
               }
             />
           ) : (
-            <Table>
-              <THead>
-                <TR>
-                  <TH>Pool</TH>
-                  <TH>Amount</TH>
-                  <TH>Payment</TH>
-                  <TH>PayPal order</TH>
-                  <TH>Capture</TH>
-                  <TH>Updated</TH>
-                  <TH className="text-right">Open</TH>
-                </TR>
-              </THead>
-              <TBody>
+            <>
+              {/* Mobile card stack */}
+              <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
                 {myPayments.map((p) => (
-                  <TR key={p.id}>
-                    <TD className="font-semibold">{poolName.get(p.referenceId) ?? p.referenceId}</TD>
-                    <TD className="num font-bold">{formatMoney(p.amount)}</TD>
-                    <TD>
+                  <div key={p.id} className="p-3.5 space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-semibold">{poolName.get(p.referenceId) ?? p.referenceId}</p>
+                        <p className="num text-xs text-muted dark:text-portal-muted">{formatDateTime(p.updatedAt)}</p>
+                      </div>
+                      <p className="num text-base font-bold text-forest dark:text-growth">{formatMoney(p.amount)}</p>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-col items-start gap-1">
                         <StatusChip status={p.status} size="sm" />
                         {(p.status === "Approved" || p.status === "Initiated") && (
                           <span className="text-[10px] font-semibold text-settle">Awaiting PayPal verification</span>
                         )}
                       </div>
-                    </TD>
-                    <TD className="num text-[12px]">{p.paypalOrderRef}</TD>
-                    <TD className="num text-[12px]">{p.paypalCaptureRef ?? "—"}</TD>
-                    <TD className="num text-[11px]">{formatDateTime(p.updatedAt)}</TD>
-                    <TD className="text-right">
-                      <Link to={`/portal/pools/${p.referenceId}`} className="text-[12px] font-semibold text-forest dark:text-growth">
-                        View
+                      <Link to={`/portal/pools/${p.referenceId}`} className="text-xs font-semibold text-forest dark:text-growth">
+                        View pool →
                       </Link>
-                    </TD>
-                  </TR>
+                    </div>
+                    <div className="text-[11px] text-muted dark:text-portal-muted">
+                      Order: <span className="num font-mono">{p.paypalOrderRef}</span>
+                      {p.paypalCaptureRef && <> · Capture: <span className="num font-mono">{p.paypalCaptureRef}</span></>}
+                    </div>
+                  </div>
                 ))}
-              </TBody>
-            </Table>
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden sm:block overflow-x-auto">
+                <Table>
+                  <THead>
+                    <TR>
+                      <TH>Pool</TH>
+                      <TH>Amount</TH>
+                      <TH>Payment</TH>
+                      <TH>PayPal order</TH>
+                      <TH>Capture</TH>
+                      <TH>Updated</TH>
+                      <TH className="text-right">Open</TH>
+                    </TR>
+                  </THead>
+                  <TBody>
+                    {myPayments.map((p) => (
+                      <TR key={p.id}>
+                        <TD className="font-semibold">{poolName.get(p.referenceId) ?? p.referenceId}</TD>
+                        <TD className="num font-bold">{formatMoney(p.amount)}</TD>
+                        <TD>
+                          <div className="flex flex-col items-start gap-1">
+                            <StatusChip status={p.status} size="sm" />
+                            {(p.status === "Approved" || p.status === "Initiated") && (
+                              <span className="text-[10px] font-semibold text-settle">Awaiting PayPal verification</span>
+                            )}
+                          </div>
+                        </TD>
+                        <TD className="num text-[12px]">{p.paypalOrderRef}</TD>
+                        <TD className="num text-[12px]">{p.paypalCaptureRef ?? "—"}</TD>
+                        <TD className="num text-[11px]">{formatDateTime(p.updatedAt)}</TD>
+                        <TD className="text-right">
+                          <Link to={`/portal/pools/${p.referenceId}`} className="text-[12px] font-semibold text-forest dark:text-growth">
+                            View
+                          </Link>
+                        </TD>
+                      </TR>
+                    ))}
+                  </TBody>
+                </Table>
+              </div>
+            </>
           )}
         </PortalCard>
       )}
@@ -164,40 +200,81 @@ export default function PaymentsPage() {
               body="Farmer-wise payables are prepared after a pool payment is captured."
             />
           ) : (
-            <Table>
-              <THead>
-                <TR>
-                  <TH>Pool</TH>
-                  <TH>Farmer</TH>
-                  <TH>Accepted</TH>
-                  <TH>Gross</TH>
-                  <TH>Commission</TH>
-                  <TH>Net</TH>
-                  <TH>Payout</TH>
-                </TR>
-              </THead>
-              <TBody>
+            <>
+              {/* Mobile card stack */}
+              <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
                 {myPayables.map((r) => (
-                  <TR key={r.id}>
-                    <TD className="text-[12px]">{r.poolLabel}</TD>
-                    <TD>
-                      <p className="font-semibold">{r.farmerName}</p>
-                      <p className="num text-[10px] text-muted dark:text-portal-muted">{r.farmerMasked}</p>
-                    </TD>
-                    <TD className="num">{r.acceptedKg} kg</TD>
-                    <TD className="num">{formatMoney(r.gross)}</TD>
-                    <TD className="num">{formatMoney(r.commission)}</TD>
-                    <TD className="num font-bold">{formatMoney(r.net)}</TD>
-                    <TD>
+                  <div key={r.id} className="p-3.5 space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-semibold">{r.farmerName}</p>
+                        <p className="text-xs text-muted dark:text-portal-muted">{r.poolLabel}</p>
+                      </div>
                       <div className="flex items-center gap-1">
                         <StatusChip status={r.payout} size="sm" />
                         {r.simulated && <SimulatedChip />}
                       </div>
-                    </TD>
-                  </TR>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="text-muted dark:text-portal-muted">Accepted: </span>
+                        <span className="num font-medium">{r.acceptedKg} kg</span>
+                      </div>
+                      <div>
+                        <span className="text-muted dark:text-portal-muted">Gross: </span>
+                        <span className="num font-medium">{formatMoney(r.gross)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted dark:text-portal-muted">Commission: </span>
+                        <span className="num font-medium">{formatMoney(r.commission)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted dark:text-portal-muted">Net: </span>
+                        <span className="num font-bold text-forest dark:text-growth">{formatMoney(r.net)}</span>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </TBody>
-            </Table>
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden sm:block overflow-x-auto">
+                <Table>
+                  <THead>
+                    <TR>
+                      <TH>Pool</TH>
+                      <TH>Farmer</TH>
+                      <TH>Accepted</TH>
+                      <TH>Gross</TH>
+                      <TH>Commission</TH>
+                      <TH>Net</TH>
+                      <TH>Payout</TH>
+                    </TR>
+                  </THead>
+                  <TBody>
+                    {myPayables.map((r) => (
+                      <TR key={r.id}>
+                        <TD className="text-[12px]">{r.poolLabel}</TD>
+                        <TD>
+                          <p className="font-semibold">{r.farmerName}</p>
+                          <p className="num text-[10px] text-muted dark:text-portal-muted">{r.farmerMasked}</p>
+                        </TD>
+                        <TD className="num">{r.acceptedKg} kg</TD>
+                        <TD className="num">{formatMoney(r.gross)}</TD>
+                        <TD className="num">{formatMoney(r.commission)}</TD>
+                        <TD className="num font-bold">{formatMoney(r.net)}</TD>
+                        <TD>
+                          <div className="flex items-center gap-1">
+                            <StatusChip status={r.payout} size="sm" />
+                            {r.simulated && <SimulatedChip />}
+                          </div>
+                        </TD>
+                      </TR>
+                    ))}
+                  </TBody>
+                </Table>
+              </div>
+            </>
           )}
         </PortalCard>
       )}
@@ -206,6 +283,6 @@ export default function PaymentsPage() {
         GreenRoots never stores card or bank details. Only the PayPal order and capture references are kept. Admin
         approves each farmer payout; a simulated payout is always labelled.
       </p>
-    </div>
+    </PageContainer>
   );
 }

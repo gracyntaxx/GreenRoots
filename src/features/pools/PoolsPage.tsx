@@ -11,6 +11,7 @@ import { VerifiedMark } from "@/components/shared/Marks";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { WASTE_LABELS } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -77,12 +78,14 @@ export default function PoolsPage() {
   const minePools = (mine.data ?? []).filter((p) => p.status === "Open");
 
   return (
-    <div className="px-4 pt-4">
-      <h1 className="text-xl font-bold text-ink">{t("pools.title")}</h1>
-      <p className="mt-0.5 text-[12px] text-muted">{t("pools.subtitle")}</p>
+    <PageContainer>
+      <div className="border-b border-line pb-4 dark:border-portal-line">
+        <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("pools.title")}</h1>
+        <p className="mt-1 text-sm text-muted dark:text-portal-muted">{t("pools.subtitle")}</p>
+      </div>
 
-      <Tabs value={tab} onValueChange={setTab} className="mt-3">
-        <TabsList className="w-full">
+      <Tabs value={tab} onValueChange={setTab} className="mt-4">
+        <TabsList className="w-full sm:w-80">
           <TabsTrigger value="open" className="flex-1">
             Open
           </TabsTrigger>
@@ -96,10 +99,12 @@ export default function PoolsPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="open" className="space-y-2.5">
-          {pools.isLoading && [0, 1, 2].map((i) => <Skeleton key={i} className="h-40 w-full" />)}
+        <TabsContent value="open" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {pools.isLoading && [0, 1, 2, 3, 4, 5].map((i) => <Skeleton key={i} className="h-44 w-full rounded-xl" />)}
           {!pools.isLoading && open.length === 0 && (
-            <EmptyState icon={<Layers className="h-7 w-7" />} title={t("pools.noPools")} body={t("pools.noPoolsBody")} />
+            <div className="col-span-full">
+              <EmptyState icon={<Layers className="h-7 w-7" />} title={t("pools.noPools")} body={t("pools.noPoolsBody")} />
+            </div>
           )}
           {open.map((p) => (
             <PoolCard key={p.id} pool={p} />
@@ -107,14 +112,16 @@ export default function PoolsPage() {
         </TabsContent>
 
         {isFarmer && (
-          <TabsContent value="mine" className="space-y-2.5">
-            {mine.isLoading && <Skeleton className="h-40 w-full" />}
+          <TabsContent value="mine" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {mine.isLoading && [0, 1].map((i) => <Skeleton key={i} className="h-44 w-full rounded-xl" />)}
             {!mine.isLoading && minePools.length === 0 && (
-              <EmptyState
-                icon={<Layers className="h-7 w-7" />}
-                title={t("home.noPools")}
-                body="Commit to a nearby pool and it will appear here."
-              />
+              <div className="col-span-full">
+                <EmptyState
+                  icon={<Layers className="h-7 w-7" />}
+                  title={t("home.noPools")}
+                  body="Commit to a nearby pool and it will appear here."
+                />
+              </div>
             )}
             {minePools.map((p) => (
               <PoolCard key={p.id} pool={p} />
@@ -122,10 +129,12 @@ export default function PoolsPage() {
           </TabsContent>
         )}
 
-        <TabsContent value="settled" className="space-y-2.5">
-          {pools.isLoading && <Skeleton className="h-40 w-full" />}
+        <TabsContent value="settled" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {pools.isLoading && [0, 1].map((i) => <Skeleton key={i} className="h-44 w-full rounded-xl" />)}
           {!pools.isLoading && settled.length === 0 && (
-            <EmptyState icon={<Layers className="h-7 w-7" />} title="No settled pools yet" />
+            <div className="col-span-full">
+              <EmptyState icon={<Layers className="h-7 w-7" />} title="No settled pools yet" />
+            </div>
           )}
           {settled.map((p) => (
             <div key={p.id} className={cn(p.status === "Settled" && "opacity-90")}>
@@ -134,6 +143,6 @@ export default function PoolsPage() {
           ))}
         </TabsContent>
       </Tabs>
-    </div>
+    </PageContainer>
   );
 }

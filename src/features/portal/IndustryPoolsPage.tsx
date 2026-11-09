@@ -5,6 +5,7 @@ import { CalendarClock, ChevronRight, Layers, Users } from "lucide-react";
 import { useSession } from "@/store/session";
 import { poolService } from "@/services/poolService";
 import { PortalPageHeader } from "@/components/shared/PageHeader";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { PoolProgress } from "@/components/shared/PoolProgress";
 import { PortalCard } from "@/components/ui/card";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
@@ -31,7 +32,7 @@ export default function IndustryPoolsPage() {
   const rows = (pools.data ?? []).filter((p) => (filter === "active" ? p.status === "Open" || p.status === "Ready for Pickup" : true));
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Pools"
         description="Each pool aggregates nearby farmers toward one requirement. Expand the area or extend the deadline when supply is short."
@@ -54,7 +55,7 @@ export default function IndustryPoolsPage() {
         }
       />
 
-      {pools.isLoading && <Skeleton className="h-64 w-full" />}
+      {pools.isLoading && <Skeleton className="h-64 w-full rounded-xl" />}
 
       {!pools.isLoading && rows.length === 0 && (
         <EmptyState
@@ -64,7 +65,7 @@ export default function IndustryPoolsPage() {
         />
       )}
 
-      <div className="grid gap-3 lg:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 pb-6">
         {rows.map((p) => {
           const ratePerKg = p.ratePerUnit / (p.rateUnit === "tonne" ? 1000 : p.rateUnit === "quintal" ? 100 : 1);
           return (
@@ -113,6 +114,6 @@ export default function IndustryPoolsPage() {
           );
         })}
       </div>
-    </div>
+    </PageContainer>
   );
 }

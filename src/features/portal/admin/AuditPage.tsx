@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { AiChip } from "@/components/shared/Marks";
 import { ROLE_LABELS, type AiActionAudit, type Role } from "@/types";
 import { timeAgo, formatDateTime, cn } from "@/lib/utils";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 const roleTone: Record<Role, string> = {
   farmer: "bg-meadow text-forest dark:bg-[#123524] dark:text-growth",
@@ -38,14 +39,14 @@ export default function AuditPage() {
   }, [all, q, role]);
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="AI audit log"
         description="Every AI-prepared action, the human who confirmed it, and the recorded outcome. This is the accountability trail."
         actions={<AiChip kind="explanation">AI prepared · human confirmed</AiChip>}
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Total actions" value={all.length} icon={<ScrollText className="h-5 w-5 text-forest" />} />
         <StatCard label="Human confirmations" value={all.filter((a) => a.confirmedBy.trim().length > 0).length} sub="No action without a person" tone="success" icon={<UserCheck className="h-5 w-5 text-growth" />} />
         <StatCard label="Admin decisions" value={all.filter((a) => a.actorRole === "admin").length} icon={<ShieldCheck className="h-5 w-5 text-navy" />} />
@@ -88,45 +89,76 @@ export default function AuditPage() {
 
       {rows.length > 0 && (
         <PortalCard className="mt-3 overflow-hidden">
-          <Table>
-            <THead>
-              <TR>
-                <TH>When</TH>
-                <TH>Actor</TH>
-                <TH>AI prepared</TH>
-                <TH>Action</TH>
-                <TH>Reference</TH>
-                <TH>Outcome</TH>
-                <TH className="text-right">Details</TH>
-              </TR>
-            </THead>
-            <TBody>
-              {rows.map((a) => (
-                <TR key={a.id}>
-                  <TD className="whitespace-nowrap text-[11px]">
-                    <span title={formatDateTime(a.at)}>{timeAgo(a.at)}</span>
-                  </TD>
-                  <TD>
-                    <p className="text-[12px] font-semibold">{a.actor}</p>
-                    <span className={cn("mt-0.5 inline-block rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide", roleTone[a.actorRole])}>
-                      {ROLE_LABELS[a.actorRole]}
-                    </span>
-                  </TD>
-                  <TD className="max-w-64">
-                    <p className="line-clamp-2 text-[12px]">{a.aiPreparedSummary}</p>
-                  </TD>
-                  <TD className="text-[12px] font-medium">{a.action}</TD>
-                  <TD className="num max-w-44 truncate text-[11px]">{a.reference}</TD>
-                  <TD className="text-[12px]">{a.outcome}</TD>
-                  <TD className="text-right">
-                    <button type="button" onClick={() => setSelected(a)} className="text-[12px] font-semibold text-forest dark:text-growth">
-                      View
-                    </button>
-                  </TD>
+          {/* Mobile card stack */}
+          <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
+            {rows.map((a) => (
+              <div key={a.id} className="p-3.5 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-semibold text-sm">{a.action}</p>
+                    <p className="text-xs text-muted dark:text-portal-muted">{a.actor} ({ROLE_LABELS[a.actorRole]})</p>
+                  </div>
+                  <span className="num text-xs text-muted dark:text-portal-muted">{timeAgo(a.at)}</span>
+                </div>
+                <p className="line-clamp-2 text-xs text-ink/80 dark:text-portal-ink/80 rounded bg-canvas p-2 dark:bg-portal-bg">
+                  <span className="font-semibold text-ai">AI: </span>{a.aiPreparedSummary}
+                </p>
+                <div className="flex items-center justify-between text-xs pt-1 border-t border-line/60 dark:border-portal-line/60">
+                  <span className="text-muted dark:text-portal-muted truncate max-w-[200px]">Outcome: {a.outcome}</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelected(a)}
+                    className="font-semibold text-forest dark:text-growth shrink-0"
+                  >
+                    View →
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
+            <Table>
+              <THead>
+                <TR>
+                  <TH>When</TH>
+                  <TH>Actor</TH>
+                  <TH>AI prepared</TH>
+                  <TH>Action</TH>
+                  <TH>Reference</TH>
+                  <TH>Outcome</TH>
+                  <TH className="text-right">Details</TH>
                 </TR>
-              ))}
-            </TBody>
-          </Table>
+              </THead>
+              <TBody>
+                {rows.map((a) => (
+                  <TR key={a.id}>
+                    <TD className="whitespace-nowrap text-[11px]">
+                      <span title={formatDateTime(a.at)}>{timeAgo(a.at)}</span>
+                    </TD>
+                    <TD>
+                      <p className="text-[12px] font-semibold">{a.actor}</p>
+                      <span className={cn("mt-0.5 inline-block rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide", roleTone[a.actorRole])}>
+                        {ROLE_LABELS[a.actorRole]}
+                      </span>
+                    </TD>
+                    <TD className="max-w-64">
+                      <p className="line-clamp-2 text-[12px]">{a.aiPreparedSummary}</p>
+                    </TD>
+                    <TD className="text-[12px] font-medium">{a.action}</TD>
+                    <TD className="num max-w-44 truncate text-[11px]">{a.reference}</TD>
+                    <TD className="text-[12px]">{a.outcome}</TD>
+                    <TD className="text-right">
+                      <button type="button" onClick={() => setSelected(a)} className="text-[12px] font-semibold text-forest dark:text-growth">
+                        View
+                      </button>
+                    </TD>
+                  </TR>
+                ))}
+              </TBody>
+            </Table>
+          </div>
         </PortalCard>
       )}
 
@@ -182,6 +214,6 @@ export default function AuditPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

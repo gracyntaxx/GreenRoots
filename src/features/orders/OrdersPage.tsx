@@ -9,6 +9,7 @@ import { StatusChip } from "@/components/shared/StatusTriad";
 import { QtyText } from "@/components/shared/Numbers";
 import { Card } from "@/components/ui/card";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { WASTE_LABELS } from "@/types";
 import { formatMoney } from "@/lib/money";
 import { formatDate } from "@/lib/utils";
@@ -32,10 +33,13 @@ export default function OrdersPage() {
   }, [orders.data, filter]);
 
   return (
-    <div className="px-4 pt-4">
-      <h1 className="text-xl font-bold text-ink">{t("orders.title")}</h1>
+    <PageContainer>
+      <div className="border-b border-line pb-4 dark:border-portal-line">
+        <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("orders.title")}</h1>
+        <p className="mt-1 text-sm text-muted dark:text-portal-muted">Review order fulfilment, verified payments and farmer payouts.</p>
+      </div>
 
-      <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+      <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
         {FILTERS.map((f) => (
           <button
             key={f}
@@ -43,8 +47,8 @@ export default function OrdersPage() {
             onClick={() => setFilter(f)}
             className={
               filter === f
-                ? "shrink-0 rounded-full border border-forest bg-meadow px-3 py-1.5 text-[12px] font-semibold text-forest"
-                : "shrink-0 rounded-full border border-line bg-surface px-3 py-1.5 text-[12px] font-semibold text-muted"
+                ? "shrink-0 rounded-full border border-forest bg-meadow px-3.5 py-1.5 text-xs font-bold text-forest dark:border-growth/40 dark:bg-[#123524] dark:text-growth"
+                : "shrink-0 rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-semibold text-muted hover:bg-canvas dark:border-portal-line dark:bg-portal-surface dark:text-portal-muted"
             }
           >
             {f === "all" ? t("orders.filterAll") : f === "pending" ? t("orders.filterPending") : f === "completed" ? t("orders.filterCompleted") : t("orders.filterPaid")}
@@ -52,15 +56,17 @@ export default function OrdersPage() {
         ))}
       </div>
 
-      <div className="mt-3 space-y-2.5 pb-4">
-        {orders.isLoading && [0, 1, 2].map((i) => <Skeleton key={i} className="h-36 w-full" />)}
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pb-6">
+        {orders.isLoading && [0, 1, 2].map((i) => <Skeleton key={i} className="h-44 w-full rounded-xl" />)}
 
         {!orders.isLoading && rows.length === 0 && (
-          <EmptyState
-            icon={<ReceiptText className="h-7 w-7" />}
-            title={t("orders.noOrders")}
-            body={t("orders.noOrdersBody")}
-          />
+          <div className="col-span-full">
+            <EmptyState
+              icon={<ReceiptText className="h-7 w-7" />}
+              title={t("orders.noOrders")}
+              body={t("orders.noOrdersBody")}
+            />
+          </div>
         )}
 
         {rows.map((o) => {
@@ -111,6 +117,6 @@ export default function OrdersPage() {
           );
         })}
       </div>
-    </div>
+    </PageContainer>
   );
 }

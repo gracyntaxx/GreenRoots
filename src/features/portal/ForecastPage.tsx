@@ -21,6 +21,7 @@ import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { WASTE_LABELS } from "@/types";
 import { formatNumber } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 const confidenceTone: Record<string, string> = {
   High: "bg-meadow text-forest dark:bg-[#123524] dark:text-growth",
@@ -59,7 +60,7 @@ export default function ForecastPage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Seasonal forecast"
         description="Availability and demand estimates from recorded collection history. Estimates are labelled; missing history is never filled with invented numbers."
@@ -95,7 +96,7 @@ export default function ForecastPage() {
             ))}
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             <StatCard label="Region" value={<span className="text-lg">{selected.state}</span>} sub={selected.region} />
             <StatCard label="Season" value={<span className="text-lg">{selected.season}</span>} sub={WASTE_LABELS[selected.wasteType]} />
             <StatCard
@@ -217,6 +218,6 @@ export default function ForecastPage() {
           </div>
         </>
       )}
-    </div>
+    </PageContainer>
   );
 }

@@ -22,6 +22,7 @@ import { adminService } from "@/services/adminService";
 import { moderationService } from "@/services/moderationService";
 import { auditService } from "@/services/auditService";
 import { PortalPageHeader, StatCard, SectionTitle } from "@/components/shared/PageHeader";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { PoolProgress } from "@/components/shared/PoolProgress";
 import { VerifiedMark, AiChip } from "@/components/shared/Marks";
 import { PortalCard } from "@/components/ui/card";
@@ -67,7 +68,7 @@ export default function OverviewPage() {
     const unusual = (payables.data ?? []).filter((p) => p.net > 50000);
 
     return (
-      <div>
+      <PageContainer>
         <PortalPageHeader
           title={`Good to see you, ${profile.name.split(" ")[0]}`}
           description="Operations overview. Every AI-prepared action below still needs a human decision."
@@ -81,7 +82,7 @@ export default function OverviewPage() {
           }
         />
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatCard label="Pending verifications" value={pendingVer.length} sub="Awaiting human decision" tone={pendingVer.length ? "warning" : "success"} icon={<BadgeCheck className="h-5 w-5 text-settle" />} />
           <StatCard label="Open moderation flags" value={openFlags.length} sub={`${(flags.data ?? []).length} total flags`} tone={openFlags.length ? "warning" : "success"} icon={<ShieldAlert className="h-5 w-5 text-settle" />} />
           <StatCard label="Active listings" value={activeListings.length} sub={`${(listings.data ?? []).length} listings on record`} icon={<PackageSearch className="h-5 w-5 text-forest" />} />
@@ -160,12 +161,12 @@ export default function OverviewPage() {
             </div>
           </PortalCard>
         </div>
-      </div>
+      </PageContainer>
     );
   }
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title={`Good to see you, ${profile.name.split(" ")[0]}`}
         description="Your sourcing pipeline at a glance. AI prepares drafts; you confirm every action."
@@ -192,7 +193,7 @@ export default function OverviewPage() {
         </div>
       )}
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Open requirements" value={openRequirements.length} sub={`${(requirements.data ?? []).filter((r) => r.industryId === profile.id).length} total`} icon={<ClipboardList className="h-5 w-5 text-forest" />} />
         <StatCard label="Active pools" value={activePools.length} sub={`${myPools.length} pools on record`} icon={<Layers className="h-5 w-5 text-navy" />} />
         <StatCard
@@ -284,6 +285,6 @@ export default function OverviewPage() {
           </PortalCard>
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

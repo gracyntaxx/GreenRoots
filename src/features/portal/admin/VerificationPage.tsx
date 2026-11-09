@@ -13,6 +13,7 @@ import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatDate, timeAgo, cn } from "@/lib/utils";
 import type { IndustryVerification } from "@/types";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 export default function VerificationPage() {
   const profile = useSession((s) => s.profile)!;
@@ -64,7 +65,7 @@ export default function VerificationPage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Industry verification"
         description="A human decision is required before an industry can publish requirements. AI may summarise documents, but it never approves."
@@ -271,6 +272,6 @@ export default function VerificationPage() {
           ]}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

@@ -10,6 +10,7 @@ import { Skeleton, EmptyState, Table, THead, TBody, TR, TH, TD } from "@/compone
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ROLE_LABELS, type Profile, type Role } from "@/types";
 import { formatDate, cn } from "@/lib/utils";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 const roleTone: Record<Role, string> = {
   farmer: "bg-meadow text-forest dark:bg-[#123524] dark:text-growth",
@@ -38,13 +39,13 @@ export default function UsersPage() {
   const all = users.data ?? [];
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Users"
         description="Farmer, buyer, industry and admin accounts. Read-only view; verification and moderation are handled in their own queues."
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Total users" value={all.length} icon={<Users className="h-5 w-5 text-forest" />} />
         <StatCard label="Farmers" value={all.filter((u) => u.role === "farmer").length} tone="success" />
         <StatCard label="Industry accounts" value={all.filter((u) => u.role === "industry").length} icon={<BadgeCheck className="h-5 w-5 text-navy" />} />
@@ -93,59 +94,94 @@ export default function UsersPage() {
 
       {rows.length > 0 && (
         <PortalCard className="mt-3 overflow-hidden">
-          <Table>
-            <THead>
-              <TR>
-                <TH>User</TH>
-                <TH>Role</TH>
-                <TH>Location</TH>
-                <TH>Reputation</TH>
-                <TH>Payout readiness</TH>
-                <TH>Joined</TH>
-                <TH className="text-right">Details</TH>
-              </TR>
-            </THead>
-            <TBody>
-              {rows.map((u) => (
-                <TR key={u.id}>
-                  <TD>
-                    <div className="flex items-center gap-2">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-meadow text-[11px] font-bold text-forest dark:bg-[#123524] dark:text-growth">
-                        {u.avatarInitials}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate font-semibold">{u.name}</p>
-                        <p className="truncate text-[11px] text-muted dark:text-portal-muted">{u.phone ?? u.email ?? u.id}</p>
-                      </div>
-                    </div>
-                  </TD>
-                  <TD>
-                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", roleTone[u.role])}>
-                      {ROLE_LABELS[u.role]}
+          {/* Mobile card stack */}
+          <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
+            {rows.map((u) => (
+              <div key={u.id} className="p-3.5 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-meadow text-xs font-bold text-forest dark:bg-[#123524] dark:text-growth">
+                      {u.avatarInitials}
                     </span>
-                  </TD>
-                  <TD className="text-[12px]">
-                    {u.village}
-                    <span className="block text-[10px] text-muted dark:text-portal-muted">{u.state}</span>
-                  </TD>
-                  <TD>
-                    <ReputationBadge score={u.reputation} factors={u.reputationFactors} size="sm" />
-                  </TD>
-                  <TD className="text-[12px]">{u.payoutReadiness}</TD>
-                  <TD className="num text-[12px]">{formatDate(u.joined)}</TD>
-                  <TD className="text-right">
-                    <button
-                      type="button"
-                      onClick={() => setSelected(u)}
-                      className="text-[12px] font-semibold text-forest dark:text-growth"
-                    >
-                      View
-                    </button>
-                  </TD>
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-sm">{u.name}</p>
+                      <p className="text-xs text-muted dark:text-portal-muted">{u.village}, {u.state}</p>
+                    </div>
+                  </div>
+                  <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", roleTone[u.role])}>
+                    {ROLE_LABELS[u.role]}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-line/60 dark:border-portal-line/60">
+                  <ReputationBadge score={u.reputation} factors={u.reputationFactors} size="sm" />
+                  <button
+                    type="button"
+                    onClick={() => setSelected(u)}
+                    className="text-xs font-semibold text-forest dark:text-growth"
+                  >
+                    View details →
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
+            <Table>
+              <THead>
+                <TR>
+                  <TH>User</TH>
+                  <TH>Role</TH>
+                  <TH>Location</TH>
+                  <TH>Reputation</TH>
+                  <TH>Payout readiness</TH>
+                  <TH>Joined</TH>
+                  <TH className="text-right">Details</TH>
                 </TR>
-              ))}
-            </TBody>
-          </Table>
+              </THead>
+              <TBody>
+                {rows.map((u) => (
+                  <TR key={u.id}>
+                    <TD>
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-meadow text-[11px] font-bold text-forest dark:bg-[#123524] dark:text-growth">
+                          {u.avatarInitials}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="truncate font-semibold">{u.name}</p>
+                          <p className="truncate text-[11px] text-muted dark:text-portal-muted">{u.phone ?? u.email ?? u.id}</p>
+                        </div>
+                      </div>
+                    </TD>
+                    <TD>
+                      <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", roleTone[u.role])}>
+                        {ROLE_LABELS[u.role]}
+                      </span>
+                    </TD>
+                    <TD className="text-[12px]">
+                      {u.village}
+                      <span className="block text-[10px] text-muted dark:text-portal-muted">{u.state}</span>
+                    </TD>
+                    <TD>
+                      <ReputationBadge score={u.reputation} factors={u.reputationFactors} size="sm" />
+                    </TD>
+                    <TD className="text-[12px]">{u.payoutReadiness}</TD>
+                    <TD className="num text-[12px]">{formatDate(u.joined)}</TD>
+                    <TD className="text-right">
+                      <button
+                        type="button"
+                        onClick={() => setSelected(u)}
+                        className="text-[12px] font-semibold text-forest dark:text-growth"
+                      >
+                        View
+                      </button>
+                    </TD>
+                  </TR>
+                ))}
+              </TBody>
+            </Table>
+          </div>
         </PortalCard>
       )}
 
@@ -198,6 +234,6 @@ export default function UsersPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

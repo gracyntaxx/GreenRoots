@@ -5,8 +5,7 @@ import { ErrorBoundary } from "@/app/ErrorBoundary";
 import { RealtimeBridge } from "@/app/RealtimeBridge";
 import { RequireRole } from "@/app/RoleGuard";
 import { DevPanel } from "@/app/DevPanel";
-import { FieldShell } from "@/app/FieldShell";
-import { PortalShell } from "@/app/PortalShell";
+import { AppShell } from "@/app/AppShell";
 import { useSession } from "@/store/session";
 import { homeForRole } from "@/lib/routing";
 
@@ -72,7 +71,7 @@ export default function App() {
             path="/app"
             element={
               <RequireRole allow="field">
-                <FieldShell />
+                <AppShell />
               </RequireRole>
             }
           >
@@ -95,7 +94,7 @@ export default function App() {
             path="/portal"
             element={
               <RequireRole allow="portal">
-                <PortalShell />
+                <AppShell />
               </RequireRole>
             }
           >

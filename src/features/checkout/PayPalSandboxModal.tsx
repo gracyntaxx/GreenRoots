@@ -69,7 +69,7 @@ export function PayPalSandboxModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => (!busy ? onOpenChange(v) : undefined)}>
-      <DialogContent variant="center" hideClose={busy} className="max-w-sm overflow-hidden p-0">
+      <DialogContent variant="sheet" hideClose={busy} className="p-0 overflow-hidden sm:max-w-md">
         <div className="bg-navy px-5 py-4 text-white">
           <div className="flex items-center justify-between">
             <span className="text-xl font-bold italic tracking-tight">

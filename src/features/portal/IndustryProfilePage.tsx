@@ -31,6 +31,7 @@ import { formatMoney } from "@/lib/money";
 import { kgToBestDisplay } from "@/lib/units";
 import { formatDate, cn } from "@/lib/utils";
 import { LANGUAGES } from "@/types";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 export default function IndustryProfilePage() {
   const profile = useSession((s) => s.profile)!;
@@ -69,14 +70,14 @@ export default function IndustryProfilePage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Company profile"
         description="Registered details, verification status and settlement readiness. Verified details are locked to protect farmers."
         actions={<VerifiedMark label={verified ? "Licence verified" : "Verification pending"} />}
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Requirements" value={myRequirements.length} sub={`${myRequirements.filter((r) => r.status === "Open").length} open`} icon={<Building2 className="h-5 w-5 text-forest" />} />
         <StatCard label="Pools" value={myPools.length} sub={`${kgToBestDisplay(myPools.reduce((s, p) => s + p.committedKg, 0))} committed`} icon={<BadgeCheck className="h-5 w-5 text-navy" />} />
         <StatCard
@@ -263,6 +264,6 @@ export default function IndustryProfilePage() {
         onConfirm={logout}
         actor={{ name: profile.name, role: profile.role }}
       />
-    </div>
+    </PageContainer>
   );
 }

@@ -17,6 +17,7 @@ import { aiAssistantService } from "@/services/aiAssistantService";
 import { requirementService } from "@/services/requirementService";
 import { collectionService } from "@/services/collectionService";
 import { PortalPageHeader } from "@/components/shared/PageHeader";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { MapView } from "@/components/shared/MapView";
 import { AiChip, VerifiedMark } from "@/components/shared/Marks";
 import { ConfirmSheet } from "@/components/shared/ConfirmSheet";
@@ -136,11 +137,11 @@ export default function CreateRequirementPage() {
   const inputError = (bad: boolean) => (showErrors && bad ? "border-error ring-2 ring-error/20" : "");
 
   return (
-    <div>
+    <PageContainer>
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="mb-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-muted hover:text-forest dark:text-portal-muted dark:hover:text-growth"
+        className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-muted hover:text-forest dark:text-portal-muted dark:hover:text-growth"
       >
         <ArrowLeft className="h-4 w-4" /> Back to requirements
       </button>
@@ -421,6 +422,6 @@ export default function CreateRequirementPage() {
           ]}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

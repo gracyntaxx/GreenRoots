@@ -21,22 +21,22 @@ export const DialogContent = React.forwardRef<
       className={cn(
         "fixed z-50 bg-surface shadow-xl focus:outline-none dark:bg-portal-surface",
         variant === "center" &&
-          "left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-field border-[1.5px] border-line p-5 animate-fade-in",
+          "left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line p-5 sm:p-6 animate-fade-in dark:border-portal-line",
         variant === "wide" &&
-          "left-1/2 top-1/2 max-h-[90vh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-portal border border-line p-6 dark:border-portal-line",
+          "left-1/2 top-1/2 max-h-[90dvh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-line p-6 dark:border-portal-line",
         variant === "sheet" &&
-          "bottom-0 left-1/2 max-h-[92vh] w-full max-w-[430px] -translate-x-1/2 overflow-y-auto rounded-t-3xl border-t-[1.5px] border-line px-5 pb-8 pt-3 animate-sheet-up",
+          "bottom-0 left-0 right-0 max-h-[92dvh] w-full sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85dvh] sm:max-w-xl sm:-translate-x-1/2 sm:-translate-y-1/2 overflow-y-auto rounded-t-3xl sm:rounded-2xl border-t sm:border border-line px-5 sm:px-6 pb-8 pt-3 sm:py-6 animate-sheet-up sm:animate-fade-in dark:border-portal-line",
         className
       )}
       {...props}
     >
       {variant === "sheet" && (
-        <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line" aria-hidden />
+        <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true" />
       )}
       {children}
       {!hideClose && (
         <DialogPrimitive.Close
-          className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full text-muted hover:bg-canvas focus-visible:outline-none dark:text-portal-muted dark:hover:bg-portal-bg"
+          className="absolute right-3.5 top-3.5 flex h-10 w-10 items-center justify-center rounded-full text-muted hover:bg-canvas focus-visible:outline-none dark:text-portal-muted dark:hover:bg-portal-bg"
           aria-label="Close"
         >
           <X className="h-5 w-5" />

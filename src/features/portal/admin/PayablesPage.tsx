@@ -15,6 +15,7 @@ import { Skeleton, EmptyState, Table, THead, TBody, TR, TH, TD } from "@/compone
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import type { FarmerPayable } from "@/types";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 export default function PayablesPage() {
   const profile = useSession((s) => s.profile)!;
@@ -65,13 +66,13 @@ export default function PayablesPage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Payables & payouts"
         description="Farmer-wise payables prepared after a verified pool payment. Every payout needs a human decision; simulated payouts are labelled."
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Net payable" value={formatMoney(summary.totalNet)} sub={`${all.length} farmer records`} icon={<Banknote className="h-5 w-5 text-forest" />} />
         <StatCard label="Completed" value={summary.completedCount} sub="Approved or simulated" tone="success" />
         <StatCard label="Pending" value={summary.pendingCount} tone={summary.pendingCount ? "warning" : "default"} icon={<Wallet className="h-5 w-5 text-settle" />} />
@@ -126,81 +127,160 @@ export default function PayablesPage() {
 
       {rows.length > 0 && (
         <PortalCard className="mt-3 overflow-hidden">
-          <Table>
-            <THead>
-              <TR>
-                <TH>Farmer</TH>
-                <TH>Pool</TH>
-                <TH>Accepted</TH>
-                <TH>Gross</TH>
-                <TH>Commission</TH>
-                <TH>Net</TH>
-                <TH>Payout</TH>
-                <TH className="text-right">Action</TH>
-              </TR>
-            </THead>
-            <TBody>
-              {rows.map((p) => {
-                const unusual = p.net > 50000;
-                const actionable = p.payout === "Pending" || p.payout === "Processing" || p.payout === "Failed";
-                return (
-                  <TR key={p.id} className={cn(unusual && "bg-[#FFFBEB]/60 dark:bg-[#2A2110]/40")}>
-                    <TD>
+          {/* Mobile card stack */}
+          <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
+            {rows.map((p) => {
+              const unusual = p.net > 50000;
+              const actionable = p.payout === "Pending" || p.payout === "Processing" || p.payout === "Failed";
+              return (
+                <div key={p.id} className={cn("p-3.5 space-y-2", unusual && "bg-[#FFFBEB]/60 dark:bg-[#2A2110]/40")}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
                       <div className="flex items-center gap-1.5">
-                        <p className="font-semibold">{p.farmerName}</p>
+                        <p className="font-semibold text-sm">{p.farmerName}</p>
                         {unusual && <ShieldAlert className="h-3.5 w-3.5 text-settle" aria-label="Unusual amount" />}
                       </div>
-                      <p className="num text-[10px] text-muted dark:text-portal-muted">{p.farmerMasked}</p>
-                    </TD>
-                    <TD className="max-w-44 truncate text-[12px]">{p.poolLabel}</TD>
-                    <TD className="num">{p.acceptedKg} kg</TD>
-                    <TD className="num">{formatMoney(p.gross)}</TD>
-                    <TD className="num">{formatMoney(p.commission)}</TD>
-                    <TD className="num font-bold">{formatMoney(p.net)}</TD>
-                    <TD>
-                      <div className="flex items-center gap-1">
-                        <StatusChip status={p.payout} size="sm" />
-                        {p.simulated && <SimulatedChip />}
-                      </div>
-                    </TD>
-                    <TD>
-                      <div className="flex items-center justify-end gap-1">
-                        {actionable ? (
-                          <>
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => {
-                                setTarget(p);
-                                setSimulate(false);
-                              }}
-                            >
-                              Approve
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setTarget(p);
-                                setSimulate(true);
-                              }}
-                              title="Mark as simulated payout"
-                            >
-                              <FlaskConical className="h-3.5 w-3.5" />
-                            </Button>
-                          </>
-                        ) : (
-                          <span className="text-[11px] text-muted dark:text-portal-muted">
-                            {p.payout === "Not Yet Due" ? "Not due" : "No action"}
-                          </span>
-                        )}
-                      </div>
-                    </TD>
-                  </TR>
-                );
-              })}
-            </TBody>
-          </Table>
+                      <p className="text-xs text-muted dark:text-portal-muted">{p.poolLabel}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <StatusChip status={p.payout} size="sm" />
+                      {p.simulated && <SimulatedChip />}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-muted dark:text-portal-muted">Accepted: </span>
+                      <span className="num font-medium">{p.acceptedKg} kg</span>
+                    </div>
+                    <div>
+                      <span className="text-muted dark:text-portal-muted">Gross: </span>
+                      <span className="num font-medium">{formatMoney(p.gross)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted dark:text-portal-muted">Commission: </span>
+                      <span className="num font-medium">{formatMoney(p.commission)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted dark:text-portal-muted">Net: </span>
+                      <span className="num font-bold text-forest dark:text-growth">{formatMoney(p.net)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end gap-1.5 pt-1 border-t border-line/60 dark:border-portal-line/60">
+                    {actionable ? (
+                      <>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="h-7 text-xs px-2.5"
+                          onClick={() => {
+                            setTarget(p);
+                            setSimulate(false);
+                          }}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-7 text-xs px-2"
+                          onClick={() => {
+                            setTarget(p);
+                            setSimulate(true);
+                          }}
+                          title="Mark as simulated payout"
+                        >
+                          <FlaskConical className="h-3.5 w-3.5" />
+                        </Button>
+                      </>
+                    ) : (
+                      <span className="text-[11px] text-muted dark:text-portal-muted">
+                        {p.payout === "Not Yet Due" ? "Not due" : "No action"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
+            <Table>
+              <THead>
+                <TR>
+                  <TH>Farmer</TH>
+                  <TH>Pool</TH>
+                  <TH>Accepted</TH>
+                  <TH>Gross</TH>
+                  <TH>Commission</TH>
+                  <TH>Net</TH>
+                  <TH>Payout</TH>
+                  <TH className="text-right">Action</TH>
+                </TR>
+              </THead>
+              <TBody>
+                {rows.map((p) => {
+                  const unusual = p.net > 50000;
+                  const actionable = p.payout === "Pending" || p.payout === "Processing" || p.payout === "Failed";
+                  return (
+                    <TR key={p.id} className={cn(unusual && "bg-[#FFFBEB]/60 dark:bg-[#2A2110]/40")}>
+                      <TD>
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-semibold">{p.farmerName}</p>
+                          {unusual && <ShieldAlert className="h-3.5 w-3.5 text-settle" aria-label="Unusual amount" />}
+                        </div>
+                        <p className="num text-[10px] text-muted dark:text-portal-muted">{p.farmerMasked}</p>
+                      </TD>
+                      <TD className="max-w-44 truncate text-[12px]">{p.poolLabel}</TD>
+                      <TD className="num">{p.acceptedKg} kg</TD>
+                      <TD className="num">{formatMoney(p.gross)}</TD>
+                      <TD className="num">{formatMoney(p.commission)}</TD>
+                      <TD className="num font-bold">{formatMoney(p.net)}</TD>
+                      <TD>
+                        <div className="flex items-center gap-1">
+                          <StatusChip status={p.payout} size="sm" />
+                          {p.simulated && <SimulatedChip />}
+                        </div>
+                      </TD>
+                      <TD>
+                        <div className="flex items-center justify-end gap-1">
+                          {actionable ? (
+                            <>
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => {
+                                  setTarget(p);
+                                  setSimulate(false);
+                                }}
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setTarget(p);
+                                  setSimulate(true);
+                                }}
+                                title="Mark as simulated payout"
+                              >
+                                <FlaskConical className="h-3.5 w-3.5" />
+                              </Button>
+                            </>
+                          ) : (
+                            <span className="text-[11px] text-muted dark:text-portal-muted">
+                              {p.payout === "Not Yet Due" ? "Not due" : "No action"}
+                            </span>
+                          )}
+                        </div>
+                      </TD>
+                    </TR>
+                  );
+                })}
+              </TBody>
+            </Table>
+          </div>
         </PortalCard>
       )}
 
@@ -240,6 +320,6 @@ export default function PayablesPage() {
         {poolLabels.length} pool{poolLabels.length === 1 ? "" : "s"} represented. Commission is calculated from the
         configured platform fee; farmer net is always shown separately.
       </p>
-    </div>
+    </PageContainer>
   );
 }

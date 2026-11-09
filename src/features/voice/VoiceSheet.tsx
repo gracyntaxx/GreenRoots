@@ -307,7 +307,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? onOpenChange(true) : onOpenChange(false))}>
-      <DialogContent variant="sheet" className="max-w-[430px]">
+      <DialogContent variant="sheet">
         <DialogHeader className="mb-3">
           <DialogTitle className="text-xl">{t("voice.title")}</DialogTitle>
           <DialogDescription>

@@ -21,6 +21,7 @@ import { AiChip } from "@/components/shared/Marks";
 import { RateText, QtyText } from "@/components/shared/Numbers";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { Input, Label, Select } from "@/components/ui/form";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -85,11 +86,11 @@ export default function MarketPage() {
   };
 
   return (
-    <div className="px-4 pt-4">
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-bold text-ink">{t("market.title")}</h1>
+    <PageContainer>
+      <div className="flex items-center justify-between gap-2 border-b border-line pb-4 dark:border-portal-line">
+        <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("market.title")}</h1>
         {isFarmer && (
-          <Button variant="secondary" size="sm" onClick={openVoice}>
+          <Button variant="secondary" size="portal" onClick={openVoice} className="font-semibold text-forest">
             <Mic className="h-4 w-4" /> {t("market.listOnMarket")}
           </Button>
         )}
@@ -229,9 +230,9 @@ export default function MarketPage() {
         </section>
       )}
 
-      <div className="mt-2 space-y-2.5 pb-4">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pb-6">
         {listings.isLoading &&
-          [0, 1, 2].map((i) => <Skeleton key={i} className="h-32 w-full" />)}
+          [0, 1, 2, 3, 4, 5].map((i) => <Skeleton key={i} className="h-40 w-full rounded-xl" />)}
 
         {!listings.isLoading && (listings.data?.length ?? 0) === 0 && (
           <EmptyState
@@ -351,6 +352,6 @@ export default function MarketPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

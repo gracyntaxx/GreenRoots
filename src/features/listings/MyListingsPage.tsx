@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/form";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ConfirmSheet } from "@/components/shared/ConfirmSheet";
 import { WASTE_LABELS, type QtyUnit } from "@/types";
@@ -92,33 +93,35 @@ export default function MyListingsPage() {
   const activeCount = rows.filter((l) => l.status === "Active").length;
 
   return (
-    <div className="px-4 pt-4 pb-4">
-      <div className="flex items-center justify-between gap-2">
+    <PageContainer>
+      <div className="flex items-center justify-between gap-2 border-b border-line pb-4 dark:border-portal-line">
         <div>
-          <h1 className="text-xl font-bold text-ink">My listings</h1>
-          <p className="text-[12px] text-muted">
+          <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">My listings</h1>
+          <p className="mt-1 text-sm text-muted dark:text-portal-muted">
             {activeCount} active · {rows.length} total
           </p>
         </div>
-        <Button variant="secondary" size="sm" onClick={openVoice}>
+        <Button variant="secondary" size="portal" onClick={openVoice} className="font-semibold text-forest">
           <Mic className="h-4 w-4" /> New listing
         </Button>
       </div>
 
-      <div className="mt-3 space-y-2.5">
-        {listings.isLoading && [0, 1].map((i) => <Skeleton key={i} className="h-36 w-full" />)}
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {listings.isLoading && [0, 1, 2].map((i) => <Skeleton key={i} className="h-44 w-full rounded-xl" />)}
 
         {!listings.isLoading && rows.length === 0 && (
-          <EmptyState
-            icon={<FileText className="h-7 w-7" />}
-            title="No listings yet"
-            body="Use the microphone to create your first listing. AI will prepare a draft for you to check."
-            action={
-              <Button variant="secondary" size="sm" onClick={openVoice}>
-                <Mic className="h-4 w-4" /> Speak to sell
-              </Button>
-            }
-          />
+          <div className="col-span-full">
+            <EmptyState
+              icon={<FileText className="h-7 w-7" />}
+              title="No listings yet"
+              body="Use the microphone to create your first listing. AI will prepare a draft for you to check."
+              action={
+                <Button variant="secondary" size="sm" onClick={openVoice}>
+                  <Mic className="h-4 w-4" /> Speak to sell
+                </Button>
+              }
+            />
+          </div>
         )}
 
         {rows.map((l) => (
@@ -243,6 +246,6 @@ export default function MyListingsPage() {
         loading={busy}
         onConfirm={remove}
       />
-    </div>
+    </PageContainer>
   );
 }

@@ -15,6 +15,7 @@ import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatNumber } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 type SortKey = "score" | "distance" | "quantity";
 
@@ -61,7 +62,7 @@ export default function MatchesPage() {
   const active = rows.find((m) => m.id === explainFor);
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Farmer matches"
         description="Ranked on recorded distance, quantity fit and trust. AI explains a rank; you decide whether to invite."
@@ -230,6 +231,6 @@ export default function MatchesPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

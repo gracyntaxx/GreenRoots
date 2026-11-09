@@ -14,6 +14,7 @@ import { WASTE_LABELS, type Listing, type WasteType } from "@/types";
 import { formatMoney } from "@/lib/money";
 import { kgToBestDisplay } from "@/lib/units";
 import { formatDate, cn } from "@/lib/utils";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 const statusTone: Record<string, string> = {
   Active: "bg-meadow text-forest dark:bg-[#123524] dark:text-growth",
@@ -73,13 +74,13 @@ export default function AdminListingsPage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Listings"
         description="All farmer listings, including voice-created drafts. Removing a listing requires a reason and is recorded in the audit log."
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Total listings" value={all.length} icon={<PackageSearch className="h-5 w-5 text-forest" />} />
         <StatCard label="Active" value={all.filter((l) => l.status === "Active").length} tone="success" />
         <StatCard label="Voice-created" value={all.filter((l) => l.source === "voice").length} sub="AI-assisted drafts" icon={<Mic className="h-5 w-5 text-ai" />} />
@@ -135,65 +136,113 @@ export default function AdminListingsPage() {
 
       {rows.length > 0 && (
         <PortalCard className="mt-3 overflow-hidden">
-          <Table>
-            <THead>
-              <TR>
-                <TH>Listing</TH>
-                <TH>Farmer</TH>
-                <TH>Quantity</TH>
-                <TH>Rate</TH>
-                <TH>Status</TH>
-                <TH>Source</TH>
-                <TH>Created</TH>
-                <TH className="text-right">Action</TH>
-              </TR>
-            </THead>
-            <TBody>
-              {rows.map((l) => (
-                <TR key={l.id}>
-                  <TD>
-                    <p className="font-semibold">{WASTE_LABELS[l.wasteType]}</p>
-                    <p className="num text-[10px] text-muted dark:text-portal-muted">{l.id}</p>
-                  </TD>
-                  <TD>
-                    <p className="text-[12px] font-medium">{l.farmerName}</p>
-                    <p className="text-[10px] text-muted dark:text-portal-muted">{l.village}</p>
-                  </TD>
-                  <TD className="num">{kgToBestDisplay(l.quantityKg)}</TD>
-                  <TD className="num">
-                    {formatMoney(l.ratePerUnit)}
-                    <span className="text-[10px] text-muted dark:text-portal-muted">/{l.rateUnit}</span>
-                  </TD>
-                  <TD>
-                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", statusTone[l.status])}>
-                      {l.status}
-                    </span>
-                  </TD>
-                  <TD>
-                    <span className="inline-flex items-center gap-1 text-[11px] capitalize">
-                      {l.source === "voice" && <Mic className="h-3 w-3 text-ai" />}
-                      {l.source}
-                    </span>
-                  </TD>
-                  <TD className="num text-[11px]">{formatDate(l.createdAt)}</TD>
-                  <TD className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-error hover:bg-error/10"
-                      onClick={() => {
-                        setTarget(l);
-                        setReason("");
-                        setReasonError(null);
-                      }}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" /> Remove
-                    </Button>
-                  </TD>
+          {/* Mobile card stack */}
+          <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
+            {rows.map((l) => (
+              <div key={l.id} className="p-3.5 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-semibold text-sm">{WASTE_LABELS[l.wasteType]}</p>
+                    <p className="text-xs text-muted dark:text-portal-muted">{l.farmerName} · {l.village}</p>
+                  </div>
+                  <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", statusTone[l.status])}>
+                    {l.status}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Quantity: </span>
+                    <span className="num font-semibold">{kgToBestDisplay(l.quantityKg)}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Rate: </span>
+                    <span className="num font-semibold">{formatMoney(l.ratePerUnit)}/{l.rateUnit}</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-1 border-t border-line/60 dark:border-portal-line/60">
+                  <span className="inline-flex items-center gap-1 text-[11px] capitalize text-muted dark:text-portal-muted">
+                    {l.source === "voice" && <Mic className="h-3 w-3 text-ai" />}
+                    {l.source} · {formatDate(l.createdAt)}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-error hover:bg-error/10 text-xs h-7 px-2"
+                    onClick={() => {
+                      setTarget(l);
+                      setReason("");
+                      setReasonError(null);
+                    }}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> Remove
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
+            <Table>
+              <THead>
+                <TR>
+                  <TH>Listing</TH>
+                  <TH>Farmer</TH>
+                  <TH>Quantity</TH>
+                  <TH>Rate</TH>
+                  <TH>Status</TH>
+                  <TH>Source</TH>
+                  <TH>Created</TH>
+                  <TH className="text-right">Action</TH>
                 </TR>
-              ))}
-            </TBody>
-          </Table>
+              </THead>
+              <TBody>
+                {rows.map((l) => (
+                  <TR key={l.id}>
+                    <TD>
+                      <p className="font-semibold">{WASTE_LABELS[l.wasteType]}</p>
+                      <p className="num text-[10px] text-muted dark:text-portal-muted">{l.id}</p>
+                    </TD>
+                    <TD>
+                      <p className="text-[12px] font-medium">{l.farmerName}</p>
+                      <p className="text-[10px] text-muted dark:text-portal-muted">{l.village}</p>
+                    </TD>
+                    <TD className="num">{kgToBestDisplay(l.quantityKg)}</TD>
+                    <TD className="num">
+                      {formatMoney(l.ratePerUnit)}
+                      <span className="text-[10px] text-muted dark:text-portal-muted">/{l.rateUnit}</span>
+                    </TD>
+                    <TD>
+                      <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", statusTone[l.status])}>
+                        {l.status}
+                      </span>
+                    </TD>
+                    <TD>
+                      <span className="inline-flex items-center gap-1 text-[11px] capitalize">
+                        {l.source === "voice" && <Mic className="h-3 w-3 text-ai" />}
+                        {l.source}
+                      </span>
+                    </TD>
+                    <TD className="num text-[11px]">{formatDate(l.createdAt)}</TD>
+                    <TD className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-error hover:bg-error/10"
+                        onClick={() => {
+                          setTarget(l);
+                          setReason("");
+                          setReasonError(null);
+                        }}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Remove
+                      </Button>
+                    </TD>
+                  </TR>
+                ))}
+              </TBody>
+            </Table>
+          </div>
         </PortalCard>
       )}
 
@@ -235,6 +284,6 @@ export default function AdminListingsPage() {
           </p>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

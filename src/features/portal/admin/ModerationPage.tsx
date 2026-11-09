@@ -12,6 +12,7 @@ import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { ModerationFlag } from "@/types";
 import { timeAgo, cn } from "@/lib/utils";
+import { PageContainer } from "@/components/shared/PageContainer";
 
 const statusTone: Record<string, string> = {
   Open: "bg-settle/15 text-[#92400E]",
@@ -73,13 +74,13 @@ export default function ModerationPage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <PortalPageHeader
         title="Moderation flags"
         description="Rule-based and AI-flagged activity. A flag is a prompt for a human decision, never an automatic punishment."
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Open" value={all.filter((f) => f.status === "Open").length} tone={all.some((f) => f.status === "Open") ? "warning" : "success"} icon={<ShieldAlert className="h-5 w-5 text-settle" />} />
         <StatCard label="AI flagged" value={all.filter((f) => f.source === "AI").length} sub="Needs human review" icon={<Sparkles className="h-5 w-5 text-ai" />} />
         <StatCard label="Rule flagged" value={all.filter((f) => f.source === "Rule").length} />
@@ -222,6 +223,6 @@ export default function ModerationPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

@@ -18,6 +18,7 @@ import { poolService } from "@/services/poolService";
 import { paymentService } from "@/services/paymentService";
 import { payoutService } from "@/services/payoutService";
 import { PortalPageHeader, StatCard } from "@/components/shared/PageHeader";
+import { PageContainer } from "@/components/shared/PageContainer";
 import { PoolProgress } from "@/components/shared/PoolProgress";
 import { StatusChip } from "@/components/shared/StatusTriad";
 import { SandboxStrip, SimulatedChip, VerifiedMark, AiChip } from "@/components/shared/Marks";
@@ -146,10 +147,10 @@ export default function IndustryPoolDetailPage() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <Link
         to="/portal/pools"
-        className="mb-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-muted hover:text-forest dark:text-portal-muted dark:hover:text-growth"
+        className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-muted hover:text-forest dark:text-portal-muted dark:hover:text-growth"
       >
         <ArrowLeft className="h-4 w-4" /> Back to pools
       </Link>
@@ -178,7 +179,7 @@ export default function IndustryPoolDetailPage() {
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Committed" value={kgToBestDisplay(p.committedKg)} sub={`of ${kgToBestDisplay(p.targetKg)} target`} tone="success" />
         <StatCard label="Farmers" value={p.contributionCount} sub="contributing to this pool" icon={<Users className="h-5 w-5 text-forest" />} />
         <StatCard label="Agreed rate" value={`₹${formatMoney(p.ratePerUnit)}`} sub={`per ${p.rateUnit} · ₹${ratePerKg.toFixed(2)}/kg`} />
@@ -246,39 +247,73 @@ export default function IndustryPoolDetailPage() {
           <p className="text-[13px] font-bold">Farmer contributions</p>
           <span className="text-[11px] text-muted dark:text-portal-muted">{rows.length} records</span>
         </div>
-        <Table>
-          <THead>
-            <TR>
-              <TH>Farmer</TH>
-              <TH>Village</TH>
-              <TH>Committed</TH>
-              <TH>Accepted</TH>
-              <TH>Fulfilment</TH>
-              <TH>Payment</TH>
-              <TH>Payout</TH>
-            </TR>
-          </THead>
-          <TBody>
-            {rows.map((c) => (
-              <TR key={c.id}>
-                <TD className="font-semibold">{c.farmerName}</TD>
-                <TD>{c.farmerVillage}</TD>
-                <TD className="num">{c.committedKg} kg</TD>
-                <TD className="num">{c.acceptedKg != null ? `${c.acceptedKg} kg` : "—"}</TD>
-                <TD><StatusChip status={c.fulfilment} size="sm" /></TD>
-                <TD><StatusChip status={c.payment} size="sm" /></TD>
-                <TD><StatusChip status={c.payout} size="sm" /></TD>
-              </TR>
-            ))}
-            {rows.length === 0 && (
+
+        {/* Mobile card stack */}
+        <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
+          {rows.map((c) => (
+            <div key={c.id} className="p-3.5 space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold">{c.farmerName}</p>
+                  <p className="text-xs text-muted dark:text-portal-muted">{c.farmerVillage}</p>
+                </div>
+                <div className="text-right">
+                  <p className="num text-sm font-bold">{c.committedKg} kg</p>
+                  <p className="num text-xs text-muted dark:text-portal-muted">
+                    Accepted: {c.acceptedKg != null ? `${c.acceptedKg} kg` : "—"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-line/60 dark:border-portal-line/60">
+                <StatusChip status={c.fulfilment} size="sm" />
+                <StatusChip status={c.payment} size="sm" />
+                <StatusChip status={c.payout} size="sm" />
+              </div>
+            </div>
+          ))}
+          {rows.length === 0 && (
+            <div className="py-6 text-center text-xs text-muted dark:text-portal-muted">
+              No contributions yet.
+            </div>
+          )}
+        </div>
+
+        {/* Desktop / tablet table */}
+        <div className="hidden sm:block overflow-x-auto">
+          <Table>
+            <THead>
               <TR>
-                <TD colSpan={7} className="py-6 text-center text-muted dark:text-portal-muted">
-                  No contributions yet.
-                </TD>
+                <TH>Farmer</TH>
+                <TH>Village</TH>
+                <TH>Committed</TH>
+                <TH>Accepted</TH>
+                <TH>Fulfilment</TH>
+                <TH>Payment</TH>
+                <TH>Payout</TH>
               </TR>
-            )}
-          </TBody>
-        </Table>
+            </THead>
+            <TBody>
+              {rows.map((c) => (
+                <TR key={c.id}>
+                  <TD className="font-semibold">{c.farmerName}</TD>
+                  <TD>{c.farmerVillage}</TD>
+                  <TD className="num">{c.committedKg} kg</TD>
+                  <TD className="num">{c.acceptedKg != null ? `${c.acceptedKg} kg` : "—"}</TD>
+                  <TD><StatusChip status={c.fulfilment} size="sm" /></TD>
+                  <TD><StatusChip status={c.payment} size="sm" /></TD>
+                  <TD><StatusChip status={c.payout} size="sm" /></TD>
+                </TR>
+              ))}
+              {rows.length === 0 && (
+                <TR>
+                  <TD colSpan={7} className="py-6 text-center text-muted dark:text-portal-muted">
+                    No contributions yet.
+                  </TD>
+                </TR>
+              )}
+            </TBody>
+          </Table>
+        </div>
       </PortalCard>
 
       <PortalCard className="mt-4 p-4">
@@ -354,35 +389,72 @@ export default function IndustryPoolDetailPage() {
               Net total {formatMoney(payableRows.reduce((s, r) => s + r.net, 0))}
             </span>
           </div>
-          <Table>
-            <THead>
-              <TR>
-                <TH>Farmer</TH>
-                <TH>Accepted</TH>
-                <TH>Gross</TH>
-                <TH>Commission</TH>
-                <TH>Net</TH>
-                <TH>Payout</TH>
-              </TR>
-            </THead>
-            <TBody>
-              {payableRows.map((r) => (
-                <TR key={r.id}>
-                  <TD className="font-semibold">{r.farmerName}</TD>
-                  <TD className="num">{r.acceptedKg} kg</TD>
-                  <TD className="num">{formatMoney(r.gross)}</TD>
-                  <TD className="num">{formatMoney(r.commission)}</TD>
-                  <TD className="num font-bold">{formatMoney(r.net)}</TD>
-                  <TD>
-                    <div className="flex items-center gap-1">
-                      <StatusChip status={r.payout} size="sm" />
-                      {r.simulated && <SimulatedChip />}
-                    </div>
-                  </TD>
+
+          {/* Mobile card stack */}
+          <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
+            {payableRows.map((r) => (
+              <div key={r.id} className="p-3.5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold">{r.farmerName}</p>
+                  <div className="flex items-center gap-1">
+                    <StatusChip status={r.payout} size="sm" />
+                    {r.simulated && <SimulatedChip />}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Accepted: </span>
+                    <span className="num font-medium">{r.acceptedKg} kg</span>
+                  </div>
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Gross: </span>
+                    <span className="num font-medium">{formatMoney(r.gross)}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Commission: </span>
+                    <span className="num font-medium">{formatMoney(r.commission)}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted dark:text-portal-muted">Net: </span>
+                    <span className="num font-bold text-forest dark:text-growth">{formatMoney(r.net)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
+            <Table>
+              <THead>
+                <TR>
+                  <TH>Farmer</TH>
+                  <TH>Accepted</TH>
+                  <TH>Gross</TH>
+                  <TH>Commission</TH>
+                  <TH>Net</TH>
+                  <TH>Payout</TH>
                 </TR>
-              ))}
-            </TBody>
-          </Table>
+              </THead>
+              <TBody>
+                {payableRows.map((r) => (
+                  <TR key={r.id}>
+                    <TD className="font-semibold">{r.farmerName}</TD>
+                    <TD className="num">{r.acceptedKg} kg</TD>
+                    <TD className="num">{formatMoney(r.gross)}</TD>
+                    <TD className="num">{formatMoney(r.commission)}</TD>
+                    <TD className="num font-bold">{formatMoney(r.net)}</TD>
+                    <TD>
+                      <div className="flex items-center gap-1">
+                        <StatusChip status={r.payout} size="sm" />
+                        {r.simulated && <SimulatedChip />}
+                      </div>
+                    </TD>
+                  </TR>
+                ))}
+              </TBody>
+            </Table>
+          </div>
         </PortalCard>
       )}
 
@@ -477,6 +549,6 @@ export default function IndustryPoolDetailPage() {
       <p className="mt-3 flex items-center gap-1 text-[11px] text-muted dark:text-portal-muted">
         <Sparkles className="h-3 w-3 text-ai" /> AI suggestions are based on recorded pool numbers and never act alone.
       </p>
-    </div>
+    </PageContainer>
   );
 }
