@@ -38,7 +38,7 @@ interface Notice {
   tone?: "warning" | "error";
 }
 
-const DEMO_SENTENCES = {
+const EXAMPLE_SENTENCES = {
   husk: "I have 200 kg of rice husk available at this location, 8 rupees per kg.",
   mustard: "I have 3 quintals of mustard stubble in Rewari at 1400 rupees per quintal by 20 April.",
 };
@@ -359,27 +359,27 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
             </div>
 
             <div className="mt-4 w-full rounded-xl border border-line bg-canvas p-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Try a demo sentence</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Example phrases</p>
               <div className="mt-2 space-y-2">
                 <button
                   type="button"
                   onClick={() => {
-                    updateTranscript(DEMO_SENTENCES.husk);
-                    void parse(DEMO_SENTENCES.husk);
+                    updateTranscript(EXAMPLE_SENTENCES.husk);
+                    void parse(EXAMPLE_SENTENCES.husk);
                   }}
                   className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-left text-[12px] text-ink hover:border-forest/40"
                 >
-                  “{DEMO_SENTENCES.husk}”
+                  “{EXAMPLE_SENTENCES.husk}”
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    updateTranscript(DEMO_SENTENCES.mustard);
-                    void parse(DEMO_SENTENCES.mustard);
+                    updateTranscript(EXAMPLE_SENTENCES.mustard);
+                    void parse(EXAMPLE_SENTENCES.mustard);
                   }}
                   className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-left text-[12px] text-ink hover:border-forest/40"
                 >
-                  “{DEMO_SENTENCES.mustard}”
+                  “{EXAMPLE_SENTENCES.mustard}”
                 </button>
               </div>
             </div>

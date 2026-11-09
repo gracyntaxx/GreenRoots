@@ -78,40 +78,10 @@ export function EstimateLabel({
   );
 }
 
-export function SandboxStrip({ className, compact }: { className?: string; compact?: boolean }) {
-  const { t } = useTranslation();
-  return (
-    <div
-      role="status"
-      className={cn(
-        "flex items-start gap-2 border-y border-settle/50 bg-[#FEF3C7] px-3 py-2 text-[12px] font-semibold leading-snug text-[#92400E]",
-        className
-      )}
-    >
-      <FlaskConical className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-      <span>{compact ? t("common.sandboxShort") : t("common.sandbox")}</span>
-    </div>
-  );
+export function SandboxStrip(_props?: { className?: string; compact?: boolean }) {
+  return null;
 }
 
-export function SimulatedChip({ className }: { className?: string }) {
-  const { t } = useTranslation();
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <span
-          className={cn(
-            "inline-flex items-center gap-1 rounded-full border border-settle/40 bg-[#FEF3C7] px-2 py-0.5 text-[12px] font-semibold text-[#92400E]",
-            className
-          )}
-        >
-          <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
-          {t("common.simulated")}
-        </span>
-      </TooltipTrigger>
-      <TooltipContent>
-        This payout was simulated in the prototype. No real money moved.
-      </TooltipContent>
-    </Tooltip>
-  );
+export function SimulatedChip(_props?: { className?: string }) {
+  return null;
 }

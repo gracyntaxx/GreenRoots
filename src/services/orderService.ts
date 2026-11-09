@@ -4,7 +4,7 @@ import { createOrder, getState, MockError } from "@/mocks/store";
 
 export const orderService = {
   list(profile: Profile): Promise<Order[]> {
-    return call("orders/list", undefined, () => {
+    return call("orders/list", { method: "POST", body: JSON.stringify({ profile }) }, () => {
       const { orders } = getState();
       if (profile.role === "buyer") return orders.filter((o) => o.buyerId === profile.id);
       if (profile.role === "farmer") return orders.filter((o) => o.farmerId === profile.id);
@@ -14,7 +14,7 @@ export const orderService = {
   },
 
   get(id: string): Promise<Order> {
-    return call("orders/get", undefined, () => {
+    return call(`orders/get?id=${encodeURIComponent(id)}`, { method: "POST", body: JSON.stringify({ id }) }, () => {
       const o = getState().orders.find((x) => x.id === id);
       if (!o) throw new MockError("Order not found", "NOT_FOUND");
       return o;

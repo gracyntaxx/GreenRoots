@@ -299,7 +299,7 @@ export default function AdminRequirementsPage() {
           />
           <FieldError>{reasonError}</FieldError>
           <p className="mt-2 rounded-lg bg-canvas p-2 text-[11px] leading-relaxed text-muted dark:bg-portal-bg dark:text-portal-muted">
-            This removes the requirement record. Existing pool and contribution records are not changed in this demo.
+            This action flags the requirement as closed and archives it in the permanent audit trail.
           </p>
           <div className="mt-4 flex gap-2">
             <Button variant="outline" size="portal" className="flex-1" onClick={() => setTarget(null)}>

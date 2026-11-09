@@ -1,0 +1,280 @@
+{
+  "info": {
+    "name": "GreenRoots API",
+    "description": "Supabase Edge Functions Collection for GreenRoots Agricultural Waste Marketplace & Settlement",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Demo Login (Farmer)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"farmer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/auth/demo-login",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "auth", "demo-login"]
+            }
+          }
+        },
+        {
+          "name": "Request OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9812345670\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/auth/request-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "auth", "request-otp"]
+            }
+          }
+        },
+        {
+          "name": "Login Phone",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9812345670\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/auth/login-phone",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "auth", "login-phone"]
+            }
+          }
+        },
+        {
+          "name": "Login Email (Industry)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"procurement@panipatbiomass.example\",\n  \"password\": \"demo1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/auth/login-email",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "auth", "login-email"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Assistant",
+      "item": [
+        {
+          "name": "Parse Listing Text",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"I have 50 quintals of paddy straw in Rewari for 1200 rupees per quintal\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/ai/parse-listing",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "ai", "parse-listing"]
+            }
+          }
+        },
+        {
+          "name": "Explain Pool Progress",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"committedKg\": 62000,\n  \"targetKg\": 100000,\n  \"deadline\": \"2026-11-15T18:00:00Z\",\n  \"contributionCount\": 7\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/ai/explain-pool",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "ai", "explain-pool"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listings",
+      "item": [
+        {
+          "name": "List Listings",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"wasteType\": \"all\",\n  \"sort\": \"nearest\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/listings/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "listings", "list"]
+            }
+          }
+        },
+        {
+          "name": "Recommend Listings",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/listings/recommend",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "listings", "recommend"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pools",
+      "item": [
+        {
+          "name": "List Pools",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/pools/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "pools", "list"]
+            }
+          }
+        },
+        {
+          "name": "Commit to Pool",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"poolId\": \"pool_paddy_panipat\",\n  \"farmer\": {\n    \"id\": \"farmer_1\",\n    \"name\": \"Ramesh Yadav\",\n    \"village\": \"Rewari\"\n  },\n  \"quantityKg\": 5000,\n  \"collectionPointId\": \"cp_rewari_central\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/pools/commit",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "pools", "commit"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments & PayPal",
+      "item": [
+        {
+          "name": "Create PayPal Order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scope\": \"order\",\n  \"referenceId\": \"order_ricehusk_500\",\n  \"amount\": 1200,\n  \"idempotencyKey\": \"test_idem_001\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/payments/create-order",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "payments", "create-order"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Payment (Capture)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentId\": \"pay_order_ricehusk\",\n  \"outcome\": \"approve\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/payments/confirm",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "payments", "confirm"]
+            }
+          }
+        },
+        {
+          "name": "Simulate PayPal Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "paypal-auth-algo", "value": "SHA256withRSA" },
+              { "key": "paypal-transmission-id", "value": "test-transmission-001" },
+              { "key": "paypal-transmission-sig", "value": "test-signature" },
+              { "key": "paypal-transmission-time", "value": "2026-11-09T12:00:00Z" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"WH-EVENT-998877\",\n  \"event_type\": \"PAYMENT.CAPTURE.COMPLETED\",\n  \"create_time\": \"2026-11-09T12:00:00Z\",\n  \"resource\": {\n    \"id\": \"CAP-TEST-123\",\n    \"status\": \"COMPLETED\",\n    \"amount\": {\n      \"currency_code\": \"USD\",\n      \"value\": \"14.28\"\n    },\n    \"supplementary_data\": {\n      \"related_ids\": {\n        \"order_id\": \"PP-7K2A1M4QX\"\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/paypal-webhook",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "paypal-webhook"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collection Points & Routing",
+      "item": [
+        {
+          "name": "List Collection Points",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/collection-points/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "collection-points", "list"]
+            }
+          }
+        },
+        {
+          "name": "Calculate Vehicle Route",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": { \"lat\": 28.199, \"lng\": 76.618 },\n  \"vehicleCapacityKg\": 5000,\n  \"stops\": [\n    { \"id\": \"s1\", \"name\": \"Farmer 1\", \"location\": { \"lat\": 28.075, \"lng\": 76.585 }, \"quantityKg\": 2000 },\n    { \"id\": \"s2\", \"name\": \"Farmer 2\", \"location\": { \"lat\": 28.210, \"lng\": 76.630 }, \"quantityKg\": 4000 }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/functions/v1/collection-points/route",
+              "host": ["{{baseUrl}}"],
+              "path": ["functions", "v1", "collection-points", "route"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

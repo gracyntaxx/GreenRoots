@@ -23,9 +23,10 @@ const roleCards: { role: SignupRole; title: string; body: string; icon: typeof S
 
 const baseSchema = z.object({
   name: z.string().min(2, "Enter your name."),
+  email: z.string().email("Enter a valid email address."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
   phone: z.string().regex(/^\d{10}$/, "Enter a 10-digit phone number."),
   village: z.string().min(1, "Choose your village."),
-  otp: z.string().regex(/^\d{6}$/, "Enter the 6-digit code."),
 });
 
 const industrySchema = z.object({
@@ -33,6 +34,7 @@ const industrySchema = z.object({
   contactPerson: z.string().min(2, "Enter a contact person."),
   email: z.string().email("Enter a valid work email."),
   password: z.string().min(6, "Use at least 6 characters."),
+  phone: z.string().regex(/^\d{10}$/, "Enter a 10-digit phone number.").optional().or(z.literal("")),
   licenseNumber: z.string().min(3, "Enter your licence number."),
   village: z.string().min(1, "Choose the plant location."),
 });
@@ -86,11 +88,16 @@ export default function SignupPage() {
           companyName: parsed.data.companyName,
           contactPerson: parsed.data.contactPerson,
           email: parsed.data.email,
+          password: parsed.data.password,
+          phone: form.phone || undefined,
           village: parsed.data.village,
           state,
           language: language as Language,
           licenseNumber: parsed.data.licenseNumber,
         });
+        if (!p || !p.role) {
+          throw new Error("Could not initialize your profile. Please try signing in.");
+        }
         setProfile(p);
         setOnboardingSeen(false);
         pushToast({
@@ -116,20 +123,21 @@ export default function SignupPage() {
       setErrors(next);
       return;
     }
-    if (parsed.data.otp !== "123456") {
-      setErrors({ otp: "That code is not correct. Use 123456 in the demo." });
-      return;
-    }
     setBusy(true);
     try {
       const p = await authService.signup({
         role,
         name: parsed.data.name,
+        email: parsed.data.email,
+        password: parsed.data.password,
         phone: parsed.data.phone,
         village: parsed.data.village,
         state,
         language: language as Language,
       });
+      if (!p || !p.role) {
+        throw new Error("Could not initialize your profile. Please try signing in.");
+      }
       setProfile(p);
       setOnboardingSeen(false);
       pushToast({ title: "Welcome to GreenRoots", description: "Your account is ready.", variant: "success" });
@@ -249,6 +257,17 @@ export default function SignupPage() {
                     />
                     <FieldError>{errors.licenseNumber}</FieldError>
                   </div>
+                  <div>
+                    <Label htmlFor="su-phone">Contact phone number</Label>
+                    <Input
+                      id="su-phone"
+                      inputMode="numeric"
+                      value={form.phone ?? ""}
+                      onChange={(e) => set("phone", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                      placeholder="10-digit mobile number (optional)"
+                    />
+                    <FieldError>{errors.phone}</FieldError>
+                  </div>
                 </>
               ) : (
                 <>
@@ -259,8 +278,35 @@ export default function SignupPage() {
                       value={form.name ?? ""}
                       onChange={(e) => set("name", e.target.value)}
                       placeholder={role === "farmer" ? "Full name" : "e.g. Amit Traders"}
+                      required
                     />
                     <FieldError>{errors.name}</FieldError>
+                  </div>
+                  <div>
+                    <Label htmlFor="su-email">Email address</Label>
+                    <Input
+                      id="su-email"
+                      type="email"
+                      autoComplete="email"
+                      value={form.email ?? ""}
+                      onChange={(e) => set("email", e.target.value)}
+                      placeholder="you@example.com"
+                      required
+                    />
+                    <FieldError>{errors.email}</FieldError>
+                  </div>
+                  <div>
+                    <Label htmlFor="su-password">Password</Label>
+                    <Input
+                      id="su-password"
+                      type="password"
+                      autoComplete="new-password"
+                      value={form.password ?? ""}
+                      onChange={(e) => set("password", e.target.value)}
+                      placeholder="At least 6 characters"
+                      required
+                    />
+                    <FieldError>{errors.password}</FieldError>
                   </div>
                   <div>
                     <Label htmlFor="su-phone">Phone number</Label>
@@ -270,6 +316,7 @@ export default function SignupPage() {
                       value={form.phone ?? ""}
                       onChange={(e) => set("phone", e.target.value.replace(/\D/g, "").slice(0, 10))}
                       placeholder="10-digit mobile number"
+                      required
                     />
                     <FieldError>{errors.phone}</FieldError>
                   </div>
@@ -310,22 +357,6 @@ export default function SignupPage() {
                 </select>
               </div>
 
-              {role !== "industry" && (
-                <div>
-                  <Label htmlFor="su-otp">Phone verification code</Label>
-                  <Input
-                    id="su-otp"
-                    inputMode="numeric"
-                    value={form.otp ?? ""}
-                    onChange={(e) => set("otp", e.target.value.replace(/\D/g, "").slice(0, 6))}
-                    placeholder="6-digit code"
-                    className="num tracking-[0.4em]"
-                  />
-                  <FieldHint>Demo OTP is 123456. In production this is sent by SMS.</FieldHint>
-                  <FieldError>{errors.otp}</FieldError>
-                </div>
-              )}
-
               {role === "industry" && (
                 <div className="rounded-lg border border-settle/40 bg-settle/10 p-3 text-[11px] leading-relaxed text-ink">
                   Publishing requirements stays disabled until an admin verifies your licence. You can browse,
@@ -354,7 +385,7 @@ export default function SignupPage() {
               </div>
 
               <p className="text-center text-[11px] text-muted">
-                By continuing you agree to the GreenRoots demo terms. No real payments are taken.
+                By continuing you agree to the GreenRoots Terms of Service and Privacy Policy.
               </p>
             </form>
           )}

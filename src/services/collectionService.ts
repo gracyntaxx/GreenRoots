@@ -9,7 +9,7 @@ export interface CollectionPointWithDistance extends CollectionPoint {
 
 export const collectionService = {
   list(origin: Profile): Promise<CollectionPointWithDistance[]> {
-    return call("collection-points/list", undefined, () =>
+    return call("collection-points/list", { method: "POST", body: JSON.stringify({ origin: origin.location }) }, () =>
       getState()
         .collectionPoints.map((c) => ({ ...c, distanceKm: haversineKm(origin.location, c.location) }))
         .sort((a, b) => a.distanceKm - b.distanceKm)
@@ -17,7 +17,7 @@ export const collectionService = {
   },
 
   get(id: string): Promise<CollectionPoint> {
-    return call("collection-points/get", undefined, () => {
+    return call(`collection-points/get?id=${encodeURIComponent(id)}`, undefined, () => {
       const c = getState().collectionPoints.find((x) => x.id === id);
       if (!c) throw new MockError("Collection point not found", "NOT_FOUND");
       return c;
@@ -25,7 +25,7 @@ export const collectionService = {
   },
 
   suggest(origin: Profile, destination?: LatLng): Promise<CollectionPointWithDistance> {
-    return call("collection-points/suggest", undefined, () => {
+    return call("collection-points/suggest", { method: "POST", body: JSON.stringify({ origin: origin.location, destination }) }, () => {
       const target = destination ?? origin.location;
       const active = getState().collectionPoints.filter((c) => c.active);
       if (!active.length) throw new MockError("No active collection points nearby.", "NOT_FOUND");

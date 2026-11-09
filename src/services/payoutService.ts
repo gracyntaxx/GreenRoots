@@ -4,7 +4,7 @@ import { approvePayout, getState, MockError } from "@/mocks/store";
 
 export const payoutService = {
   list(poolId?: string): Promise<FarmerPayable[]> {
-    return call("payouts/list", undefined, () => {
+    return call(poolId ? `payouts/list?poolId=${encodeURIComponent(poolId)}` : "payouts/list", undefined, () => {
       const rows = getState().payables;
       return poolId ? rows.filter((p) => p.poolId === poolId) : rows;
     });

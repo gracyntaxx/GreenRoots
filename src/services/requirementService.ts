@@ -13,7 +13,7 @@ export interface RequirementWithDistance extends Requirement {
 
 export const requirementService = {
   list(origin: Profile): Promise<RequirementWithDistance[]> {
-    return call("requirements/list", undefined, () => {
+    return call("requirements/list", { method: "POST", body: JSON.stringify({ origin: origin.location }) }, () => {
       const { requirements, pools } = getState();
       return requirements.map((r) => {
         const pool = pools.find((p) => p.id === r.poolId);
@@ -30,7 +30,7 @@ export const requirementService = {
   },
 
   get(id: string, origin: Profile): Promise<RequirementWithDistance> {
-    return call("requirements/get", undefined, () => {
+    return call(`requirements/get?id=${encodeURIComponent(id)}`, { method: "POST", body: JSON.stringify({ id, origin: origin.location }) }, () => {
       const r = getState().requirements.find((x) => x.id === id);
       if (!r) throw new MockError("Requirement not found", "NOT_FOUND");
       const pool = getState().pools.find((p) => p.id === r.poolId);
@@ -45,7 +45,7 @@ export const requirementService = {
   },
 
   create(industry: Profile, draft: RequirementDraft): Promise<{ requirement: Requirement; poolId: string }> {
-    return call("requirements/create", { method: "POST", body: JSON.stringify(draft) }, () => {
+    return call("requirements/create", { method: "POST", body: JSON.stringify({ ...draft, industry }) }, () => {
       if (!draft.wasteType || !draft.quantity || !draft.rate || !draft.deadline || !draft.location) {
         throw new MockError("Some required details are missing.", "VALIDATION");
       }

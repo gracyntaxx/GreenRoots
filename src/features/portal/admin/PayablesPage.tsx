@@ -26,7 +26,6 @@ export default function PayablesPage() {
   const [q, setQ] = useState("");
   const [payout, setPayout] = useState<FarmerPayable["payout"] | "all">("all");
   const [target, setTarget] = useState<FarmerPayable | null>(null);
-  const [simulate, setSimulate] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const all = payables.data ?? [];
@@ -46,18 +45,17 @@ export default function PayablesPage() {
     if (!target) return;
     setBusy(true);
     try {
-      await payoutService.approve(target.id, simulate);
+      await payoutService.approve(target.id, false);
       pushToast({
-        title: simulate ? "Payout simulated" : "Payout approved",
+        title: "Payout approved",
         description: `${target.farmerName} · ${formatMoney(target.net)}`,
-        variant: simulate ? "warning" : "success",
+        variant: "success",
       });
       qc.invalidateQueries({ queryKey: ["payouts"] });
       qc.invalidateQueries({ queryKey: ["admin-payables"] });
       qc.invalidateQueries({ queryKey: ["audit"] });
       qc.invalidateQueries({ queryKey: ["pool"] });
       setTarget(null);
-      setSimulate(false);
     } catch (e) {
       pushToast({ title: "Could not approve payout", description: e instanceof Error ? e.message : "", variant: "error" });
     } finally {
@@ -69,12 +67,12 @@ export default function PayablesPage() {
     <PageContainer>
       <PortalPageHeader
         title="Payables & payouts"
-        description="Farmer-wise payables prepared after a verified pool payment. Every payout needs a human decision; simulated payouts are labelled."
+        description="Farmer-wise payables prepared after a verified pool payment. Every payout requires administrator approval before disbursement."
       />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Net payable" value={formatMoney(summary.totalNet)} sub={`${all.length} farmer records`} icon={<Banknote className="h-5 w-5 text-forest" />} />
-        <StatCard label="Completed" value={summary.completedCount} sub="Approved or simulated" tone="success" />
+        <StatCard label="Completed" value={summary.completedCount} sub="Disbursed to farmers" tone="success" />
         <StatCard label="Pending" value={summary.pendingCount} tone={summary.pendingCount ? "warning" : "default"} icon={<Wallet className="h-5 w-5 text-settle" />} />
         <StatCard label="Unusual" value={summary.unusualCount} sub="Net above ₹50,000" tone={summary.unusualCount ? "warning" : "default"} icon={<ShieldAlert className="h-5 w-5 text-settle" />} />
       </div>
@@ -109,7 +107,7 @@ export default function PayablesPage() {
           aria-label="Filter by payout status"
         >
           <option value="all">All payout states</option>
-          {["Not Yet Due", "Pending", "Processing", "Completed", "Failed", "Simulated"].map((s) => (
+          {["Not Yet Due", "Pending", "Processing", "Completed", "Failed"].map((s) => (
             <option key={s} value={s}>
               {s}
             </option>
@@ -167,31 +165,16 @@ export default function PayablesPage() {
                   </div>
                   <div className="flex items-center justify-end gap-1.5 pt-1 border-t border-line/60 dark:border-portal-line/60">
                     {actionable ? (
-                      <>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          className="h-7 text-xs px-2.5"
-                          onClick={() => {
-                            setTarget(p);
-                            setSimulate(false);
-                          }}
-                        >
-                          Approve
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-7 text-xs px-2"
-                          onClick={() => {
-                            setTarget(p);
-                            setSimulate(true);
-                          }}
-                          title="Mark as simulated payout"
-                        >
-                          <FlaskConical className="h-3.5 w-3.5" />
-                        </Button>
-                      </>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="h-7 text-xs px-2.5"
+                        onClick={() => {
+                          setTarget(p);
+                        }}
+                      >
+                        Approve
+                      </Button>
                     ) : (
                       <span className="text-[11px] text-muted dark:text-portal-muted">
                         {p.payout === "Not Yet Due" ? "Not due" : "No action"}
@@ -245,29 +228,15 @@ export default function PayablesPage() {
                       <TD>
                         <div className="flex items-center justify-end gap-1">
                           {actionable ? (
-                            <>
-                              <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={() => {
-                                  setTarget(p);
-                                  setSimulate(false);
-                                }}
-                              >
-                                Approve
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  setTarget(p);
-                                  setSimulate(true);
-                                }}
-                                title="Mark as simulated payout"
-                              >
-                                <FlaskConical className="h-3.5 w-3.5" />
-                              </Button>
-                            </>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              onClick={() => {
+                                setTarget(p);
+                              }}
+                            >
+                              Approve
+                            </Button>
                           ) : (
                             <span className="text-[11px] text-muted dark:text-portal-muted">
                               {p.payout === "Not Yet Due" ? "Not due" : "No action"}
@@ -290,17 +259,12 @@ export default function PayablesPage() {
           onOpenChange={(v) => {
             if (!v) {
               setTarget(null);
-              setSimulate(false);
             }
           }}
           variant="center"
-          title={simulate ? "Simulate this payout?" : "Approve this payout?"}
-          description={
-            simulate
-              ? "No real money moves. The farmer record is marked Simulated so nobody mistakes it for a real payment."
-              : "The payout is marked Completed. GreenRoots records your decision in the audit log."
-          }
-          confirmLabel={simulate ? "Simulate payout" : "Approve payout"}
+          title="Approve this payout?"
+          description="The payout is marked Completed and processed for disbursement. GreenRoots records your decision in the audit log."
+          confirmLabel="Approve payout"
           loading={busy}
           onConfirm={approve}
           actor={{ name: profile.name, role: profile.role }}
@@ -311,7 +275,6 @@ export default function PayablesPage() {
             { label: "Gross", value: formatMoney(target.gross) },
             { label: "Commission (5%)", value: formatMoney(target.commission) },
             { label: "Net payout", value: formatMoney(target.net), emphasis: true },
-            { label: "Mode", value: simulate ? "Simulated (no money moves)" : "Completed", emphasis: true },
           ]}
         />
       )}

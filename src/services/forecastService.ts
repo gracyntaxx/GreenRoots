@@ -8,7 +8,7 @@ export const forecastService = {
   },
 
   get(id: string): Promise<Forecast> {
-    return call("forecasts/get", undefined, () => {
+    return call(`forecasts/get?id=${encodeURIComponent(id)}`, undefined, () => {
       const f = getState().forecasts.find((x) => x.id === id);
       if (!f) throw new MockError("Forecast not found", "NOT_FOUND");
       return f;
@@ -16,7 +16,7 @@ export const forecastService = {
   },
 
   forSeason(region: string, season: string): Promise<Forecast | undefined> {
-    return call("forecasts/for-season", undefined, () =>
+    return call(`forecasts/for-season?region=${encodeURIComponent(region)}&season=${encodeURIComponent(season)}`, undefined, () =>
       getState().forecasts.find((f) => f.region === region && f.season === season)
     );
   },

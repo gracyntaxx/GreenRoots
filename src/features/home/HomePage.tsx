@@ -67,13 +67,13 @@ export default function HomePage() {
     <PageContainer className="space-y-5">
       <div className="flex items-start justify-between gap-3 border-b border-line pb-4 dark:border-portal-line">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("home.greeting", { name: profile.name.split(" ")[0] })}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("home.greeting", { name: (profile?.name || "Farmer").split(" ")[0] })}</h1>
           <p className="mt-1 flex items-center gap-1.5 text-sm text-muted dark:text-portal-muted">
             <MapPin className="h-4 w-4 text-forest" aria-hidden="true" />
-            {t("home.villageLine", { village: profile.village, state: profile.state })}
+            {t("home.villageLine", { village: profile?.village || "Rewari", state: profile?.state || "Haryana" })}
           </p>
         </div>
-        <ReputationBadge score={profile.reputation} factors={profile.reputationFactors} showScore />
+        <ReputationBadge score={profile?.reputation ?? 4.5} factors={profile?.reputationFactors ?? []} showScore />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

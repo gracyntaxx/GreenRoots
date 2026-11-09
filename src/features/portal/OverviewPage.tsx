@@ -70,7 +70,7 @@ export default function OverviewPage() {
     return (
       <PageContainer>
         <PortalPageHeader
-          title={`Good to see you, ${profile.name.split(" ")[0]}`}
+          title={`Good to see you, ${(profile?.name || "Partner").split(" ")[0]}`}
           description="Operations overview. Every AI-prepared action below still needs a human decision."
           actions={
             <Link
@@ -168,7 +168,7 @@ export default function OverviewPage() {
   return (
     <PageContainer>
       <PortalPageHeader
-        title={`Good to see you, ${profile.name.split(" ")[0]}`}
+        title={`Good to see you, ${(profile?.name || "Partner").split(" ")[0]}`}
         description="Your sourcing pipeline at a glance. AI prepares drafts; you confirm every action."
         actions={
           <Link

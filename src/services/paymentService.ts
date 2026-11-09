@@ -94,7 +94,7 @@ export const paymentService = {
   },
 
   status(paymentId: string): Promise<Payment> {
-    return call("payments/status", undefined, () => {
+    return call(`payments/status?paymentId=${encodeURIComponent(paymentId)}`, undefined, () => {
       const p = getState().payments.find((x) => x.id === paymentId);
       if (!p) throw new MockError("Payment not found", "NOT_FOUND");
       return p;

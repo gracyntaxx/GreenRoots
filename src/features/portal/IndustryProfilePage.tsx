@@ -247,7 +247,7 @@ export default function IndustryProfilePage() {
               <LogOut className="h-4 w-4" /> Log out
             </Button>
             <p className="mt-2 text-[10px] text-muted dark:text-portal-muted">
-              Demo account · language: {language?.label ?? profile.language}
+              Language: {language?.label ?? profile.language}
             </p>
           </PortalCard>
         </div>

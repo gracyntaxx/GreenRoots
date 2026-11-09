@@ -74,7 +74,7 @@ export const listingService = {
   },
 
   get(id: string, origin: Profile): Promise<ListingWithDistance> {
-    return call("listings/get", undefined, () => {
+    return call(`listings/get?id=${encodeURIComponent(id)}`, { method: "POST", body: JSON.stringify({ id, origin: origin.location }) }, () => {
       const l = getState().listings.find((x) => x.id === id);
       if (!l) throw new MockError("Listing not found", "NOT_FOUND");
       return decorate(l, origin);
@@ -82,7 +82,7 @@ export const listingService = {
   },
 
   create(farmer: Profile, draft: ListingDraft, collectionPointId: string): Promise<Listing> {
-    return call("listings/create", { method: "POST", body: JSON.stringify({ draft, collectionPointId }) }, () => {
+    return call("listings/create", { method: "POST", body: JSON.stringify({ farmer, draft, collectionPointId }) }, () => {
       if (!draft.wasteType || !draft.quantity || !draft.rate) {
         throw new MockError("Some required details are missing.", "VALIDATION");
       }
@@ -101,7 +101,7 @@ export const listingService = {
 
   /** Grounded AI picks: only real listing records, ranked with visible reasons. */
   recommend(origin: Profile): Promise<{ listing: ListingWithDistance; reason: string }[]> {
-    return call("listings/recommend", undefined, () => {
+    return call("listings/recommend", { method: "POST", body: JSON.stringify({ origin: origin.location }) }, () => {
       const rows = getState().listings
         .filter((l) => l.status === "Active" && l.farmerId !== origin.id)
         .map((l) => decorate(l, origin));

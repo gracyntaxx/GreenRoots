@@ -135,7 +135,7 @@ export default function CheckoutPage() {
       setPaypalOpen(true);
     } catch (e) {
       setStage("ready");
-      setError(e instanceof Error ? e.message : "Could not start the PayPal Sandbox.");
+      setError(e instanceof Error ? e.message : "Could not start the PayPal payment.");
     }
   };
 
@@ -273,7 +273,7 @@ export default function CheckoutPage() {
               <div>
                 <p className="font-bold">{t("checkout.buyerNote")}</p>
                 <p className="mt-0.5 opacity-80 leading-relaxed">
-                  We never see or store your card or bank details. PayPal Sandbox handles the verification.
+                  We never see or store your card or bank details. PayPal handles the verification.
                 </p>
               </div>
             </div>
@@ -288,8 +288,8 @@ export default function CheckoutPage() {
                 <span className="text-base font-bold italic tracking-tight">
                   Pay<span className="text-[#009CDE]">Pal</span>
                 </span>
-                <span className="rounded-full bg-settle px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#3b2a05]">
-                  Sandbox
+                <span className="rounded-full bg-forest/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                  Verified
                 </span>
               </div>
 

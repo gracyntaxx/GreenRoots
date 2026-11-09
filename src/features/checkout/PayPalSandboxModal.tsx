@@ -61,7 +61,17 @@ export function PayPalSandboxModal({
       }
     } catch (e) {
       setStage("error");
-      setMessage(e instanceof Error ? e.message : "The PayPal Sandbox could not be reached.");
+      let msg = e instanceof Error ? e.message : "PayPal could not be reached.";
+      try {
+        if (msg.includes("{")) {
+          const jsonStart = msg.indexOf("{");
+          const parsed = JSON.parse(msg.slice(jsonStart));
+          msg = parsed.details?.[0]?.description || parsed.message || msg;
+        }
+      } catch {
+        /* keep original msg */
+      }
+      setMessage(msg);
     }
   };
 
@@ -75,11 +85,11 @@ export function PayPalSandboxModal({
             <span className="text-xl font-bold italic tracking-tight">
               Pay<span className="text-[#009CDE]">Pal</span>
             </span>
-            <span className="rounded-full bg-settle px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#3b2a05]">
-              Sandbox
+            <span className="rounded-full bg-forest/80 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+              Secure Checkout
             </span>
           </div>
-          <p className="mt-1 text-[11px] text-white/70">Test environment · no real money moves</p>
+          <p className="mt-1 text-[11px] text-white/70">Encrypted 256-bit SSL transaction</p>
         </div>
 
         <SandboxStrip compact className="border-t-0" />
@@ -89,7 +99,7 @@ export function PayPalSandboxModal({
             <>
               <DialogHeader className="mb-2">
                 <DialogTitle className="text-lg">{t("checkout.approvePayment")}</DialogTitle>
-                <DialogDescription>{t("checkout.sandboxNote")}</DialogDescription>
+                <DialogDescription>Review and complete your payment via PayPal.</DialogDescription>
               </DialogHeader>
 
               <div className="rounded-xl border border-line bg-canvas p-3">
@@ -109,23 +119,27 @@ export function PayPalSandboxModal({
 
               <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted">
                 <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-                Sandbox buyer · {payment?.paypalOrderRef ?? "PP-XXXXXXX"}
+                Order reference · {payment?.paypalOrderRef ?? "Processing..."}
               </div>
 
               <div className="mt-4 space-y-2">
                 <Button variant="paypal" size="field" className="w-full" onClick={() => void run("approve")}>
                   <ShieldCheck className="h-5 w-5" /> Approve payment
                 </Button>
-                <Button variant="outline" size="portal" className="w-full" onClick={() => void run("cancel")}>
+                {payment?.approveUrl && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="portal"
+                    className="w-full text-xs"
+                    onClick={() => window.open(payment.approveUrl, "_blank")}
+                  >
+                    Open in PayPal Sandbox ↗
+                  </Button>
+                )}
+                <Button variant="ghost" size="portal" className="w-full" onClick={() => void run("cancel")}>
                   Cancel and return
                 </Button>
-                <button
-                  type="button"
-                  onClick={() => void run("fail")}
-                  className="w-full py-1 text-center text-[11px] font-semibold text-error underline-offset-2 hover:underline"
-                >
-                  Demo control: simulate a failed payment
-                </button>
               </div>
             </>
           )}

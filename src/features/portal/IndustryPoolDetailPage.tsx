@@ -323,8 +323,7 @@ export default function IndustryPoolDetailPage() {
               <Wallet className="h-4 w-4 text-navy" /> Pool settlement
             </p>
             <p className="mt-1 max-w-xl text-[12px] leading-relaxed text-muted dark:text-portal-muted">
-              You pay the pool total through PayPal Sandbox. GreenRoots then prepares farmer-wise payables. Admin
-              approves each payout, and one payout may be simulated in this demo.
+              Pay the pool total through PayPal. GreenRoots then automatically prepares farmer-wise payables and initiates payout disbursement.
             </p>
           </div>
           <div className="text-right">
@@ -358,7 +357,7 @@ export default function IndustryPoolDetailPage() {
             {isIndustry && (
               <Button variant="paypal" size="portal" disabled={!canPay || creatingPayment} onClick={startPoolPayment}>
                 {creatingPayment ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wallet className="h-4 w-4" />}
-                Pay pool via PayPal Sandbox
+                Pay pool via PayPal
               </Button>
             )}
             {!isIndustry && (

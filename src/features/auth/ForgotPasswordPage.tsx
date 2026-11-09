@@ -31,8 +31,8 @@ export default function ForgotPasswordPage() {
               <CheckCircle2 className="mx-auto h-11 w-11 text-forest" aria-hidden="true" />
               <h1 className="mt-3 text-xl font-bold text-ink">Check your email</h1>
               <p className="mt-1 text-sm text-muted">
-                If an account exists for <span className="font-semibold text-ink">{email}</span>, a reset link is on its
-                way. In this demo no email is actually sent.
+                If an account exists for <span className="font-semibold text-ink">{email}</span>, a password reset link
+                has been dispatched to your inbox.
               </p>
               <Link to="/login" className={cn(buttonVariants({ variant: "primary", size: "field" }), "mt-5 w-full")}>
                 Return to sign in

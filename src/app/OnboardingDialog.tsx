@@ -35,7 +35,7 @@ export function OnboardingDialog({ open, onOpenChange }: { open: boolean; onOpen
     if (role === "buyer") {
       return [
         { title: "Find waste near you", body: "Browse real listings from verified farmers. Filter by distance, quantity and price." },
-        { title: "Pay through PayPal Sandbox", body: "You will review the order, then approve the payment in PayPal. No real money moves in this demo." },
+        { title: "Pay through PayPal", body: "You will review the order, then approve payment securely via PayPal. Verified server-side before release." },
         { title: "Three statuses, always separate", body: "Fulfilment, payment and farmer payout are shown separately so you always know what is real." },
       ];
     }

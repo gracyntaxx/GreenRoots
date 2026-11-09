@@ -4,7 +4,6 @@ import { Toaster } from "@/components/shared/Toaster";
 import { ErrorBoundary } from "@/app/ErrorBoundary";
 import { RealtimeBridge } from "@/app/RealtimeBridge";
 import { RequireRole } from "@/app/RoleGuard";
-import { DevPanel } from "@/app/DevPanel";
 import { AppShell } from "@/app/AppShell";
 import { useSession } from "@/store/session";
 import { homeForRole } from "@/lib/routing";
@@ -47,7 +46,7 @@ import AuditPage from "@/features/portal/admin/AuditPage";
 
 function RootRedirect() {
   const profile = useSession((s) => s.profile);
-  return <Navigate to={profile ? homeForRole(profile.role) : "/welcome"} replace />;
+  return <Navigate to={profile?.role ? homeForRole(profile.role) : "/welcome"} replace />;
 }
 
 function FieldIndex() {
@@ -179,7 +178,6 @@ export default function App() {
         </Routes>
       </ErrorBoundary>
       <Toaster />
-      <DevPanel />
     </TooltipProvider>
   );
 }

@@ -13,7 +13,7 @@ export function RequireRole({
   const profile = useSession((s) => s.profile);
   const location = useLocation();
 
-  if (!profile) {
+  if (!profile || !profile.role) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 

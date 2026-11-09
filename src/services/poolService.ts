@@ -31,7 +31,7 @@ function meta(pool: Pool, origin: Profile): PoolWithMeta {
 
 export const poolService = {
   list(origin: Profile, opts?: { industryId?: string }): Promise<PoolWithMeta[]> {
-    return call("pools/list", undefined, () => {
+    return call("pools/list", { method: "POST", body: JSON.stringify({ origin: origin.location, industryId: opts?.industryId }) }, () => {
       let pools = getState().pools;
       if (opts?.industryId) pools = pools.filter((p) => p.industryId === opts.industryId);
       return pools.map((p) => meta(p, origin));
@@ -39,7 +39,7 @@ export const poolService = {
   },
 
   get(id: string, origin: Profile): Promise<PoolWithMeta> {
-    return call("pools/get", undefined, () => {
+    return call(`pools/get?id=${encodeURIComponent(id)}`, { method: "POST", body: JSON.stringify({ id, origin: origin.location }) }, () => {
       const p = findPool(id);
       if (!p) throw new MockError("Pool not found", "NOT_FOUND");
       return meta(p, origin);
@@ -47,11 +47,11 @@ export const poolService = {
   },
 
   contributions(poolId: string): Promise<PoolContribution[]> {
-    return call("pools/contributions", undefined, () => contributionsForPool(poolId));
+    return call(`pools/contributions?poolId=${encodeURIComponent(poolId)}`, undefined, () => contributionsForPool(poolId));
   },
 
   myPools(farmerId: string, origin: Profile): Promise<PoolWithMeta[]> {
-    return call("pools/mine", undefined, () => {
+    return call("pools/mine", { method: "POST", body: JSON.stringify({ farmerId, origin: origin.location }) }, () => {
       const state = getState();
       const ids = new Set(state.contributions.filter((c) => c.farmerId === farmerId).map((c) => c.poolId));
       return state.pools.filter((p) => ids.has(p.id)).map((p) => meta(p, origin));

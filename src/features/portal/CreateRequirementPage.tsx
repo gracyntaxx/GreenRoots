@@ -30,7 +30,7 @@ import { useConnectivity } from "@/lib/connectivity";
 import { WASTE_LABELS, type QtyUnit, type RequirementDraft, type WasteType } from "@/types";
 import { formatNumber } from "@/lib/money";
 
-const DEMO = "We need 500 tonnes of paddy straw in Panipat by 15 May at 2300 rupees per tonne.";
+const SAMPLE_TEXT = "We need 500 tonnes of paddy straw in Panipat by 15 May at 2300 rupees per tonne.";
 
 export default function CreateRequirementPage() {
   const navigate = useNavigate();
@@ -170,7 +170,7 @@ export default function CreateRequirementPage() {
               id="req-text"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder={DEMO}
+              placeholder={SAMPLE_TEXT}
               className="min-h-28"
             />
             <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -182,11 +182,11 @@ export default function CreateRequirementPage() {
                 variant="ghost"
                 size="portal"
                 onClick={() => {
-                  setText(DEMO);
+                  setText(SAMPLE_TEXT);
                   setError(null);
                 }}
               >
-                Use demo sentence
+                Use sample description
               </Button>
             </div>
             <p className="mt-2 text-[11px] leading-relaxed text-muted dark:text-portal-muted">
@@ -395,7 +395,7 @@ export default function CreateRequirementPage() {
               <li>1. You confirm the structured requirement.</li>
               <li>2. A pool opens and nearby farmers see it.</li>
               <li>3. You approve area expansion if the pool needs more supply.</li>
-              <li>4. You pay the pool through PayPal Sandbox after delivery is verified.</li>
+              <li>4. You pay the pool through PayPal after delivery is verified.</li>
             </ol>
           </PortalCard>
         </div>

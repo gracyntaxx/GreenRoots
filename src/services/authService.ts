@@ -1,5 +1,6 @@
 import type { IndustryVerification, Language, Profile, Role } from "@/types";
 import { call } from "./http";
+import { supabase } from "@/lib/supabaseClient";
 import {
   clearIdempotency,
   findProfile,
@@ -12,7 +13,7 @@ const DEMO_PASSWORD = "demo1234";
 
 export const authService = {
   demoLogin(role: Role): Promise<Profile> {
-    return call("auth/demo-login", undefined, () => {
+    return call("auth/demo-login", { method: "POST", body: JSON.stringify({ role }) }, () => {
       const account = DEMO_ACCOUNTS.find((a) => a.role === role);
       const profile = account ? findProfile(account.id) : undefined;
       if (!profile) throw new MockError("Demo account not found", "NOT_FOUND");
@@ -25,13 +26,13 @@ export const authService = {
       if (!/^\d{10}$/.test(phone)) {
         throw new MockError("Enter a 10-digit phone number.", "VALIDATION");
       }
-      return { sent: true, hint: "Demo OTP is 123456" };
+      return { sent: true, hint: "OTP sent to registered phone" };
     });
   },
 
   loginPhone(phone: string, otp: string): Promise<Profile> {
     return call("auth/login-phone", { method: "POST", body: JSON.stringify({ phone, otp }) }, () => {
-      if (otp !== "123456") throw new MockError("That OTP is not correct. Use 123456 in the demo.", "AUTH");
+      if (otp !== "123456") throw new MockError("Invalid verification code.", "AUTH");
       const profile = getState().profiles.find(
         (p) => p.phone === phone && (p.role === "farmer" || p.role === "buyer")
       );
@@ -56,6 +57,7 @@ export const authService = {
     name: string;
     phone?: string;
     email?: string;
+    password?: string;
     village: string;
     district?: string;
     state?: string;
@@ -117,6 +119,7 @@ export const authService = {
 
   logout() {
     clearIdempotency();
+    supabase.auth.signOut().catch(() => {});
   },
 
   demoPasswordHint: DEMO_PASSWORD,

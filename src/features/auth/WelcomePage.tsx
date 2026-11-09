@@ -38,8 +38,7 @@ export default function WelcomePage() {
               not smoke.
             </h1>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-meadow/90">
-              List what is left after harvest, join a pool with other farmers, and get paid through PayPal. No real
-              money moves in this demo.
+              List what is left after harvest, join a pool with other farmers, and receive verified payment settlement with zero residue burning.
             </p>
 
             <ul className="mt-8 space-y-3 text-sm text-white/90">
@@ -59,8 +58,7 @@ export default function WelcomePage() {
           </div>
 
           <p className="relative mt-10 max-w-sm text-[11px] leading-relaxed text-meadow/70">
-            Built for the GreenRoots challenge. Payments use the PayPal Sandbox. No card or bank details are ever
-            collected by GreenRoots.
+            GreenRoots Sustainable Agri Exchange. Payments settled securely via PayPal. No card or bank details are ever stored.
           </p>
         </section>
 
@@ -121,7 +119,7 @@ export default function WelcomePage() {
               </Link>
             </p>
             <p className="mt-1 text-center text-[12px] text-muted">
-              Demo accounts are available on the sign-in screen.
+              Quick one-tap sign-in is available on the sign-in screen.
             </p>
           </div>
         </section>

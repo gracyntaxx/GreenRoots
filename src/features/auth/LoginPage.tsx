@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, Factory, Loader2, ShieldCheck, ShoppingBasket, Smartphone, Sprout } from "lucide-react";
+import { ArrowLeft, Loader2, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Label, FieldError } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,17 +8,8 @@ import { LogoMark } from "@/components/shared/Brand";
 import { useSession } from "@/store/session";
 import { useUi } from "@/store/ui";
 import { authService } from "@/services/authService";
-import { DEMO_ACCOUNTS } from "@/mocks/seed";
 import { homeForRole } from "@/lib/routing";
-import type { Profile, Role } from "@/types";
-import { cn } from "@/lib/utils";
-
-const demoIcons: Record<string, typeof Sprout> = {
-  sprout: Sprout,
-  shopping: ShoppingBasket,
-  factory: Factory,
-  shield: ShieldCheck,
-};
+import type { Profile } from "@/types";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -28,7 +19,6 @@ export default function LoginPage() {
   const setOnboardingSeen = useSession((s) => s.setOnboardingSeen);
   const pushToast = useUi((s) => s.pushToast);
 
-  const [demoBusy, setDemoBusy] = useState<Role | null>(null);
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -51,19 +41,6 @@ export default function LoginPage() {
     navigate(from && from.startsWith(area) ? from : homeForRole(p.role), { replace: true });
   };
 
-  const demoLogin = async (role: Role) => {
-    setError(null);
-    setDemoBusy(role);
-    try {
-      const p = await authService.demoLogin(role);
-      enter(p, `Demo account: ${p.name}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not open the demo account.");
-    } finally {
-      setDemoBusy(null);
-    }
-  };
-
   const requestOtp = async () => {
     setError(null);
     setOtpLoading(true);
@@ -71,7 +48,7 @@ export default function LoginPage() {
       const res = await authService.requestOtp(phone);
       setOtpSent(true);
       setOtpHint(res.hint);
-      pushToast({ title: "OTP sent (demo)", description: res.hint, variant: "info" });
+      pushToast({ title: "OTP sent", description: res.hint, variant: "info" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not send the OTP.");
     } finally {
@@ -125,49 +102,56 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="mt-5 rounded-xl border border-ai/30 bg-aitint p-3">
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ai">Demo accounts · one tap</p>
-            <div className="mt-2 grid gap-2 sm:grid-cols-2">
-              {DEMO_ACCOUNTS.map((a) => {
-                const Icon = demoIcons[a.icon] ?? Sprout;
-                const busyThis = demoBusy === a.role;
-                return (
-                  <button
-                    key={a.id}
-                    type="button"
-                    disabled={demoBusy !== null}
-                    onClick={() => demoLogin(a.role)}
-                    className={cn(
-                      "flex min-h-[58px] items-center gap-2.5 rounded-lg border border-ai/25 bg-surface px-3 text-left transition-colors hover:border-ai/60 disabled:opacity-60"
-                    )}
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-aitint text-ai">
-                      {busyThis ? <Loader2 className="h-4 w-4 animate-spin" /> : <Icon className="h-4 w-4" />}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block truncate text-[13px] font-semibold text-ink">{a.name}</span>
-                      <span className="block truncate text-[11px] text-muted">
-                        {a.label} · {a.detail}
-                      </span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-2 text-[11px] leading-snug text-ai/90">
-              Demo shortcuts are only on this sign-in screen. Every other screen uses the real app flows.
-            </p>
-          </div>
-
-          <Tabs defaultValue="phone" className="mt-5" onValueChange={() => setError(null)}>
+          <Tabs defaultValue="email" className="mt-5" onValueChange={() => setError(null)}>
             <TabsList className="w-full">
-              <TabsTrigger value="phone" className="flex-1">
-                <Smartphone className="h-4 w-4" /> Phone OTP
-              </TabsTrigger>
               <TabsTrigger value="email" className="flex-1">
                 Email &amp; password
               </TabsTrigger>
+              <TabsTrigger value="phone" className="flex-1">
+                <Smartphone className="h-4 w-4" /> Phone OTP
+              </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="email">
+              <form onSubmit={submitEmail} className="space-y-3">
+                <div>
+                  <Label htmlFor="login-email">Email address</Label>
+                  <Input
+                    id="login-email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="login-password">Password</Label>
+                  <Input
+                    id="login-password"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="At least 6 characters"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <div className="mt-1.5 text-right">
+                    <Link to="/forgot-password" className="text-[12px] font-semibold text-forest hover:underline">
+                      Forgot password?
+                    </Link>
+                  </div>
+                </div>
+                <Button type="submit" variant="primary" size="field" className="w-full" disabled={busy}>
+                  {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Sign in
+                </Button>
+                <p className="text-[11px] text-muted">
+                  Sign in with your registered email and password.
+                </p>
+              </form>
+            </TabsContent>
 
             <TabsContent value="phone">
               <form onSubmit={submitPhone} className="space-y-3">
@@ -224,48 +208,7 @@ export default function LoginPage() {
                     </Button>
                   </div>
                 )}
-                <p className="text-[11px] text-muted">Demo OTP is 123456. Use a demo account phone or your signup phone.</p>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="email">
-              <form onSubmit={submitEmail} className="space-y-3">
-                <div>
-                  <Label htmlFor="login-email">Work email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="login-password">Password</Label>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    autoComplete="current-password"
-                    placeholder="At least 6 characters"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <div className="mt-1.5 text-right">
-                    <Link to="/forgot-password" className="text-[12px] font-semibold text-forest hover:underline">
-                      Forgot password?
-                    </Link>
-                  </div>
-                </div>
-                <Button type="submit" variant="primary" size="field" className="w-full" disabled={busy}>
-                  {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-                  Sign in
-                </Button>
-                <p className="text-[11px] text-muted">
-                  Demo industry and admin accounts accept any password of 6 or more characters.
-                </p>
+                <p className="text-[11px] text-muted">Use your registered 10-digit mobile number to receive a verification code.</p>
               </form>
             </TabsContent>
           </Tabs>
@@ -280,7 +223,7 @@ export default function LoginPage() {
           </Link>
         </p>
         <p className="mt-2 text-center text-[11px] text-muted">
-          Sandbox demo · no real money · no card or bank details
+          GreenRoots Agri Platform · Secure Agricultural Waste Exchange
         </p>
       </div>
     </div>

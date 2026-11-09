@@ -230,6 +230,7 @@ export interface Payment {
   status: PaymentStatus;
   paypalOrderRef: string;
   paypalCaptureRef?: string;
+  approveUrl?: string;
   createdAt: string;
   updatedAt: string;
   history: { at: string; status: PaymentStatus; note: string }[];

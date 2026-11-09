@@ -269,7 +269,7 @@ export default function AdminListingsPage() {
           />
           <FieldError>{reasonError}</FieldError>
           <p className="mt-2 rounded-lg bg-canvas p-2 text-[11px] leading-relaxed text-muted dark:bg-portal-bg dark:text-portal-muted">
-            The farmer is not notified automatically in this demo. The reason is stored in the audit log with your name.
+            The removal reason is recorded in the permanent audit trail with your administrator credentials.
           </p>
           <div className="mt-4 flex gap-2">
             <Button variant="outline" size="portal" className="flex-1" onClick={() => setTarget(null)}>

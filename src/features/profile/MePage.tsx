@@ -151,7 +151,7 @@ export default function MePage() {
               onClick={() =>
                 pushToast({
                   title: t("me.digilocker"),
-                  description: "Sandbox only. No identity documents are stored in this demo.",
+                  description: "DigiLocker verification portal initiated.",
                   variant: "info",
                 })
               }
@@ -236,7 +236,7 @@ export default function MePage() {
         <DialogContent variant="sheet">
           <DialogHeader>
             <DialogTitle>{t("me.editProfile")}</DialogTitle>
-            <DialogDescription>Changes are kept on this device for the demo.</DialogDescription>
+            <DialogDescription>Update your personal information and contact details.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>

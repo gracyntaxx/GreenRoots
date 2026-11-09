@@ -18,7 +18,13 @@ export const useSession = create<SessionState>()(
       profile: null,
       onboardingSeen: true,
       selectedCollectionPointId: null,
-      setProfile: (profile) => set({ profile }),
+      setProfile: (profile) => {
+        if (!profile || typeof profile !== "object" || !("role" in profile) || !profile.role || "error" in profile) {
+          set({ profile: null });
+        } else {
+          set({ profile });
+        }
+      },
       setOnboardingSeen: (onboardingSeen) => set({ onboardingSeen }),
       setSelectedCollectionPointId: (selectedCollectionPointId) => set({ selectedCollectionPointId }),
       logout: () =>
@@ -31,10 +37,15 @@ export const useSession = create<SessionState>()(
     {
       name: "greenroots-session",
       partialize: (s) => ({
-        profile: s.profile,
+        profile: s.profile && s.profile.role && !("error" in s.profile) ? s.profile : null,
         onboardingSeen: s.onboardingSeen,
         selectedCollectionPointId: s.selectedCollectionPointId,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.profile && (!state.profile.role || "error" in state.profile)) {
+          state.profile = null;
+        }
+      },
     }
   )
 );
