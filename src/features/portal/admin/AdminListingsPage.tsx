@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input, Select, Label, Textarea, FieldError } from "@/components/ui/form";
 import { Skeleton, EmptyState, Table, THead, TBody, TR, TH, TD } from "@/components/ui/misc";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { WASTE_LABELS, type Listing, type WasteType } from "@/types";
 import { formatMoney } from "@/lib/money";
 import { kgToBestDisplay } from "@/lib/units";
@@ -140,14 +141,23 @@ export default function AdminListingsPage() {
           <div className="divide-y divide-line sm:hidden dark:divide-portal-line">
             {rows.map((l) => (
               <div key={l.id} className="p-3.5 space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-semibold text-sm">{WASTE_LABELS[l.wasteType]}</p>
-                    <p className="text-xs text-muted dark:text-portal-muted">{l.farmerName} · {l.village}</p>
+                <div className="flex items-start gap-3">
+                  <WasteImage
+                    wasteType={l.wasteType}
+                    alt={WASTE_LABELS[l.wasteType]}
+                    className="h-12 w-12 shrink-0 rounded-lg object-cover border border-line dark:border-portal-line"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="font-semibold text-sm">{WASTE_LABELS[l.wasteType]}</p>
+                        <p className="text-xs text-muted dark:text-portal-muted">{l.farmerName} · {l.village}</p>
+                      </div>
+                      <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", statusTone[l.status])}>
+                        {l.status}
+                      </span>
+                    </div>
                   </div>
-                  <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", statusTone[l.status])}>
-                    {l.status}
-                  </span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
@@ -200,8 +210,17 @@ export default function AdminListingsPage() {
                 {rows.map((l) => (
                   <TR key={l.id}>
                     <TD>
-                      <p className="font-semibold">{WASTE_LABELS[l.wasteType]}</p>
-                      <p className="num text-[10px] text-muted dark:text-portal-muted">{l.id}</p>
+                      <div className="flex items-center gap-2.5">
+                        <WasteImage
+                          wasteType={l.wasteType}
+                          alt={WASTE_LABELS[l.wasteType]}
+                          className="h-10 w-10 shrink-0 rounded-lg object-cover border border-line dark:border-portal-line"
+                        />
+                        <div>
+                          <p className="font-semibold">{WASTE_LABELS[l.wasteType]}</p>
+                          <p className="num text-[10px] text-muted dark:text-portal-muted">{l.id}</p>
+                        </div>
+                      </div>
                     </TD>
                     <TD>
                       <p className="text-[12px] font-medium">{l.farmerName}</p>

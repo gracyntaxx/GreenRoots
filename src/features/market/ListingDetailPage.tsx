@@ -20,6 +20,7 @@ import { ReputationBadge } from "@/components/shared/ReputationBadge";
 import { RateText, QtyText, ConversionLine } from "@/components/shared/Numbers";
 import { MapView } from "@/components/shared/MapView";
 import { AiChip } from "@/components/shared/Marks";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/shared/PageContainer";
@@ -100,52 +101,71 @@ export default function ListingDetailPage() {
       <div className="grid gap-6 lg:grid-cols-5">
         {/* Left Column: Details & Hub */}
         <div className="space-y-4 lg:col-span-3">
-          <Card className="p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[l.wasteType]}</h1>
-                  {l.source === "voice" && (
-                    <span className="flex items-center gap-1 rounded-full bg-aitint px-2 py-0.5 text-xs font-semibold text-ai">
-                      <Mic className="h-3 w-3" /> voice listing
-                    </span>
-                  )}
-                  {!active && (
-                    <span className="rounded-full bg-canvas px-2.5 py-0.5 text-xs font-semibold text-muted dark:bg-portal-bg dark:text-portal-muted">{l.status}</span>
-                  )}
-                </div>
-                <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted dark:text-portal-muted">
-                  <MapPin className="h-4 w-4 text-forest" /> {l.village} · {l.distanceKm.toFixed(0)} km away
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted dark:text-portal-muted">{t("common.rate")}</p>
-                <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="text-xl sm:text-2xl font-bold text-forest dark:text-growth" />
-                <p className="num text-xs text-muted dark:text-portal-muted">{formatMoney(l.ratePerKg)} / kg</p>
-              </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-line bg-canvas p-3 dark:border-portal-line dark:bg-portal-bg">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted dark:text-portal-muted">{t("common.quantity")}</p>
-                <QtyText kg={l.quantityKg} className="text-base sm:text-lg font-bold text-ink dark:text-portal-ink" />
-              </div>
-              <div className="rounded-xl border border-line bg-canvas p-3 dark:border-portal-line dark:bg-portal-bg">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted dark:text-portal-muted">{t("voice.availableFrom")}</p>
-                <p className="flex items-center gap-1.5 text-sm sm:text-base font-semibold text-ink dark:text-portal-ink">
-                  <CalendarDays className="h-4 w-4 text-forest" /> {formatDate(l.createdAt)}
-                </p>
-              </div>
-            </div>
-
-            {l.aiConfidence != null && (
-              <div className="mt-4 flex items-center gap-2 rounded-xl bg-aitint/40 p-3 border border-ai/20">
-                <AiChip>{t("common.aiSuggested")}</AiChip>
-                <span className="text-xs text-muted dark:text-portal-muted">
-                  AI parsed the farmer&apos;s speech; farmer reviewed and confirmed every field.
+          <Card className="overflow-hidden p-0">
+            <div className="relative h-52 sm:h-64 w-full overflow-hidden bg-canvas dark:bg-portal-bg">
+              <WasteImage
+                wasteType={l.wasteType}
+                alt={WASTE_LABELS[l.wasteType]}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
+                <span className="rounded-full bg-forest/90 backdrop-blur-xs px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-xs">
+                  {WASTE_LABELS[l.wasteType]}
+                </span>
+                <span className="rounded-full bg-black/50 backdrop-blur-xs px-2.5 py-1 text-xs font-medium text-white/90">
+                  Residue Photography
                 </span>
               </div>
-            )}
+            </div>
+
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[l.wasteType]}</h1>
+                    {l.source === "voice" && (
+                      <span className="flex items-center gap-1 rounded-full bg-aitint px-2 py-0.5 text-xs font-semibold text-ai">
+                        <Mic className="h-3 w-3" /> voice listing
+                      </span>
+                    )}
+                    {!active && (
+                      <span className="rounded-full bg-canvas px-2.5 py-0.5 text-xs font-semibold text-muted dark:bg-portal-bg dark:text-portal-muted">{l.status}</span>
+                    )}
+                  </div>
+                  <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted dark:text-portal-muted">
+                    <MapPin className="h-4 w-4 text-forest" /> {l.village} · {l.distanceKm.toFixed(0)} km away
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted dark:text-portal-muted">{t("common.rate")}</p>
+                  <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="text-xl sm:text-2xl font-bold text-forest dark:text-growth" />
+                  <p className="num text-xs text-muted dark:text-portal-muted">{formatMoney(l.ratePerKg)} / kg</p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-xl border border-line bg-canvas p-3 dark:border-portal-line dark:bg-portal-bg">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-muted dark:text-portal-muted">{t("common.quantity")}</p>
+                  <QtyText kg={l.quantityKg} className="text-base sm:text-lg font-bold text-ink dark:text-portal-ink" />
+                </div>
+                <div className="rounded-xl border border-line bg-canvas p-3 dark:border-portal-line dark:bg-portal-bg">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-muted dark:text-portal-muted">{t("voice.availableFrom")}</p>
+                  <p className="flex items-center gap-1.5 text-sm sm:text-base font-semibold text-ink dark:text-portal-ink">
+                    <CalendarDays className="h-4 w-4 text-forest" /> {formatDate(l.createdAt)}
+                  </p>
+                </div>
+              </div>
+
+              {l.aiConfidence != null && (
+                <div className="mt-4 flex items-center gap-2 rounded-xl bg-aitint/40 p-3 border border-ai/20">
+                  <AiChip>{t("common.aiSuggested")}</AiChip>
+                  <span className="text-xs text-muted dark:text-portal-muted">
+                    AI parsed the farmer&apos;s speech; farmer reviewed and confirmed every field.
+                  </span>
+                </div>
+              )}
+            </div>
           </Card>
 
           {point && (

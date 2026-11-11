@@ -4,6 +4,7 @@ import {
   parseListingText,
   parseRequirementText,
   explainPoolProgress,
+  parseListingAudio,
 } from "../_shared/gemini.ts";
 import { logAiAudit } from "../_shared/audit.ts";
 
@@ -14,6 +15,25 @@ export async function handleAiRequest(req: Request): Promise<Response> {
   try {
     const url = new URL(req.url);
     const subpath = url.pathname.replace(/^\/(?:ai|ai-assistant)\/?/, "");
+
+    // 0. POST /parse-audio
+    if (subpath === "parse-audio" || subpath.endsWith("/parse-audio")) {
+      const body = await req.json().catch(() => ({}));
+      const { audioBase64, mimeType = "audio/webm" } = body;
+      if (!audioBase64) {
+        throw new ApiError(400, "audioBase64 is required", "VALIDATION");
+      }
+      const result = await parseListingAudio(audioBase64, mimeType);
+
+      await logAiAudit({
+        endpoint: "ai/parse-audio",
+        promptText: `Audio (${mimeType}, len=${audioBase64.length})`,
+        responsePayload: result as unknown as Record<string, unknown>,
+        confidenceScores: result.confidence,
+      });
+
+      return jsonResponse(result);
+    }
 
     // 1. POST /parse-listing
     if (subpath === "parse-listing" || subpath.endsWith("/parse-listing")) {

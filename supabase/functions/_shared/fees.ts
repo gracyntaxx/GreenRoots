@@ -1,5 +1,13 @@
 // Platform Fee and Largest-Remainder Commission Split Algorithm
 
+// @ts-ignore
+if (typeof BigInt !== "undefined" && !BigInt.prototype.toJSON) {
+  // @ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return Number(this);
+  };
+}
+
 export interface ContributionItem {
   id: string;
   farmerId: string;

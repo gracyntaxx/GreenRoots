@@ -4,6 +4,14 @@ import { ApiError, jsonResponse } from "../_shared/errors.ts";
 import { calculatePlatformFee } from "../_shared/fees.ts";
 import { logAudit } from "../_shared/audit.ts";
 
+// @ts-ignore
+if (typeof BigInt !== "undefined" && !BigInt.prototype.toJSON) {
+  // @ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return Number(this);
+  };
+}
+
 function formatOrder(row: any) {
   const totalAmountPaise = Number(row.total_amount_paise || row.total_price_paise || 0);
   const totalRupees = Math.round(totalAmountPaise / 100);
@@ -114,6 +122,34 @@ Deno.serve(async (req: Request) => {
         throw new ApiError(400, "Valid listingId and quantity required", "VALIDATION");
       }
 
+      const captureRef = payment?.captureRef || payment?.paypalCaptureRef || null;
+      const orderRef = payment?.paypalOrderRef || null;
+
+      // Idempotency: if an order already exists for this captured payment, return it immediately
+      if (captureRef || orderRef) {
+        let existingQuery = supabase
+          .from("orders")
+          .select(`
+            *,
+            buyer:profiles!orders_buyer_id_fkey(name),
+            farmer:profiles!orders_farmer_id_fkey(name),
+            collection_point:collection_points!orders_collection_point_id_fkey(name)
+          `);
+
+        if (captureRef && orderRef) {
+          existingQuery = existingQuery.or(`paypal_capture_ref.eq.${captureRef},paypal_order_ref.eq.${orderRef}`);
+        } else if (captureRef) {
+          existingQuery = existingQuery.eq("paypal_capture_ref", captureRef);
+        } else {
+          existingQuery = existingQuery.eq("paypal_order_ref", orderRef);
+        }
+
+        const { data: existingOrder } = await existingQuery.maybeSingle();
+        if (existingOrder) {
+          return jsonResponse(formatOrder(existingOrder));
+        }
+      }
+
       const buyerId = (buyer?.id && buyer.id.includes("-")) ? buyer.id : "b0000000-0000-0000-0000-000000000001";
 
       // Check listing
@@ -134,22 +170,11 @@ Deno.serve(async (req: Request) => {
       }
 
       // Calculate fee & net in paise
-      const ratePerKg = Number(listing.rate_per_unit || 0) / (listing.rate_unit === "tonne" ? 1000 : 100);
+      const unitDivisor = listing.rate_unit === "tonne" ? 1000 : listing.rate_unit === "quintal" ? 100 : 1;
+      const ratePerKg = Number(listing.rate_per_unit || 0) / unitDivisor;
       const totalRupees = Math.round(quantityKg * ratePerKg);
       const totalPaise = totalRupees * 100;
       const { feePaise, netPaise } = calculatePlatformFee(totalPaise);
-
-      const remainingKg = availableKg - quantityKg;
-      const nextStatus = remainingKg <= 0 ? "Sold" : listing.status;
-
-      // Update listing
-      await supabase
-        .from("listings")
-        .update({
-          quantity_kg: remainingKg,
-          status: nextStatus,
-        })
-        .eq("id", listingId);
 
       const orderId = `order_${Date.now()}`;
       const nowIso = new Date().toISOString();
@@ -163,15 +188,15 @@ Deno.serve(async (req: Request) => {
           farmer_id: listing.farmer_id,
           waste_type: listing.waste_type,
           quantity_kg: quantityKg,
-          rate_per_unit: listing.rate_per_unit,
+          rate_per_unit: Number(listing.rate_per_unit || 0),
           rate_unit: listing.rate_unit,
           total_amount_paise: Number(totalPaise),
           collection_point_id: listing.collection_point_id,
           fulfilment: "Ready for Pickup",
           payment: payment?.status || "Captured",
           payout: "Not Yet Due",
-          paypal_order_ref: payment?.paypalOrderRef || null,
-          paypal_capture_ref: payment?.captureRef || null,
+          paypal_order_ref: orderRef,
+          paypal_capture_ref: captureRef,
           timeline: [
             { id: "tl_1", at: nowIso, label: "Order Created", state: "done" },
             { id: "tl_2", at: nowIso, label: "Payment Captured", state: "done" },
@@ -189,6 +214,17 @@ Deno.serve(async (req: Request) => {
         console.error("[Orders] Create error:", oErr);
         throw new ApiError(500, oErr.message, "DATABASE_ERROR");
       }
+
+      // Update listing only after order is safely created
+      const remainingKg = Math.max(0, availableKg - quantityKg);
+      const nextStatus = remainingKg <= 0 ? "Sold" : listing.status;
+      await supabase
+        .from("listings")
+        .update({
+          quantity_kg: remainingKg,
+          status: nextStatus,
+        })
+        .eq("id", listingId);
 
       if (payment?.id) {
         await supabase

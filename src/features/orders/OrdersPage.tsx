@@ -7,6 +7,7 @@ import { useSession } from "@/store/session";
 import { orderService } from "@/services/orderService";
 import { StatusChip } from "@/components/shared/StatusTriad";
 import { QtyText } from "@/components/shared/Numbers";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { Card } from "@/components/ui/card";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { PageContainer } from "@/components/shared/PageContainer";
@@ -74,20 +75,29 @@ export default function OrdersPage() {
           return (
             <Link key={o.id} to={`/app/orders/${o.id}`} className="block">
               <Card className="p-3.5 transition-shadow hover:shadow-md">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="text-[15px] font-bold text-ink">{WASTE_LABELS[o.wasteType]}</p>
-                    <p className="truncate text-[12px] text-muted">
-                      {profile.role === "buyer" ? t("common.farmer") : t("common.buyer")}: {other}
-                    </p>
-                    <p className="num mt-0.5 text-[11px] text-muted">
-                      {t("orders.orderNumber", { id: o.id })} · {formatDate(o.createdAt)}
-                    </p>
+                <div className="flex items-start gap-3">
+                  <WasteImage
+                    wasteType={o.wasteType}
+                    alt={WASTE_LABELS[o.wasteType]}
+                    className="h-12 w-12 shrink-0 rounded-lg object-cover border border-line dark:border-portal-line"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-1.5">
+                      <div className="min-w-0">
+                        <p className="text-[15px] font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[o.wasteType]}</p>
+                        <p className="truncate text-[12px] text-muted dark:text-portal-muted">
+                          {profile.role === "buyer" ? t("common.farmer") : t("common.buyer")}: {other}
+                        </p>
+                        <p className="num mt-0.5 text-[11px] text-muted dark:text-portal-muted">
+                          {t("orders.orderNumber", { id: o.id })} · {formatDate(o.createdAt)}
+                        </p>
+                      </div>
+                      <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-muted dark:text-portal-muted" aria-hidden="true" />
+                    </div>
                   </div>
-                  <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-muted" aria-hidden="true" />
                 </div>
 
-                <div className="mt-2.5 grid grid-cols-3 gap-1.5 border-y border-line py-2">
+                <div className="mt-2.5 grid grid-cols-3 gap-1.5 border-y border-line py-2 dark:border-portal-line">
                   <div>
                     <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-muted">{t("status.fulfilment")}</p>
                     <StatusChip status={o.fulfilment} size="sm" />

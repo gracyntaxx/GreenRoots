@@ -1,5 +1,14 @@
 // Supabase Edge Functions Shared Error & Response Handler
 
+// Global BigInt serialization polyfill
+// @ts-ignore
+if (typeof BigInt !== "undefined" && !BigInt.prototype.toJSON) {
+  // @ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return Number(this);
+  };
+}
+
 export type ErrorCode =
   | "UNAUTHENTICATED"
   | "FORBIDDEN"

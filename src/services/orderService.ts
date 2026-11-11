@@ -1,5 +1,5 @@
 import type { Order, Payment, Profile } from "@/types";
-import { call } from "./http";
+import { call, safeJsonStringify } from "./http";
 import { createOrder, getState, MockError } from "@/mocks/store";
 
 export const orderService = {
@@ -27,7 +27,27 @@ export const orderService = {
     quantityKg: number;
     payment: Payment;
   }): Promise<Order> {
-    return call("orders/create", { method: "POST", body: JSON.stringify(input) }, () => {
+    const safePayload = {
+      listingId: String(input.listingId),
+      buyer: {
+        id: String(input.buyer?.id || ""),
+        name: String(input.buyer?.name || ""),
+        role: input.buyer?.role,
+        village: input.buyer?.village,
+        phone: input.buyer?.phone,
+        email: input.buyer?.email,
+      },
+      quantityKg: Number(input.quantityKg),
+      payment: {
+        id: input.payment?.id ? String(input.payment.id) : undefined,
+        status: input.payment?.status,
+        paypalOrderRef: input.payment?.paypalOrderRef ? String(input.payment.paypalOrderRef) : null,
+        captureRef: (input.payment as any)?.captureRef || (input.payment as any)?.paypalCaptureRef || null,
+        amount: Number(input.payment?.amount || 0),
+      },
+    };
+
+    return call("orders/create", { method: "POST", body: safeJsonStringify(safePayload) }, () => {
       const listing = getState().listings.find((l) => l.id === input.listingId);
       if (!listing) throw new MockError("Listing not found", "NOT_FOUND");
       if (input.quantityKg <= 0) throw new MockError("Choose a quantity first.", "VALIDATION");

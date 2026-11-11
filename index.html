@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#15803D" />
     <meta name="description" content="GreenRoots — sell crop residue instead of burning it. AI-assisted marketplace and verified PayPal settlement." />
+    <script>
+      if (typeof BigInt !== "undefined" && !BigInt.prototype.toJSON) {
+        BigInt.prototype.toJSON = function () {
+          return Number(this);
+        };
+      }
+    </script>
     <title>GreenRoots</title>
   </head>
   <body>

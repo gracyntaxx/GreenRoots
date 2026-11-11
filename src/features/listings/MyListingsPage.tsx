@@ -7,6 +7,7 @@ import { useUi } from "@/store/ui";
 import { useFieldShell } from "@/app/FieldShellContext";
 import { listingService, type ListingWithDistance } from "@/services/listingService";
 import { RateText, QtyText } from "@/components/shared/Numbers";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/form";
@@ -125,32 +126,41 @@ export default function MyListingsPage() {
         )}
 
         {rows.map((l) => (
-          <Card key={l.id} className="p-3.5">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <p className="text-[15px] font-bold text-ink">{WASTE_LABELS[l.wasteType]}</p>
-                  <span
-                    className={cn(
-                      "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
-                      l.status === "Active"
-                        ? "bg-meadow text-forest"
-                        : l.status === "Paused"
-                        ? "bg-settle/15 text-[#92400E]"
-                        : "bg-canvas text-muted"
-                    )}
-                  >
-                    {l.status}
-                  </span>
+          <Card key={l.id} className="p-3.5 transition-shadow hover:shadow-md">
+            <div className="flex items-start gap-3">
+              <WasteImage
+                wasteType={l.wasteType}
+                alt={WASTE_LABELS[l.wasteType]}
+                className="h-14 w-14 shrink-0 rounded-xl object-cover border border-line dark:border-portal-line"
+              />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between gap-1.5">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <p className="text-[15px] font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[l.wasteType]}</p>
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+                          l.status === "Active"
+                            ? "bg-meadow text-forest dark:bg-[#123524] dark:text-growth"
+                            : l.status === "Paused"
+                            ? "bg-settle/15 text-[#92400E]"
+                            : "bg-canvas text-muted dark:bg-portal-bg dark:text-portal-muted"
+                        )}
+                      >
+                        {l.status}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-[11px] text-muted dark:text-portal-muted">
+                      Updated {timeAgo(l.updatedAt)} · {l.collectionPointId ? "collection point set" : "no point"}
+                    </p>
+                  </div>
+                  <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="shrink-0 text-[13px] font-bold text-forest dark:text-growth" />
                 </div>
-                <p className="mt-0.5 text-[11px] text-muted">
-                  Updated {timeAgo(l.updatedAt)} · {l.collectionPointId ? "collection point set" : "no point"}
-                </p>
               </div>
-              <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="shrink-0 text-[13px] font-bold text-forest" />
             </div>
 
-            <div className="mt-2 flex items-center justify-between rounded-lg bg-canvas px-2.5 py-2">
+            <div className="mt-2.5 flex items-center justify-between rounded-lg bg-canvas px-2.5 py-2 dark:bg-portal-bg">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wide text-muted">{t("common.quantity")}</p>
                 <QtyText kg={l.quantityKg} className="text-[14px] font-bold text-ink" />

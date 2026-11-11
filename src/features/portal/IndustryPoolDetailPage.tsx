@@ -24,6 +24,7 @@ import { StatusChip } from "@/components/shared/StatusTriad";
 import { SandboxStrip, SimulatedChip, VerifiedMark, AiChip } from "@/components/shared/Marks";
 import { PortalCard } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { Input, Label } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
 import { Skeleton, EmptyState, Table, THead, TBody, TR, TH, TD } from "@/components/ui/misc";
@@ -193,28 +194,46 @@ export default function IndustryPoolDetailPage() {
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-        <PortalCard className="p-4">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <p className="text-[13px] font-bold">Pool progress</p>
-            <span
-              className={cn(
-                "rounded-full px-2 py-0.5 text-[11px] font-semibold",
-                p.status === "Open"
-                  ? "bg-meadow text-forest dark:bg-[#123524] dark:text-growth"
-                  : "bg-[#E0EAFF] text-navy dark:bg-[#101E36] dark:text-[#8FB4FF]"
-              )}
-            >
-              {p.status}
-            </span>
+        <PortalCard className="overflow-hidden p-0">
+          <div className="relative h-44 w-full overflow-hidden bg-canvas dark:bg-portal-bg">
+            <WasteImage
+              wasteType={p.wasteType}
+              alt={WASTE_LABELS[p.wasteType]}
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+              <span className="rounded-full bg-forest/90 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs">
+                {WASTE_LABELS[p.wasteType]}
+              </span>
+              <span className="rounded-full bg-black/50 backdrop-blur-xs px-2 py-0.5 text-[11px] font-medium text-white/90">
+                Residue Photography
+              </span>
+            </div>
           </div>
-          <PoolProgress committedKg={p.committedKg} targetKg={p.targetKg} status={p.status} />
-          <div className="mt-3 flex items-center gap-3 text-[11px] text-muted dark:text-portal-muted">
-            <span className="flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" /> {p.village}
-            </span>
-            <span>
-              {p.expanded && p.expandedToKm ? `Expanded to ${p.expandedToKm} km` : `Reach ${p.radiusKm} km`}
-            </span>
+          <div className="p-4">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <p className="text-[13px] font-bold">Pool progress</p>
+              <span
+                className={cn(
+                  "rounded-full px-2 py-0.5 text-[11px] font-semibold",
+                  p.status === "Open"
+                    ? "bg-meadow text-forest dark:bg-[#123524] dark:text-growth"
+                    : "bg-[#E0EAFF] text-navy dark:bg-[#101E36] dark:text-[#8FB4FF]"
+                )}
+              >
+                {p.status}
+              </span>
+            </div>
+            <PoolProgress committedKg={p.committedKg} targetKg={p.targetKg} status={p.status} />
+            <div className="mt-3 flex items-center gap-3 text-[11px] text-muted dark:text-portal-muted">
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5" /> {p.village}
+              </span>
+              <span>
+                {p.expanded && p.expandedToKm ? `Expanded to ${p.expandedToKm} km` : `Reach ${p.radiusKm} km`}
+              </span>
+            </div>
           </div>
         </PortalCard>
 

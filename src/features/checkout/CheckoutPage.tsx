@@ -21,6 +21,7 @@ import { orderService } from "@/services/orderService";
 import { SandboxStrip } from "@/components/shared/Marks";
 import { StatusTriad } from "@/components/shared/StatusTriad";
 import { RateText } from "@/components/shared/Numbers";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/shared/PageContainer";
@@ -154,7 +155,7 @@ export default function CheckoutPage() {
       setStage("orderFailed");
       setError(
         e instanceof Error
-          ? `${e.message} Payment was captured — do not pay again.`
+          ? `${e.message}. Payment was captured — do not pay again.`
           : "Payment was captured but the order could not be created. Do not pay again."
       );
     }
@@ -205,25 +206,45 @@ export default function CheckoutPage() {
         <div className="grid gap-6 lg:grid-cols-5">
           {/* Left Column: Order items and pickup */}
           <div className="space-y-4 lg:col-span-3">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-meadow px-3 py-1 text-xs font-bold text-forest border border-forest/20">
+                Escrow Protected Order
+              </span>
+            </div>
             <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("checkout.title")}</h1>
 
             <Card className="p-4 sm:p-5">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-base sm:text-lg font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[l.wasteType]}</p>
-                  <p className="text-xs text-muted dark:text-portal-muted">
-                    {l.farmerName} · {l.village}
-                  </p>
+              <div className="flex items-start gap-3.5">
+                <WasteImage
+                  wasteType={l.wasteType}
+                  alt={WASTE_LABELS[l.wasteType]}
+                  className="h-16 w-16 shrink-0 rounded-xl object-cover border border-line dark:border-portal-line"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <span className="rounded-full bg-meadow px-2.5 py-0.5 text-xs font-bold text-forest dark:bg-[#123524] dark:text-growth">
+                        {WASTE_LABELS[l.wasteType]}
+                      </span>
+                      <p className="text-base sm:text-lg font-bold text-ink dark:text-portal-ink mt-1.5">{WASTE_LABELS[l.wasteType]}</p>
+                      <p className="text-xs text-muted dark:text-portal-muted">
+                        Farmer: <strong>{l.farmerName}</strong> · {l.village}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="text-base sm:text-lg font-bold text-forest dark:text-growth" />
+                      <p className="text-xs text-muted dark:text-portal-muted">₹{l.ratePerKg}/kg</p>
+                    </div>
+                  </div>
                 </div>
-                <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="text-sm sm:text-base font-bold text-forest dark:text-growth" />
               </div>
 
-              <div className="mt-4">
+              <div className="mt-4 rounded-xl bg-canvas p-3.5 border border-line dark:border-portal-line">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="checkout-qty" className="mb-0 text-sm font-bold">
+                  <Label htmlFor="checkout-qty" className="mb-0 text-xs font-bold uppercase tracking-wider text-muted">
                     {t("checkout.selectQty")}
                   </Label>
-                  <span className="num text-xs text-muted dark:text-portal-muted">{t("checkout.maxQty", { qty: l.quantityKg })}</span>
+                  <span className="num text-xs font-bold text-forest">{t("checkout.maxQty", { qty: l.quantityKg })}</span>
                 </div>
                 <div className="mt-2 flex items-center gap-2">
                   <Input
@@ -241,15 +262,15 @@ export default function CheckoutPage() {
               </div>
 
               <div className="mt-4 space-y-2 border-t border-line pt-3.5 text-sm dark:border-portal-line">
-                <div className="flex justify-between">
-                  <span className="text-muted dark:text-portal-muted">
+                <div className="flex justify-between text-muted">
+                  <span>
                     {safeQty} kg × {formatMoney(l.ratePerKg)}/kg
                   </span>
                   <span className="num font-semibold text-ink dark:text-portal-ink">{formatMoney(total)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted dark:text-portal-muted">Platform fee to buyer</span>
-                  <span className="num font-semibold text-ink dark:text-portal-ink">₹0</span>
+                <div className="flex justify-between text-muted">
+                  <span>Platform fee to buyer</span>
+                  <span className="num font-semibold text-forest dark:text-growth">₹0 (Free)</span>
                 </div>
                 <div className="flex items-center justify-between border-t border-line pt-2.5 dark:border-portal-line">
                   <span className="font-bold text-ink dark:text-portal-ink">{t("checkout.total")}</span>
@@ -273,7 +294,7 @@ export default function CheckoutPage() {
               <div>
                 <p className="font-bold">{t("checkout.buyerNote")}</p>
                 <p className="mt-0.5 opacity-80 leading-relaxed">
-                  We never see or store your card or bank details. PayPal handles the verification.
+                  Payment is safely held in escrow and only released to the farmer once weight and moisture are certified at the collection weighbridge.
                 </p>
               </div>
             </div>
@@ -379,6 +400,7 @@ export default function CheckoutPage() {
         onOpenChange={setPaypalOpen}
         onVerifying={() => setStage("awaiting")}
         onVerified={(paid) => {
+          setPayment(paid);
           void createOrder(paid);
         }}
         onAborted={(outcome) => {

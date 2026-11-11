@@ -5,7 +5,7 @@ export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
   return (
     <div
       className={cn(
-        "rounded-xl border border-line bg-surface shadow-sm transition-colors dark:border-portal-line dark:bg-portal-surface",
+        "rounded-2xl border border-line bg-surface shadow-sm transition-all dark:border-portal-line dark:bg-portal-surface",
         className
       )}
       {...props}
@@ -17,7 +17,7 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
   return <div className={cn("p-4 sm:p-5 pb-2", className)} {...props} />;
 }
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-base sm:text-lg font-bold leading-tight text-ink dark:text-portal-ink", className)} {...props} />;
+  return <h3 className={cn("font-heading text-base sm:text-lg font-bold leading-tight text-ink dark:text-portal-ink", className)} {...props} />;
 }
 export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
   return <p className={cn("mt-1 text-sm text-muted dark:text-portal-muted", className)} {...props} />;
@@ -33,7 +33,7 @@ export function PortalCard({ className, ...props }: React.HTMLAttributes<HTMLDiv
   return (
     <div
       className={cn(
-        "rounded-xl border border-line bg-surface shadow-sm transition-colors dark:border-portal-line dark:bg-portal-surface",
+        "rounded-2xl border border-line bg-surface shadow-sm transition-all dark:border-portal-line dark:bg-portal-surface",
         className
       )}
       {...props}

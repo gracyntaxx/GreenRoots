@@ -1,5 +1,13 @@
 // Money and Currency Conversion Module (Paise & Sandbox FX)
 
+// @ts-ignore
+if (typeof BigInt !== "undefined" && !BigInt.prototype.toJSON) {
+  // @ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return Number(this);
+  };
+}
+
 export function rupeesToPaise(rupees: number): bigint {
   return BigInt(Math.round(rupees * 100));
 }

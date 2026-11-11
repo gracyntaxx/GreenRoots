@@ -30,6 +30,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { formatMoney } from "@/lib/money";
 import { kgToBestDisplay } from "@/lib/units";
 import { WASTE_LABELS } from "@/types";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { useState } from "react";
 
 export default function HomePage() {
@@ -166,17 +167,26 @@ export default function HomePage() {
             {activePools.map((pool) => (
               <Link key={pool.id} to={`/app/pools/${pool.id}`} className="block">
                 <Card className="p-3.5 transition-shadow hover:shadow-md">
-                  <div className="mb-2 flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-[14px] font-bold text-ink">{WASTE_LABELS[pool.wasteType]}</p>
-                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted">
-                        <MapPin className="h-3 w-3" /> {pool.village} · {pool.distanceKm.toFixed(0)} km
-                      </p>
+                  <div className="mb-2 flex items-start gap-3">
+                    <WasteImage
+                      wasteType={pool.wasteType}
+                      alt={WASTE_LABELS[pool.wasteType]}
+                      className="h-12 w-12 shrink-0 rounded-lg object-cover border border-line dark:border-portal-line"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="text-[14px] font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[pool.wasteType]}</p>
+                          <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted dark:text-portal-muted">
+                            <MapPin className="h-3 w-3" /> {pool.village} · {pool.distanceKm.toFixed(0)} km
+                          </p>
+                        </div>
+                        <span className="flex items-center gap-1 rounded-full bg-canvas px-2 py-1 text-[11px] font-semibold text-muted dark:bg-portal-bg dark:text-portal-muted">
+                          <CalendarClock className="h-3 w-3" />
+                          {pool.daysLeft > 0 ? t("home.deadline", { days: pool.daysLeft }) : t("home.overdue")}
+                        </span>
+                      </div>
                     </div>
-                    <span className="flex items-center gap-1 rounded-full bg-canvas px-2 py-1 text-[11px] font-semibold text-muted">
-                      <CalendarClock className="h-3 w-3" />
-                      {pool.daysLeft > 0 ? t("home.deadline", { days: pool.daysLeft }) : t("home.overdue")}
-                    </span>
                   </div>
                   <PoolProgress committedKg={pool.committedKg} targetKg={pool.targetKg} status={pool.status} showStages={false} />
                 </Card>
@@ -201,16 +211,18 @@ export default function HomePage() {
           <div className="space-y-2">
             {nearbyDemand.map((r) => (
               <Link key={r.id} to={`/app/pools`} className="block">
-                <Card className="flex items-center gap-3 p-3.5">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-meadow text-forest">
-                    <Sprout className="h-5 w-5" aria-hidden="true" />
-                  </span>
+                <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-md">
+                  <WasteImage
+                    wasteType={r.wasteType}
+                    alt={WASTE_LABELS[r.wasteType]}
+                    className="h-11 w-11 shrink-0 rounded-lg object-cover border border-line dark:border-portal-line"
+                  />
                   <div className="min-w-0 flex-1">
-                    <p className="text-[14px] font-semibold text-ink">{WASTE_LABELS[r.wasteType]}</p>
-                    <p className="text-[11px] text-muted">
+                    <p className="text-[14px] font-semibold text-ink dark:text-portal-ink">{WASTE_LABELS[r.wasteType]}</p>
+                    <p className="text-[11px] text-muted dark:text-portal-muted">
                       {r.industryName} · {r.distanceKm.toFixed(0)} km
                     </p>
-                    <p className="mt-0.5 text-[11px] text-muted">
+                    <p className="mt-0.5 text-[11px] text-muted dark:text-portal-muted">
                       {t("home.remaining", { qty: kgToBestDisplay(r.remainingKg) })} ·{" "}
                       <span className="num">
                         {formatMoney(r.ratePerUnit)}/{r.rateUnit}
@@ -218,12 +230,12 @@ export default function HomePage() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[11px] font-semibold text-forest">
+                    <p className="text-[11px] font-semibold text-forest dark:text-growth">
                       {r.deadline
                         ? `${Math.max(0, Math.ceil((new Date(r.deadline).getTime() - Date.now()) / 86400000))} days`
                         : ""}
                     </p>
-                    <ChevronRight className="ml-auto mt-1 h-4 w-4 text-muted" />
+                    <ChevronRight className="ml-auto mt-1 h-4 w-4 text-muted dark:text-portal-muted" />
                   </div>
                 </Card>
               </Link>

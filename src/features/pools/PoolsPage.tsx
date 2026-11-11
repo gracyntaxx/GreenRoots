@@ -8,6 +8,7 @@ import { poolService, type PoolWithMeta } from "@/services/poolService";
 import { PoolProgress } from "@/components/shared/PoolProgress";
 import { RateText } from "@/components/shared/Numbers";
 import { VerifiedMark } from "@/components/shared/Marks";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
@@ -20,24 +21,33 @@ function PoolCard({ pool }: { pool: PoolWithMeta }) {
   return (
     <Link to={`/app/pools/${pool.id}`} className="block">
       <Card className="p-3.5 transition-shadow hover:shadow-md">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <p className="text-[15px] font-bold text-ink">{WASTE_LABELS[pool.wasteType]}</p>
-              {pool.industryVerified && <VerifiedMark label={t("common.verified")} />}
+        <div className="flex items-start gap-3">
+          <WasteImage
+            wasteType={pool.wasteType}
+            alt={WASTE_LABELS[pool.wasteType]}
+            className="h-14 w-14 shrink-0 rounded-xl object-cover border border-line dark:border-portal-line"
+          />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <p className="text-[15px] font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[pool.wasteType]}</p>
+                  {pool.industryVerified && <VerifiedMark label={t("common.verified")} />}
+                </div>
+                <p className="mt-0.5 truncate text-[12px] text-muted dark:text-portal-muted">{pool.industryName}</p>
+                <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted dark:text-portal-muted">
+                  <MapPin className="h-3 w-3" /> {pool.village} · {pool.distanceKm.toFixed(0)} km
+                  {pool.expanded && pool.expandedToKm ? ` · reaches ${pool.expandedToKm} km` : ""}
+                </p>
+              </div>
+              <div className="shrink-0 text-right">
+                <RateText rate={pool.ratePerUnit} unit={pool.rateUnit} className="text-[13px] font-bold text-forest dark:text-growth" />
+                <p className="mt-0.5 flex items-center justify-end gap-1 text-[11px] text-muted dark:text-portal-muted">
+                  <CalendarClock className="h-3 w-3" />
+                  {pool.daysLeft > 0 ? `${pool.daysLeft}d` : t("home.overdue")}
+                </p>
+              </div>
             </div>
-            <p className="mt-0.5 truncate text-[12px] text-muted">{pool.industryName}</p>
-            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted">
-              <MapPin className="h-3 w-3" /> {pool.village} · {pool.distanceKm.toFixed(0)} km
-              {pool.expanded && pool.expandedToKm ? ` · reaches ${pool.expandedToKm} km` : ""}
-            </p>
-          </div>
-          <div className="shrink-0 text-right">
-            <RateText rate={pool.ratePerUnit} unit={pool.rateUnit} className="text-[13px] font-bold text-forest" />
-            <p className="mt-0.5 flex items-center justify-end gap-1 text-[11px] text-muted">
-              <CalendarClock className="h-3 w-3" />
-              {pool.daysLeft > 0 ? `${pool.daysLeft}d` : t("home.overdue")}
-            </p>
           </div>
         </div>
         <PoolProgress
@@ -47,11 +57,11 @@ function PoolCard({ pool }: { pool: PoolWithMeta }) {
           className="mt-2.5"
           showStages={false}
         />
-        <div className="mt-2 flex items-center justify-between border-t border-line pt-2">
-          <span className="flex items-center gap-1 text-[11px] font-medium text-muted">
+        <div className="mt-2 flex items-center justify-between border-t border-line pt-2 dark:border-portal-line">
+          <span className="flex items-center gap-1 text-[11px] font-medium text-muted dark:text-portal-muted">
             <Users className="h-3.5 w-3.5" /> {t("pools.farmersContributing", { count: pool.contributionCount })}
           </span>
-          <span className="flex items-center gap-0.5 text-[11px] font-semibold text-forest">
+          <span className="flex items-center gap-0.5 text-[11px] font-semibold text-forest dark:text-growth">
             {t("common.view")} <ChevronRight className="h-3.5 w-3.5" />
           </span>
         </div>

@@ -1,6 +1,12 @@
 // Vite Plugin that integrates the real GreenRoots SQLite backend directly into the dev server.
 import { handleApiRequest } from "./api.js";
 
+if (typeof BigInt !== "undefined" && !BigInt.prototype.toJSON) {
+  BigInt.prototype.toJSON = function () {
+    return Number(this);
+  };
+}
+
 export function greenrootsBackendPlugin() {
   return {
     name: "greenroots-backend",

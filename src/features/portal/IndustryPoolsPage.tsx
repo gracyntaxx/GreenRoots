@@ -9,6 +9,7 @@ import { PageContainer } from "@/components/shared/PageContainer";
 import { PoolProgress } from "@/components/shared/PoolProgress";
 import { PortalCard } from "@/components/ui/card";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { WASTE_LABELS } from "@/types";
 import { formatMoney } from "@/lib/money";
 import { cn, formatDate } from "@/lib/utils";
@@ -71,31 +72,40 @@ export default function IndustryPoolsPage() {
           return (
             <Link key={p.id} to={`/portal/pools/${p.id}`}>
               <PortalCard className="p-4 transition-shadow hover:shadow-md">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <p className="text-[15px] font-bold">{WASTE_LABELS[p.wasteType]}</p>
-                      <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", statusTone[p.status])}>
-                        {p.status}
-                      </span>
+                <div className="flex items-start gap-3">
+                  <WasteImage
+                    wasteType={p.wasteType}
+                    alt={WASTE_LABELS[p.wasteType]}
+                    className="h-14 w-14 shrink-0 rounded-xl object-cover border border-line dark:border-portal-line"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <p className="text-[15px] font-bold">{WASTE_LABELS[p.wasteType]}</p>
+                          <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", statusTone[p.status])}>
+                            {p.status}
+                          </span>
+                        </div>
+                        <p className="text-[12px] text-muted dark:text-portal-muted">
+                          {p.village} · {formatDate(p.deadline)}
+                        </p>
+                        <p className="mt-0.5 flex items-center gap-2 text-[11px] text-muted dark:text-portal-muted">
+                          <span className="flex items-center gap-1">
+                            <Users className="h-3 w-3" /> {p.contributionCount} farmers
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <CalendarClock className="h-3 w-3" /> {p.daysLeft > 0 ? `${p.daysLeft}d left` : "deadline passed"}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className="num text-[13px] font-bold text-forest dark:text-growth">
+                          {formatMoney(p.ratePerUnit)} / {p.rateUnit}
+                        </p>
+                        <p className="num text-[11px] text-muted dark:text-portal-muted">₹{ratePerKg.toFixed(2)} / kg</p>
+                      </div>
                     </div>
-                    <p className="text-[12px] text-muted dark:text-portal-muted">
-                      {p.village} · {formatDate(p.deadline)}
-                    </p>
-                    <p className="mt-0.5 flex items-center gap-2 text-[11px] text-muted dark:text-portal-muted">
-                      <span className="flex items-center gap-1">
-                        <Users className="h-3 w-3" /> {p.contributionCount} farmers
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <CalendarClock className="h-3 w-3" /> {p.daysLeft > 0 ? `${p.daysLeft}d left` : "deadline passed"}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <p className="num text-[13px] font-bold text-forest dark:text-growth">
-                      {formatMoney(p.ratePerUnit)} / {p.rateUnit}
-                    </p>
-                    <p className="num text-[11px] text-muted dark:text-portal-muted">₹{ratePerKg.toFixed(2)} / kg</p>
                   </div>
                 </div>
 

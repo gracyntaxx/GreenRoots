@@ -9,6 +9,7 @@ import { StatusTriad } from "@/components/shared/StatusTriad";
 import { SandboxStrip } from "@/components/shared/Marks";
 import { QrSlip } from "@/components/shared/QrSlip";
 import { QtyText } from "@/components/shared/Numbers";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/shared/PageContainer";
@@ -88,15 +89,22 @@ export default function OrderDetailPage() {
       <div className="grid gap-6 lg:grid-cols-5">
         {/* Left Column: Details, Triad & Payment */}
         <div className="space-y-4 lg:col-span-3">
-          <div className="flex items-start justify-between gap-3 border-b border-line pb-4 dark:border-portal-line">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[o.wasteType]}</h1>
-              <p className="num text-xs text-muted dark:text-portal-muted">{t("orders.orderNumber", { id: o.id })}</p>
-              <p className="text-xs text-muted dark:text-portal-muted">{t("orders.placedOn", { date: formatDate(o.createdAt) })}</p>
+          <div className="flex items-start gap-3.5 border-b border-line pb-4 dark:border-portal-line">
+            <WasteImage
+              wasteType={o.wasteType}
+              alt={WASTE_LABELS[o.wasteType]}
+              className="h-16 w-16 shrink-0 rounded-xl object-cover border border-line dark:border-portal-line"
+            />
+            <div className="min-w-0 flex-1 flex items-start justify-between gap-3">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[o.wasteType]}</h1>
+                <p className="num text-xs text-muted dark:text-portal-muted">{t("orders.orderNumber", { id: o.id })}</p>
+                <p className="text-xs text-muted dark:text-portal-muted">{t("orders.placedOn", { date: formatDate(o.createdAt) })}</p>
+              </div>
+              <span className="rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold text-muted dark:border-portal-line dark:bg-portal-surface dark:text-portal-muted">
+                {profile.role === "buyer" ? `Farmer: ${o.farmerName}` : `Buyer: ${o.buyerName}`}
+              </span>
             </div>
-            <span className="rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold text-muted dark:border-portal-line dark:bg-portal-surface dark:text-portal-muted">
-              {profile.role === "buyer" ? `Farmer: ${o.farmerName}` : `Buyer: ${o.buyerName}`}
-            </span>
           </div>
 
           <StatusTriad fulfilment={o.fulfilment} payment={o.payment} payout={o.payout} className="mt-2" />

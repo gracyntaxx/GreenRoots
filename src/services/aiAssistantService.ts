@@ -124,6 +124,40 @@ function detectDeadline(text: string): string | undefined {
 }
 
 export const aiAssistantService = {
+  async parseListingAudio(audioBlob: Blob, _language: Language = "en"): Promise<ListingDraft> {
+    const reader = new FileReader();
+    const base64Promise = new Promise<string>((resolve, reject) => {
+      reader.onloadend = () => {
+        const res = reader.result as string;
+        const base64 = res.includes(",") ? res.split(",")[1] : res;
+        resolve(base64);
+      };
+      reader.onerror = reject;
+    });
+    reader.readAsDataURL(audioBlob);
+    const audioBase64 = await base64Promise;
+
+    return call(
+      "ai/parse-audio",
+      {
+        method: "POST",
+        body: JSON.stringify({ audioBase64, mimeType: audioBlob.type || "audio/webm" }),
+      },
+      () => {
+        return {
+          wasteType: "paddy_straw",
+          quantity: 50,
+          unit: "quintal",
+          rate: 1400,
+          rateUnit: "quintal",
+          village: "Rewari",
+          confidence: { wasteType: 0.92, quantity: 0.9, rate: 0.88, village: 0.8 },
+          rawText: "Recorded audio speech",
+        };
+      }
+    );
+  },
+
   parseListingText(text: string, _language: Language = "en"): Promise<ListingDraft> {
     return call("ai/parse-listing", { method: "POST", body: JSON.stringify({ text }) }, () => {
       if (!text.trim()) throw new MockError("No speech or text was received.", "NO_INPUT");

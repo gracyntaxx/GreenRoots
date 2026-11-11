@@ -20,6 +20,7 @@ import { aiAssistantService } from "@/services/aiAssistantService";
 import { PoolProgress } from "@/components/shared/PoolProgress";
 import { StatusChip } from "@/components/shared/StatusTriad";
 import { VerifiedMark, AiChip, EstimateLabel } from "@/components/shared/Marks";
+import { WasteImage } from "@/components/shared/WasteImage";
 import { RateText } from "@/components/shared/Numbers";
 import { MapView, type MapMarker } from "@/components/shared/MapView";
 import { ConfirmSheet } from "@/components/shared/ConfirmSheet";
@@ -186,39 +187,58 @@ export default function PoolDetailPage() {
       <div className="grid gap-6 lg:grid-cols-5">
         {/* Left Column: Pool Progress & Map */}
         <div className="space-y-4 lg:col-span-3">
-          <Card className="p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[p.wasteType]}</h1>
-                  {p.industryVerified && <VerifiedMark />}
-                </div>
-                <p className="mt-1 text-sm font-semibold text-muted dark:text-portal-muted">{p.industryName}</p>
-                <p className="mt-1 flex items-center gap-1.5 text-xs text-muted dark:text-portal-muted">
-                  <MapPin className="h-4 w-4 text-forest" /> {p.village} · {p.distanceKm.toFixed(0)} km away
-                </p>
-              </div>
-              <div className="shrink-0 text-right">
-                <RateText rate={p.ratePerUnit} unit={p.rateUnit} className="text-xl sm:text-2xl font-bold text-forest dark:text-growth" />
-                <p className="mt-1 flex items-center justify-end gap-1.5 text-xs font-semibold text-muted dark:text-portal-muted">
-                  <CalendarClock className="h-4 w-4 text-settle" />
-                  {p.daysLeft > 0 ? `${p.daysLeft} days left` : t("home.overdue")}
-                </p>
+          <Card className="overflow-hidden p-0">
+            <div className="relative h-48 sm:h-60 w-full overflow-hidden bg-canvas dark:bg-portal-bg">
+              <WasteImage
+                wasteType={p.wasteType}
+                alt={WASTE_LABELS[p.wasteType]}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
+                <span className="rounded-full bg-forest/90 backdrop-blur-xs px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-xs">
+                  {WASTE_LABELS[p.wasteType]}
+                </span>
+                <span className="rounded-full bg-black/50 backdrop-blur-xs px-2.5 py-1 text-xs font-medium text-white/90">
+                  Residue Photography
+                </span>
               </div>
             </div>
 
-            <PoolProgress committedKg={p.committedKg} targetKg={p.targetKg} status={p.status} className="mt-4" />
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[p.wasteType]}</h1>
+                    {p.industryVerified && <VerifiedMark />}
+                  </div>
+                  <p className="mt-1 text-sm font-semibold text-muted dark:text-portal-muted">{p.industryName}</p>
+                  <p className="mt-1 flex items-center gap-1.5 text-xs text-muted dark:text-portal-muted">
+                    <MapPin className="h-4 w-4 text-forest" /> {p.village} · {p.distanceKm.toFixed(0)} km away
+                  </p>
+                </div>
+                <div className="shrink-0 text-right">
+                  <RateText rate={p.ratePerUnit} unit={p.rateUnit} className="text-xl sm:text-2xl font-bold text-forest dark:text-growth" />
+                  <p className="mt-1 flex items-center justify-end gap-1.5 text-xs font-semibold text-muted dark:text-portal-muted">
+                    <CalendarClock className="h-4 w-4 text-settle" />
+                    {p.daysLeft > 0 ? `${p.daysLeft} days left` : t("home.overdue")}
+                  </p>
+                </div>
+              </div>
 
-            {p.expanded && p.expandedToKm && (
-              <p className="mt-3 rounded-xl bg-meadow/70 px-3 py-2 text-xs font-semibold text-forest dark:bg-[#123524] dark:text-growth">
-                {t("pools.areaExpanded", { km: p.expandedToKm })}
-              </p>
-            )}
+              <PoolProgress committedKg={p.committedKg} targetKg={p.targetKg} status={p.status} className="mt-4" />
 
-            <div className="mt-4 flex gap-2">
-              <Button variant="ai" size="portal" className="font-semibold" onClick={doExplain}>
-                <Sparkles className="h-4 w-4" /> {t("pools.explainPool")}
-              </Button>
+              {p.expanded && p.expandedToKm && (
+                <p className="mt-3 rounded-xl bg-meadow/70 px-3 py-2 text-xs font-semibold text-forest dark:bg-[#123524] dark:text-growth">
+                  {t("pools.areaExpanded", { km: p.expandedToKm })}
+                </p>
+              )}
+
+              <div className="mt-4 flex gap-2">
+                <Button variant="ai" size="portal" className="font-semibold" onClick={doExplain}>
+                  <Sparkles className="h-4 w-4" /> {t("pools.explainPool")}
+                </Button>
+              </div>
             </div>
           </Card>
 

@@ -1,6 +1,17 @@
 import { withLatency } from "@/mocks/store";
 import { supabase } from "@/lib/supabaseClient";
 
+// Global BigInt serialization polyfill for all API calls
+if (typeof BigInt !== "undefined" && !(BigInt.prototype as any).toJSON) {
+  (BigInt.prototype as any).toJSON = function () {
+    return Number(this);
+  };
+}
+
+export function safeJsonStringify(value: unknown): string {
+  return JSON.stringify(value, (_, v) => (typeof v === "bigint" ? Number(v) : v));
+}
+
 export const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== "false";
 
 const BASE = import.meta.env.VITE_SUPABASE_URL ?? "";

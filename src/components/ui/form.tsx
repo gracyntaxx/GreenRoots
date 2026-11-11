@@ -18,7 +18,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
     <input
       ref={ref}
       className={cn(
-        "flex min-h-14 w-full rounded-field border-[1.5px] border-line bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-forest focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/30 disabled:bg-canvas",
+        "flex min-h-12 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-base text-ink placeholder:text-muted/60 shadow-sm transition-all focus:border-forest focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/20 disabled:bg-canvas",
         "dark:border-portal-line dark:bg-portal-bg dark:text-portal-ink dark:placeholder:text-portal-muted",
         className
       )}
@@ -35,7 +35,7 @@ export const Textarea = React.forwardRef<
   <textarea
     ref={ref}
     className={cn(
-      "flex min-h-28 w-full rounded-field border-[1.5px] border-line bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-forest focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/30",
+      "flex min-h-28 w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/60 shadow-sm transition-all focus:border-forest focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/20",
       "dark:border-portal-line dark:bg-portal-bg dark:text-portal-ink dark:placeholder:text-portal-muted",
       className
     )}
@@ -51,8 +51,8 @@ export const Select = React.forwardRef<
   <select
     ref={ref}
     className={cn(
-      "flex min-h-14 w-full appearance-none rounded-field border-[1.5px] border-line bg-surface px-4 py-3 text-base text-ink focus:border-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/30",
-      "bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22m5%208%205%205%205-5%22/%3E%3C/svg%3E')] bg-[right_1rem_center] bg-no-repeat pr-10",
+      "flex min-h-12 w-full appearance-none rounded-xl border border-line bg-surface px-4 py-2.5 pr-10 text-base text-ink shadow-sm transition-all focus:border-forest focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/20",
+      "bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22none%22%20stroke%3D%22%235c6b60%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22m5%208%205%205%205-5%22/%3E%3C/svg%3E')] bg-[right_1rem_center] bg-no-repeat",
       "dark:border-portal-line dark:bg-portal-bg dark:text-portal-ink",
       className
     )}
