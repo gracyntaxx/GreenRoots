@@ -32,13 +32,22 @@ export function PayPalSandboxModal({
   const { t } = useTranslation();
   const [stage, setStage] = useState<Stage>("review");
   const [message, setMessage] = useState("");
+  const [hasOpenedSandbox, setHasOpenedSandbox] = useState(false);
 
   useEffect(() => {
     if (open) {
       setStage("review");
       setMessage("");
+      setHasOpenedSandbox(false);
     }
   }, [open]);
+
+  const openSandboxPopup = () => {
+    if (payment?.approveUrl) {
+      setHasOpenedSandbox(true);
+      window.open(payment.approveUrl, "paypal_sandbox_checkout", "width=520,height=700,scrollbars=yes");
+    }
+  };
 
   const run = async (outcome: PayPalDemoOutcome) => {
     if (!payment) return;
@@ -117,27 +126,45 @@ export function PayPalSandboxModal({
                 </div>
               </div>
 
-              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted">
-                <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-                Order reference · {payment?.paypalOrderRef ?? "Processing..."}
+              <div className="mt-3 flex items-center justify-between text-[11px] text-muted">
+                <span className="flex items-center gap-1.5">
+                  <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+                  Order: <strong className="num text-ink">{payment?.paypalOrderRef ?? "Processing..."}</strong>
+                </span>
+                <span className="text-[10px] uppercase font-bold text-forest">Live Sandbox API</span>
               </div>
 
+              {hasOpenedSandbox && (
+                <div className="mt-3 rounded-lg border border-forest/30 bg-meadow/50 p-2.5 text-xs text-forest">
+                  <p className="font-semibold">PayPal Sandbox window opened!</p>
+                  <p className="mt-0.5 text-[11px] text-forest/90">
+                    Log in with your test personal account and authorize the charge. Then click <strong>Capture Payment</strong> below.
+                  </p>
+                </div>
+              )}
+
               <div className="mt-4 space-y-2">
-                <Button variant="paypal" size="field" className="w-full" onClick={() => void run("approve")}>
-                  <ShieldCheck className="h-5 w-5" /> Approve payment
-                </Button>
-                {payment?.approveUrl && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="portal"
-                    className="w-full text-xs"
-                    onClick={() => window.open(payment.approveUrl, "_blank")}
-                  >
-                    Open in PayPal Sandbox ↗
+                {payment?.approveUrl ? (
+                  <>
+                    <Button variant="paypal" size="field" className="w-full font-bold shadow-sm" onClick={openSandboxPopup}>
+                      {hasOpenedSandbox ? "Re-open PayPal Sandbox ↗" : "Pay with PayPal Sandbox ↗"}
+                    </Button>
+                    <Button
+                      variant={hasOpenedSandbox ? "primary" : "outline"}
+                      size="field"
+                      className="w-full"
+                      onClick={() => void run("approve")}
+                    >
+                      <ShieldCheck className="h-5 w-5" />
+                      {hasOpenedSandbox ? "Verify & Capture Payment" : "Quick Approve (Hackathon Demo)"}
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="paypal" size="field" className="w-full" onClick={() => void run("approve")}>
+                    <ShieldCheck className="h-5 w-5" /> Approve payment
                   </Button>
                 )}
-                <Button variant="ghost" size="portal" className="w-full" onClick={() => void run("cancel")}>
+                <Button variant="ghost" size="portal" className="w-full text-xs text-muted" onClick={() => void run("cancel")}>
                   Cancel and return
                 </Button>
               </div>

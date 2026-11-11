@@ -3,10 +3,13 @@ node_modules/
 .pnp
 .pnp.js
 
-# Production build
+# Production build & caches
 dist/
 dist-ssr/
 *.tsbuildinfo
+.cache/
+.vite/
+.eslintcache
 
 # Environment & Secret files
 .env
@@ -16,20 +19,40 @@ dist-ssr/
 .env.*.local
 *.local
 
+# Vercel deployment metadata
+.vercel/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
 # System & IDE files
 .DS_Store
 Thumbs.db
+desktop.ini
 .vscode/*
 !.vscode/settings.json
+.idea/
+*.swp
+*.swo
 
-# SQLite local databases
-greenroots.db
-greenroots.db-wal
-greenroots.db-shm
+# SQLite & local databases
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Test & Coverage
+coverage/
+.nyc_output/
 
 # Supabase
 supabase/.branches
-supabase/.temp
-supabase/.env.secrets
 supabase/.temp/
-
+supabase/.env.secrets
