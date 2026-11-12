@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BadgeCheck, FileText, Loader2, ShieldAlert, ShieldCheck } from "lucide-react";
+import { BadgeCheck, FileText, Flag, History, Loader2, MapPin, ShieldAlert, ShieldCheck } from "lucide-react";
 import { useSession } from "@/store/session";
 import { useUi } from "@/store/ui";
 import { adminService } from "@/services/adminService";
@@ -65,10 +66,44 @@ export default function VerificationPage() {
   };
 
   return (
-    <PageContainer>
+    <PageContainer className="space-y-6">
+      <div className="border-b border-line/80 pb-5 dark:border-portal-line">
+        <span className="eyebrow mb-2">Governance & Compliance</span>
+        <h1 className="font-heading text-2xl sm:text-3xl font-bold text-moss dark:text-portal-ink">
+          Admin Moderation & Governance
+        </h1>
+        <p className="mt-1 text-sm text-muted dark:text-portal-muted">
+          Review pending industry business licences, audit AI-flagged listings, manage collection hubs, and inspect tamper-evident audit logs.
+        </p>
+
+        {/* High-Clarity Governance Tabs */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {[
+            { to: "/portal/admin/verification", label: "Industry Accounts", icon: ShieldCheck, active: true },
+            { to: "/portal/admin/moderation", label: "AI-Flagged Listings", icon: Flag, active: false },
+            { to: "/portal/admin/collection-points", label: "Collection Points", icon: MapPin, active: false },
+            { to: "/portal/admin/audit", label: "Transaction Audit Log", icon: History, active: false },
+          ].map((tab) => (
+            <Link
+              key={tab.to}
+              to={tab.to}
+              className={cn(
+                "flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all shadow-xs",
+                tab.active
+                  ? "bg-forest text-white"
+                  : "bg-surface border border-line text-muted hover:border-moss hover:text-moss dark:bg-portal-surface dark:border-portal-line"
+              )}
+            >
+              <tab.icon className="h-3.5 w-3.5" />
+              {tab.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
       <PortalPageHeader
-        title="Industry verification"
-        description="A human decision is required before an industry can publish requirements. AI may summarise documents, but it never approves."
+        title="Pending Industry Licences"
+        description="A human decision is required before an industry can publish requirements. AI may summarise documents, but it never auto-approves."
         actions={
           <div className="flex rounded-portal border border-line bg-surface p-0.5 dark:border-portal-line dark:bg-portal-surface">
             {(["pending", "all"] as const).map((f) => (

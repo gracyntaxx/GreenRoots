@@ -40,10 +40,10 @@ interface Notice {
 }
 
 const QUICK_PRESETS = [
-  { label: "🌾 Paddy Straw · 50 Qtl", text: "I have 50 quintals of paddy straw available in Rewari at 1400 rupees per quintal." },
-  { label: "🌱 Mustard Stubble · 3 Qtl", text: "I have 3 quintals of mustard stubble in Rewari at 1200 rupees per quintal." },
-  { label: "🌰 Cashew Shells · 10 Tonnes", text: "I have 10 tonnes of cashew shells in Ratnagiri at 900 rupees per quintal." },
-  { label: "🌾 Wheat Straw · 100 Qtl", text: "I have 100 quintals of wheat straw in Panipat at 2200 rupees per quintal." },
+  { label: "Paddy Straw · 50 Qtl", text: "I have 50 quintals of paddy straw available in Rewari at 1400 rupees per quintal." },
+  { label: "Mustard Stubble · 3 Qtl", text: "I have 3 quintals of mustard stubble in Rewari at 1200 rupees per quintal." },
+  { label: "Cashew Shells · 10 Tonnes", text: "I have 10 tonnes of cashew shells in Ratnagiri at 900 rupees per quintal." },
+  { label: "Wheat Straw · 100 Qtl", text: "I have 100 quintals of wheat straw in Panipat at 2200 rupees per quintal." },
 ];
 
 export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
@@ -506,7 +506,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
             {/* Quick Test Preset Chips */}
             <div className="mt-5 w-full rounded-2xl border border-line bg-canvas p-3.5">
               <p className="text-[11px] font-bold uppercase tracking-wider text-muted">
-                ⚡ Quick Presets (Click to test instantly)
+                Quick Presets (Click to test instantly)
               </p>
               <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {QUICK_PRESETS.map((p, idx) => (

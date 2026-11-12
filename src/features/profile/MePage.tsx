@@ -95,59 +95,112 @@ export default function MePage() {
         </button>
       </div>
 
+      {/* Left Column: Circular Reputation Gauge & Payout Readiness */}
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        {/* Left Column: Reputation & Payout */}
         <div className="space-y-4">
-          <Card className="p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-muted dark:text-portal-muted">{t("me.reputation")}</p>
-                <p className="mt-0.5 text-xs text-muted dark:text-portal-muted">{t("me.calculatedFrom")}</p>
-              </div>
-              <ReputationBadge score={profile.reputation} factors={profile.reputationFactors} showScore />
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {profile.reputationFactors.map((f) => (
-                <div key={f.key} className="rounded-xl border border-line bg-canvas p-3 dark:border-portal-line dark:bg-portal-bg">
-                  <p className="text-[11px] leading-tight text-muted dark:text-portal-muted">{f.label}</p>
-                  <p className="num mt-1 text-sm sm:text-base font-bold text-ink dark:text-portal-ink">{f.value}</p>
+          {/* Trust Card with Circular Reputation Gauge */}
+          <Card className="rounded-panel border border-line/80 bg-white/95 p-6 backdrop-blur-md shadow-card dark:bg-portal-surface">
+            <div className="flex flex-col sm:flex-row items-center gap-5">
+              {/* Circular Reputation Score Gauge */}
+              <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
+                <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    stroke="#E6EFEA"
+                    strokeWidth="8"
+                    fill="transparent"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    stroke="#D96B27"
+                    strokeWidth="8"
+                    strokeDasharray="264"
+                    strokeDashoffset={264 - (264 * (profile.reputation / 5))}
+                    strokeLinecap="round"
+                    fill="transparent"
+                    className="transition-all duration-1000"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span className="font-heading text-2xl font-bold text-moss dark:text-portal-ink">
+                    {profile.reputation.toFixed(1)}
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted">Out of 5.0</span>
                 </div>
-              ))}
-              {profile.reputationFactors.length === 0 && (
-                <p className="col-span-2 rounded-xl border border-line bg-canvas p-3 text-xs text-muted dark:border-portal-line dark:bg-portal-bg">
-                  No transaction history yet. Your score appears after your first completed delivery.
+              </div>
+
+              <div className="min-w-0 text-center sm:text-left">
+                <span className="eyebrow mb-1">Reputation Engine</span>
+                <h3 className="font-heading text-xl font-bold text-moss dark:text-portal-ink">
+                  Verified Trust Score
+                </h3>
+                <p className="mt-1 text-xs text-muted leading-relaxed dark:text-portal-muted">
+                  Empirically calculated from weighbridge delivery logs, residue quality acceptance, and zero contract defaults.
                 </p>
-              )}
+              </div>
+            </div>
+
+            {/* Verified Transaction Milestones */}
+            <div className="mt-5 border-t border-line/70 pt-4 dark:border-portal-line">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-2.5">
+                Verified Milestones & Performance
+              </span>
+              <div className="grid grid-cols-2 gap-2.5">
+                {profile.reputationFactors.map((f) => (
+                  <div key={f.key} className="rounded-xl border border-line/70 bg-canvas/70 p-3 dark:bg-portal-bg">
+                    <p className="text-[11px] leading-tight text-muted dark:text-portal-muted">{f.label}</p>
+                    <p className="num mt-1 text-base font-bold text-moss dark:text-portal-ink">{f.value}</p>
+                  </div>
+                ))}
+                {profile.reputationFactors.length === 0 && (
+                  <div className="col-span-2 rounded-xl border border-line/70 bg-canvas/70 p-3 text-xs text-muted">
+                    Milestones will unlock after your first weighbridge fulfillment.
+                  </div>
+                )}
+              </div>
             </div>
           </Card>
 
-          <Card className="p-5">
+          {/* PayPal Payout Readiness Card */}
+          <Card className="rounded-panel border border-line/80 bg-white/95 p-6 backdrop-blur-md shadow-card dark:bg-portal-surface">
             <div className="flex items-center justify-between">
-              <p className="flex items-center gap-2 text-sm sm:text-base font-bold text-ink dark:text-portal-ink">
-                <Wallet className="h-5 w-5 text-forest" /> {t("me.payoutReadiness")}
-              </p>
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-forest text-wheat">
+                  <Wallet className="h-5 w-5" />
+                </span>
+                <div>
+                  <h3 className="font-heading text-base font-bold text-moss dark:text-portal-ink">
+                    {t("me.payoutReadiness")}
+                  </h3>
+                  <span className="text-[11px] text-muted">PayPal Sandbox Disbursement Escrow</span>
+                </div>
+              </div>
               <span
                 className={cn(
-                  "rounded-full px-2.5 py-0.5 text-xs font-bold",
+                  "rounded-full px-3 py-1 text-xs font-bold border",
                   profile.payoutReadiness === "Ready"
-                    ? "bg-meadow text-forest dark:bg-[#123524] dark:text-growth"
+                    ? "bg-sage text-moss border-forest/30"
                     : profile.payoutReadiness === "Pending verification"
-                    ? "bg-settle/15 text-[#92400E]"
-                    : "bg-canvas text-muted dark:bg-portal-bg dark:text-portal-muted"
+                    ? "bg-settle/15 text-[#92400E] border-settle/30"
+                    : "bg-canvas text-muted border-line"
                 )}
               >
                 {profile.payoutReadiness === "Ready"
-                  ? t("me.ready")
+                  ? "PayPal Ready"
                   : profile.payoutReadiness === "Pending verification"
                   ? t("me.pendingVerification")
                   : t("me.notSetUp")}
               </span>
             </div>
-            <p className="mt-2 text-xs leading-relaxed text-muted dark:text-portal-muted">{t("me.payoutNote")}</p>
+            <p className="mt-3 text-xs leading-relaxed text-muted dark:text-portal-muted">{t("me.payoutNote")}</p>
             <Button
               variant="outline"
               size="portal"
-              className="mt-3 w-full font-semibold"
+              className="mt-4 w-full font-bold border-line hover:border-moss"
               onClick={() =>
                 pushToast({
                   title: t("me.digilocker"),
@@ -156,9 +209,9 @@ export default function MePage() {
                 })
               }
             >
-              <ShieldCheck className="h-4 w-4" /> {t("me.digilockerStart")}
+              <ShieldCheck className="h-4 w-4 text-forest" /> {t("me.digilockerStart")}
             </Button>
-            <p className="mt-1.5 text-center text-[11px] text-muted dark:text-portal-muted">{t("me.digilockerNote")}</p>
+            <p className="mt-2 text-center text-[10px] text-muted dark:text-portal-muted">{t("me.digilockerNote")}</p>
           </Card>
         </div>
 

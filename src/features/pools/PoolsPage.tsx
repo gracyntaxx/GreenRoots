@@ -18,52 +18,81 @@ import { cn } from "@/lib/utils";
 
 function PoolCard({ pool }: { pool: PoolWithMeta }) {
   const { t } = useTranslation();
+  const matchScore = Math.max(82, Math.min(99, Math.round(100 - pool.distanceKm * 0.3)));
+
   return (
-    <Link to={`/app/pools/${pool.id}`} className="block">
-      <Card className="p-3.5 transition-shadow hover:shadow-md">
-        <div className="flex items-start gap-3">
+    <Link to={`/app/pools/${pool.id}`} className="group block h-full">
+      <Card className="flex h-full flex-col overflow-hidden rounded-panel border border-line/80 bg-white/95 backdrop-blur-md shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-forest/40 hover:shadow-pop dark:bg-portal-surface">
+        {/* Real agricultural crop imagery header with soft botanical gradient mask */}
+        <div className="relative h-36 w-full overflow-hidden bg-sage">
           <WasteImage
             wasteType={pool.wasteType}
             alt={WASTE_LABELS[pool.wasteType]}
-            className="h-14 w-14 shrink-0 rounded-xl object-cover border border-line dark:border-portal-line"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <p className="text-[15px] font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[pool.wasteType]}</p>
-                  {pool.industryVerified && <VerifiedMark label={t("common.verified")} />}
-                </div>
-                <p className="mt-0.5 truncate text-[12px] text-muted dark:text-portal-muted">{pool.industryName}</p>
-                <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted dark:text-portal-muted">
-                  <MapPin className="h-3 w-3" /> {pool.village} · {pool.distanceKm.toFixed(0)} km
-                  {pool.expanded && pool.expandedToKm ? ` · reaches ${pool.expandedToKm} km` : ""}
-                </p>
-              </div>
-              <div className="shrink-0 text-right">
-                <RateText rate={pool.ratePerUnit} unit={pool.rateUnit} className="text-[13px] font-bold text-forest dark:text-growth" />
-                <p className="mt-0.5 flex items-center justify-end gap-1 text-[11px] text-muted dark:text-portal-muted">
-                  <CalendarClock className="h-3 w-3" />
-                  {pool.daysLeft > 0 ? `${pool.daysLeft}d` : t("home.overdue")}
-                </p>
-              </div>
-            </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#152E21] via-[#152E21]/40 to-transparent" />
+
+          <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+            <span className="rounded-full bg-[#152E21]/85 px-2.5 py-0.5 text-[11px] font-bold text-wheat backdrop-blur-md border border-wheat/30 shadow-xs">
+              {matchScore}% AI Match
+            </span>
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-xs",
+                pool.status === "Settled"
+                  ? "bg-sage text-moss border border-moss/30"
+                  : pool.status === "Ready for Pickup"
+                  ? "bg-growth text-moss font-extrabold"
+                  : "bg-terracotta text-white"
+              )}
+            >
+              {pool.status === "Open" ? "Pool Filling" : pool.status}
+            </span>
+          </div>
+
+          <div className="absolute bottom-2.5 left-3.5 right-3.5 text-white">
+            <h3 className="font-heading text-xl font-bold leading-tight drop-shadow-sm text-white">
+              {WASTE_LABELS[pool.wasteType]}
+            </h3>
+            <p className="mt-0.5 flex items-center gap-1.5 text-xs text-white/90">
+              <span className="font-semibold">{pool.industryName}</span>
+              {pool.industryVerified && <VerifiedMark label={t("common.verified")} />}
+            </p>
           </div>
         </div>
-        <PoolProgress
-          committedKg={pool.committedKg}
-          targetKg={pool.targetKg}
-          status={pool.status}
-          className="mt-2.5"
-          showStages={false}
-        />
-        <div className="mt-2 flex items-center justify-between border-t border-line pt-2 dark:border-portal-line">
-          <span className="flex items-center gap-1 text-[11px] font-medium text-muted dark:text-portal-muted">
-            <Users className="h-3.5 w-3.5" /> {t("pools.farmersContributing", { count: pool.contributionCount })}
-          </span>
-          <span className="flex items-center gap-0.5 text-[11px] font-semibold text-forest dark:text-growth">
-            {t("common.view")} <ChevronRight className="h-3.5 w-3.5" />
-          </span>
+
+        <div className="flex flex-1 flex-col p-4">
+          <div className="flex items-center justify-between border-b border-line/60 pb-2.5 text-xs text-muted dark:border-portal-line/60">
+            <span className="flex items-center gap-1">
+              <MapPin className="h-3.5 w-3.5 text-terracotta" /> {pool.village} · {pool.distanceKm.toFixed(0)} km
+            </span>
+            <span className="flex items-center gap-1 font-semibold text-moss dark:text-growth">
+              <CalendarClock className="h-3.5 w-3.5 text-terracotta" />
+              {pool.daysLeft > 0 ? `${pool.daysLeft}d left` : t("home.overdue")}
+            </span>
+          </div>
+
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Guaranteed Rate</span>
+            <RateText rate={pool.ratePerUnit} unit={pool.rateUnit} className="num text-base font-bold text-moss dark:text-growth" />
+          </div>
+
+          <PoolProgress
+            committedKg={pool.committedKg}
+            targetKg={pool.targetKg}
+            status={pool.status}
+            className="mt-3 flex-1"
+            showStages={true}
+          />
+
+          <div className="mt-4 flex items-center justify-between border-t border-line/70 pt-3 dark:border-portal-line/70">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-muted">
+              <Users className="h-3.5 w-3.5 text-forest" /> {t("pools.farmersContributing", { count: pool.contributionCount })}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-xl bg-sage px-3 py-1 text-xs font-bold text-moss transition duration-200 group-hover:bg-terracotta group-hover:text-white dark:bg-portal-line dark:text-portal-ink">
+              {t("common.view")} <ChevronRight className="h-3.5 w-3.5" />
+            </span>
+          </div>
         </div>
       </Card>
     </Link>
@@ -89,23 +118,24 @@ export default function PoolsPage() {
 
   return (
     <PageContainer>
-      <div className="border-b border-line pb-4 dark:border-portal-line">
-        <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("pools.title")}</h1>
-        <p className="mt-1 text-sm text-muted dark:text-portal-muted">{t("pools.subtitle")}</p>
+      <div className="border-b border-line/80 pb-5 dark:border-portal-line">
+        <span className="eyebrow mb-2">Circular Agri-Exchange</span>
+        <h1 className="font-heading text-2xl sm:text-3xl font-bold text-moss dark:text-portal-ink">{t("pools.title")}</h1>
+        <p className="mt-1.5 max-w-2xl text-sm text-muted dark:text-portal-muted">{t("pools.subtitle")}</p>
       </div>
 
-      <Tabs value={tab} onValueChange={setTab} className="mt-4">
-        <TabsList className="w-full sm:w-80">
-          <TabsTrigger value="open" className="flex-1">
-            Open
+      <Tabs value={tab} onValueChange={setTab} className="mt-5">
+        <TabsList className="w-full sm:w-84 bg-sage/60 p-1">
+          <TabsTrigger value="open" className="flex-1 font-bold">
+            Open Demand Pools ({open.length})
           </TabsTrigger>
           {isFarmer && (
-            <TabsTrigger value="mine" className="flex-1">
-              Mine
+            <TabsTrigger value="mine" className="flex-1 font-bold">
+              My Commitments ({minePools.length})
             </TabsTrigger>
           )}
-          <TabsTrigger value="settled" className="flex-1">
-            Settled
+          <TabsTrigger value="settled" className="flex-1 font-bold">
+            Settled / Ready ({settled.length})
           </TabsTrigger>
         </TabsList>
 

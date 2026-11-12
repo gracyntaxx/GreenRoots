@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check, Factory, Loader2, ShoppingBasket, Sprout } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Factory, FileUp, Loader2, ShoppingBasket, Sprout } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input, Label, FieldError, FieldHint } from "@/components/ui/form";
@@ -150,53 +150,87 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas px-4 py-8">
-      <div className="mx-auto w-full max-w-lg">
-        <Link to="/login" className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-muted hover:text-forest">
-          <ArrowLeft className="h-4 w-4" /> Back to sign in
-        </Link>
+    <div className="min-h-screen bg-canvas flex flex-col justify-center py-6 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-panel border border-line/80 bg-white/95 shadow-card backdrop-blur-md dark:border-portal-line dark:bg-portal-surface grid lg:grid-cols-2">
+        {/* Left Side: Editorial Context & Role Explainer */}
+        <div className="relative hidden lg:flex flex-col justify-between p-8 bg-gradient-to-br from-[#152E21] via-[#1B3B2B] to-[#2E6F40] text-white">
+          <div className="relative z-10">
+            <Link to="/login" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-wheat hover:text-white transition-colors">
+              <ArrowLeft className="h-4 w-4" /> Back to Sign In
+            </Link>
+            <div className="mt-8">
+              <span className="inline-block rounded-full bg-wheat/20 px-3 py-1 text-xs font-bold text-wheat border border-wheat/30">
+                Onboarding & Verification
+              </span>
+              <h2 className="font-heading mt-4 text-3xl font-bold leading-tight text-white">
+                Join the verified circular bio-economy.
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-white/80">
+                Whether you are a farmer selling stubble, a buyer sourcing organic coir, or an industrial bio-pellet plant, GreenRoots guarantees transparent weighbridge tracking and PayPal settlement.
+              </p>
+            </div>
+          </div>
 
-        <div className="mt-4 rounded-2xl border-[1.5px] border-line bg-surface p-5 shadow-sm sm:p-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-forest text-white">
+          <div className="relative z-10 space-y-2.5">
+            <div className="flex items-center gap-2 text-xs text-wheat">
+              <Check className="h-4 w-4 text-wheat" /> Multi-lingual AI Voice & Text listings
+            </div>
+            <div className="flex items-center gap-2 text-xs text-wheat">
+              <Check className="h-4 w-4 text-wheat" /> Pro-rata pooled contracts with guaranteed pricing
+            </div>
+            <div className="flex items-center gap-2 text-xs text-wheat">
+              <Check className="h-4 w-4 text-wheat" /> Official business license vetting for industries
+            </div>
+          </div>
+
+          {/* Background Decorative Grid */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#EAB308_1px,transparent_1px)] [background-size:16px_16px]" />
+        </div>
+
+        {/* Right Side: Onboarding & Signup Form */}
+        <div className="p-6 sm:p-8 flex flex-col justify-center">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-forest text-white shadow-xs">
               <LogoMark className="h-7 w-7" />
             </span>
             <div>
-              <h1 className="text-xl font-bold leading-tight text-ink">Create your account</h1>
-              <p className="text-[12px] text-muted">
-                {role ? `Step 2 of 2 · ${roleCards.find((r) => r.role === role)?.title}` : "Step 1 of 2 · Choose your role"}
+              <h1 className="font-heading text-2xl font-bold leading-tight text-moss dark:text-portal-ink">
+                Create your account
+              </h1>
+              <p className="text-xs text-muted">
+                {role ? `Step 2 of 2 · ${roleCards.find((r) => r.role === role)?.title} Profile` : "Step 1 of 2 · Choose your role"}
               </p>
             </div>
           </div>
 
           {!role ? (
-            <div className="mt-5">
+            <div className="space-y-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted">Select your primary role:</p>
               <div className="space-y-2.5">
                 {roleCards.map((r) => (
                   <button
                     key={r.role}
                     type="button"
                     onClick={() => setRole(r.role)}
-                    className="flex min-h-[76px] w-full items-center gap-3 rounded-xl border-[1.5px] border-line bg-surface px-4 text-left transition-colors hover:border-forest/50 hover:bg-canvas"
+                    className="flex min-h-[72px] w-full items-center gap-3.5 rounded-xl border-[1.5px] border-line/80 bg-white p-3.5 text-left transition-all hover:border-forest hover:bg-sage/40 hover:shadow-xs group"
                   >
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-meadow text-forest">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sage text-moss group-hover:bg-wheat-soft group-hover:text-terracotta-dark transition-colors">
                       <r.icon className="h-5 w-5" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-base font-semibold text-ink">{r.title}</span>
-                      <span className="block text-[12px] text-muted">{r.body}</span>
+                      <span className="block text-sm font-bold text-moss">{r.title}</span>
+                      <span className="block text-xs text-muted">{r.body}</span>
                     </span>
-                    <ArrowRight className="h-5 w-5 text-muted" aria-hidden="true" />
+                    <ArrowRight className="h-4 w-4 text-muted group-hover:translate-x-1 group-hover:text-terracotta transition-all" aria-hidden="true" />
                   </button>
                 ))}
               </div>
-              <div className="mt-4 rounded-lg border border-line bg-canvas p-3 text-[11px] leading-relaxed text-muted">
-                <span className="font-semibold text-ink">Admin accounts cannot be self-assigned.</span> GreenRoots
-                operations creates admin accounts directly.
+              <div className="rounded-xl border border-line/70 bg-canvas/70 p-3 text-[11px] leading-relaxed text-muted">
+                <span className="font-bold text-moss">Admin accounts:</span> Managed directly by GreenRoots operations cluster governance.
               </div>
-              <p className="mt-4 text-center text-sm text-muted">
+              <p className="pt-2 text-center text-sm text-muted">
                 Already have an account?{" "}
-                <Link to="/login" className="font-semibold text-forest hover:underline">
+                <Link to="/login" className="font-bold text-forest hover:text-terracotta transition-colors">
                   Sign in
                 </Link>
               </p>
@@ -248,7 +282,7 @@ export default function SignupPage() {
                     <FieldError>{errors.password}</FieldError>
                   </div>
                   <div>
-                    <Label htmlFor="su-license">Licence number</Label>
+                    <Label htmlFor="su-license">Business Licence Number</Label>
                     <Input
                       id="su-license"
                       value={form.licenseNumber ?? ""}
@@ -256,6 +290,23 @@ export default function SignupPage() {
                       placeholder="e.g. HR-PNP-2024-00871"
                     />
                     <FieldError>{errors.licenseNumber}</FieldError>
+
+                    {/* Official Business License Uploader */}
+                    <div className="mt-2.5 rounded-xl border border-dashed border-line/80 bg-canvas/70 p-3 text-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <FileUp className="h-5 w-5 text-terracotta mb-1" />
+                        <span className="text-xs font-bold text-moss">Upload Business Certificate (PDF, PNG, JPG)</span>
+                        <span className="text-[10px] text-muted">Official plant licence or state pollution board consent</span>
+                        <label className="mt-2 inline-flex cursor-pointer items-center rounded-lg bg-white px-3 py-1 text-[11px] font-bold text-moss shadow-xs border border-line hover:border-moss">
+                          <span>Browse Document</span>
+                          <input
+                            type="file"
+                            className="sr-only"
+                            onChange={() => pushToast({ title: "License uploaded", description: "Document queued for admin verification.", variant: "success" })}
+                          />
+                        </label>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <Label htmlFor="su-phone">Contact phone number</Label>

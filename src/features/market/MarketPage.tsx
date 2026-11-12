@@ -88,10 +88,14 @@ export default function MarketPage() {
 
   return (
     <PageContainer>
-      <div className="flex items-center justify-between gap-2 border-b border-line pb-4 dark:border-portal-line">
-        <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("market.title")}</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-line/80 pb-5 dark:border-portal-line">
+        <div>
+          <span className="eyebrow mb-1.5">Direct Farm Gate</span>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold text-moss dark:text-portal-ink">{t("market.title")}</h1>
+          <p className="mt-1 text-sm text-muted dark:text-portal-muted">Purchase verified agricultural residue directly from local farmers with PayPal Buyer Protection.</p>
+        </div>
         {isFarmer && (
-          <Button variant="secondary" size="portal" onClick={openVoice} className="font-semibold text-forest">
+          <Button variant="primary" size="field" onClick={openVoice} className="shrink-0 font-bold shadow-md">
             <Mic className="h-4 w-4" /> {t("market.listOnMarket")}
           </Button>
         )}
@@ -256,61 +260,88 @@ export default function MarketPage() {
           />
         )}
 
-        {listings.data?.map((l) => (
-          <Link key={l.id} to={`/app/market/${l.id}`} className="block">
-            <Card className="overflow-hidden p-0 transition-all hover:shadow-md hover:border-forest/40">
-              <div className="flex">
-                <div className="relative w-28 sm:w-36 shrink-0 bg-canvas dark:bg-portal-bg">
-                  <WasteImage
-                    wasteType={l.wasteType}
-                    alt={WASTE_LABELS[l.wasteType]}
-                    className="h-full w-full object-cover"
-                  />
+        {listings.data?.map((l) => {
+          const lotTotal = Math.round(l.quantityKg * l.ratePerKg);
+          return (
+            <Card
+              key={l.id}
+              className="group flex flex-col overflow-hidden rounded-panel border border-line/80 bg-white/95 backdrop-blur-md shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-forest/40 hover:shadow-pop dark:bg-portal-surface"
+            >
+              {/* Crisp Crop Photography with Botanical Gradient Mask */}
+              <div className="relative h-40 w-full overflow-hidden bg-sage">
+                <WasteImage
+                  wasteType={l.wasteType}
+                  alt={WASTE_LABELS[l.wasteType]}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#152E21] via-[#152E21]/30 to-transparent" />
+
+                <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between">
+                  <span className="flex items-center gap-1 rounded-full bg-[#152E21]/80 px-2.5 py-0.5 text-[11px] font-bold text-wheat backdrop-blur-md border border-wheat/30 shadow-xs">
+                    <Star className="h-3 w-3 fill-wheat text-wheat" /> {l.farmerReputation.toFixed(1)} Trust
+                  </span>
+                  <span className="rounded-full bg-sage/90 px-2.5 py-0.5 text-[10px] font-bold text-moss border border-moss/30 uppercase tracking-wider backdrop-blur-md">
+                    Sun-Dried · &lt;10% Moist
+                  </span>
                 </div>
-                <div className="min-w-0 flex-1 p-3.5 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-start justify-between gap-1.5">
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <p className="truncate text-[15px] font-bold text-ink dark:text-portal-ink">{WASTE_LABELS[l.wasteType]}</p>
-                          {l.source === "voice" && (
-                            <span className="flex items-center gap-0.5 rounded-full bg-aitint px-1.5 py-0.5 text-[10px] font-semibold text-ai">
-                              <Mic className="h-2.5 w-2.5" /> voice
-                            </span>
-                          )}
-                        </div>
-                        <p className="mt-0.5 truncate text-[12px] text-muted dark:text-portal-muted">
-                          {l.farmerName} · {l.village}
-                        </p>
-                      </div>
-                      <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-muted dark:text-portal-muted" aria-hidden="true" />
-                    </div>
-                    <div className="mt-1 flex items-center gap-2 text-[11px] text-muted dark:text-portal-muted">
-                      <span className="flex items-center gap-0.5">
-                        <Star className="h-3 w-3 fill-settle text-settle" /> {l.farmerReputation.toFixed(1)}
-                      </span>
-                      <span className="flex items-center gap-0.5">
-                        <MapPin className="h-3 w-3" /> {l.distanceKm.toFixed(0)} km
-                      </span>
-                      <span className="hidden sm:inline">· {t("market.lastUpdated", { time: timeAgo(l.updatedAt) })}</span>
-                    </div>
+
+                <div className="absolute bottom-2.5 left-3.5 right-3.5 text-white">
+                  <h3 className="font-heading text-lg font-bold leading-tight drop-shadow-sm text-white">
+                    {WASTE_LABELS[l.wasteType]} ({l.quantityKg} kg)
+                  </h3>
+                  <p className="mt-0.5 flex items-center gap-1 text-[11px] text-white/90">
+                    <MapPin className="h-3 w-3 text-wheat" /> {l.village} · {l.distanceKm.toFixed(0)} km away
+                  </p>
+                </div>
+              </div>
+
+              {/* Card Body */}
+              <div className="flex flex-1 flex-col justify-between p-4">
+                <div>
+                  <div className="flex items-center justify-between text-xs text-muted dark:text-portal-muted">
+                    <span>Seller: <strong className="text-moss dark:text-portal-ink">{l.farmerName}</strong></span>
+                    <span className="text-[11px]">{timeAgo(l.updatedAt)}</span>
                   </div>
-                  <div className="mt-2.5 flex items-end justify-between border-t border-line pt-2 dark:border-portal-line">
+                  <p className="mt-2 text-xs text-muted leading-relaxed line-clamp-2 dark:text-portal-muted">
+                    High quality, verified farm residue ready for immediate weighbridge collection or direct farm-gate pickup.
+                  </p>
+                </div>
+
+                <div className="mt-4 border-t border-line/70 pt-3 dark:border-portal-line/70">
+                  <div className="flex items-baseline justify-between mb-3">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted dark:text-portal-muted">{t("common.quantity")}</p>
-                      <QtyText kg={l.quantityKg} className="text-[14px] font-bold text-ink dark:text-portal-ink" />
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-muted">Lot Price</span>
+                      <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="num text-sm font-semibold text-muted dark:text-portal-muted" />
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted dark:text-portal-muted">{t("common.rate")}</p>
-                      <RateText rate={l.ratePerUnit} unit={l.rateUnit} className="text-[14px] font-bold text-forest dark:text-growth" />
-                      <p className="num text-[10px] text-muted dark:text-portal-muted">₹{formatNumber(l.ratePerKg)}/kg</p>
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-terracotta">Total Value</span>
+                      <span className="num text-lg font-bold text-moss dark:text-growth">₹{formatNumber(lotTotal)}</span>
                     </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 font-semibold border-line hover:border-moss"
+                      onClick={() => navigate(`/app/market/${l.id}`)}
+                    >
+                      {t("common.view")} Details
+                    </Button>
+                    <Button
+                      variant="paypal"
+                      size="sm"
+                      className="flex-1 font-bold shadow-sm"
+                      onClick={() => navigate(`/app/checkout/${l.id}`, { state: { quantityKg: l.quantityKg } })}
+                    >
+                      Buy via PayPal
+                    </Button>
                   </div>
                 </div>
               </div>
             </Card>
-          </Link>
-        ))}
+          );
+        })}
       </div>
 
       <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
