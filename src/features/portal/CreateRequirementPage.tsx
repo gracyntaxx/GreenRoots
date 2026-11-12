@@ -7,7 +7,7 @@ import {
   Loader2,
   MapPin,
   Send,
-  Sparkles,
+  Leaf,
   Users,
 } from "lucide-react";
 import { useSession } from "@/store/session";
@@ -164,7 +164,7 @@ export default function CreateRequirementPage() {
         <div className="space-y-4">
           <PortalCard className="p-4">
             <Label htmlFor="req-text" className="flex items-center gap-1.5">
-              <Sparkles className="h-4 w-4 text-ai" /> Describe your requirement
+              <Leaf className="h-4 w-4 text-forest" /> Describe your requirement
             </Label>
             <Textarea
               id="req-text"
@@ -175,7 +175,7 @@ export default function CreateRequirementPage() {
             />
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <Button variant="ai" size="portal" onClick={parse} disabled={loading || !text.trim()}>
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Leaf className="h-4 w-4" />}
                 Prepare draft
               </Button>
               <Button

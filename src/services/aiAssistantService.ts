@@ -12,15 +12,15 @@ import { MockError } from "@/mocks/store";
 import { daysUntil } from "@/lib/utils";
 
 const WASTE_KEYWORDS: { type: WasteType; words: string[] }[] = [
-  { type: "paddy_straw", words: ["paddy straw", "paddy", "धान", "पराली", "भाताचे काड", "भात"] },
-  { type: "rice_husk", words: ["rice husk", "husk", "भूसी", "चावल की भूसी", "भूस", "भाताची भूस"] },
-  { type: "mustard_stubble", words: ["mustard stubble", "mustard", "सरसों", "मोहरी", "मोहरीचे"] },
-  { type: "wheat_straw", words: ["wheat straw", "wheat", "गेहूं", "गेहूँ", "गहू"] },
-  { type: "sugarcane_trash", words: ["sugarcane trash", "sugarcane", "गन्ना", "ऊस", "ऊसाचा"] },
-  { type: "cashew_shell", words: ["cashew shell", "cashew", "काजू"] },
-  { type: "cotton_stalk", words: ["cotton stalk", "cotton", "कपास", "कापूस"] },
-  { type: "groundnut_shell", words: ["groundnut shell", "groundnut", "मूंगफली", "भुईमूग"] },
-  { type: "bagasse", words: ["bagasse", "बगास", "शेवाळ"] },
+  { type: "paddy_straw", words: ["paddy straw", "paddy", "धान", "पराली", "भाताचे काड", "भात", "parali", "dhaan", "dhan", "chawal", "paddi"] },
+  { type: "rice_husk", words: ["rice husk", "husk", "भूसी", "चावल की भूसी", "भूस", "भाताची भूस", "bhusi", "chawal ki bhusi"] },
+  { type: "mustard_stubble", words: ["mustard stubble", "mustard", "सरसों", "मोहरी", "मोहरीचे", "sarson", "sarso", "rai"] },
+  { type: "wheat_straw", words: ["wheat straw", "wheat", "गेहूं", "गेहूँ", "गहू", "gehu", "gehun", "toori", "turi", "bhusa", "bhoosa"] },
+  { type: "sugarcane_trash", words: ["sugarcane trash", "sugarcane", "गन्ना", "ऊस", "ऊसाचा", "ganna", "trash", "pattal"] },
+  { type: "cashew_shell", words: ["cashew shell", "cashew", "काजू", "kaju"] },
+  { type: "cotton_stalk", words: ["cotton stalk", "cotton", "कपास", "कापूस", "kapas", "kapus"] },
+  { type: "groundnut_shell", words: ["groundnut shell", "groundnut", "मूंगफली", "भुईमूग", "mungfali", "moongfali", "peanut", "peanuts"] },
+  { type: "bagasse", words: ["bagasse", "बगास", "शेवाळ", "khoi", "khoyi"] },
 ];
 
 const VILLAGES: { names: string[]; village: string; state: string }[] = [
@@ -52,9 +52,9 @@ const MONTHS: Record<string, number> = {
 };
 
 const UNIT_WORDS: { re: string; unit: QtyUnit }[] = [
-  { re: "quintals?|क्विंटल", unit: "quintal" },
-  { re: "tonnes?|tons?|टन", unit: "tonne" },
-  { re: "kgs?|kilograms?|किलो|किलोग्राम", unit: "kg" },
+  { re: "quintals?|क्विंटल|qtl|qtls?", unit: "quintal" },
+  { re: "tonnes?|tons?|टन|ton|tonne", unit: "tonne" },
+  { re: "kgs?|kilograms?|किलो|किलोग्राम|kilos?|kg", unit: "kg" },
 ];
 
 function normalizeNumbers(s: string) {
@@ -144,16 +144,7 @@ export const aiAssistantService = {
         body: JSON.stringify({ audioBase64, mimeType: audioBlob.type || "audio/webm" }),
       },
       () => {
-        return {
-          wasteType: "paddy_straw",
-          quantity: 50,
-          unit: "quintal",
-          rate: 1400,
-          rateUnit: "quintal",
-          village: "Rewari",
-          confidence: { wasteType: 0.92, quantity: 0.9, rate: 0.88, village: 0.8 },
-          rawText: "Recorded audio speech",
-        };
+        throw new MockError("Could not recognize speech from audio. Please speak clearly or enter the listing details.", "NO_INPUT");
       }
     );
   },
@@ -163,7 +154,16 @@ export const aiAssistantService = {
       if (!text.trim()) throw new MockError("No speech or text was received.", "NO_INPUT");
       const nums = parseNumbersWithUnits(text);
       const quantity = nums.find((n) => !n.isRate);
-      const rate = nums.find((n) => n.isRate);
+      let rate = nums.find((n) => n.isRate);
+      if (!rate) {
+        const standaloneMatch = text.match(/(?:at|rate|price|for|रुपये|rs\.?|rupees?|₹)\s*([\d,]+(?:\.\d+)?)/i);
+        if (standaloneMatch) {
+          const val = Number(standaloneMatch[1].replace(/,/g, ""));
+          if (!quantity || val !== quantity.value) {
+            rate = { value: val, unit: quantity?.unit || "quintal", isRate: true, index: standaloneMatch.index || 0 };
+          }
+        }
+      }
       const waste = detectWaste(text);
       const village = detectVillage(text);
       const confidence: Record<string, number> = {
@@ -178,7 +178,7 @@ export const aiAssistantService = {
         quantity: quantity?.value,
         unit: quantity?.unit,
         rate: rate?.value,
-        rateUnit: rate?.unit,
+        rateUnit: rate?.unit || quantity?.unit || "quintal",
         village: village?.village,
         confidence,
         rawText: text,

@@ -108,36 +108,50 @@ export async function handleApiRequest(path, method, body, query = {}) {
 
   // 2. AI ASSISTANT
   if (cleanPath === "ai/parse-audio") {
-    return {
-      wasteType: "paddy_straw",
-      quantity: 50,
-      unit: "quintal",
-      rate: 1400,
-      rateUnit: "quintal",
-      village: "Rewari",
-      confidence: { wasteType: 0.94, quantity: 0.92, rate: 0.90, village: 0.85 },
-      rawText: "Recorded speech for 50 quintals paddy straw in Rewari at 1400 rupees per quintal",
-    };
+    throw new Error("Could not recognize speech from audio. Please speak clearly or type your listing details.");
   }
 
   if (cleanPath === "ai/parse-listing") {
     const text = body.text || "";
-    const isPaddy = /paddy|धान|पराली/i.test(text);
-    const isMustard = /mustard|सरसों/i.test(text);
-    const isHusk = /husk|भूसी/i.test(text);
-    const wasteType = isPaddy ? "paddy_straw" : isMustard ? "mustard_stubble" : isHusk ? "rice_husk" : "paddy_straw";
+    if (!text.trim()) {
+      throw new Error("No speech or text was received.");
+    }
+    const t = text.toLowerCase();
+    let wasteType = "paddy_straw";
+    if (/wheat|गेहूं|गहू|gehu|toori|bhusa/i.test(t)) wasteType = "wheat_straw";
+    else if (/mustard|सरसों|मोहरी|sarson|rai/i.test(t)) wasteType = "mustard_stubble";
+    else if (/husk|भूसी|भूस|bhusi/i.test(t)) wasteType = "rice_husk";
+    else if (/cashew|काजू|kaju/i.test(t)) wasteType = "cashew_shell";
+    else if (/cotton|कपास|कापूस|kapas/i.test(t)) wasteType = "cotton_stalk";
+    else if (/groundnut|peanut|मूंगफली|भुईमूग|mungfali/i.test(t)) wasteType = "groundnut_shell";
+    else if (/sugarcane|गन्ना|ऊस|ganna|trash/i.test(t)) wasteType = "sugarcane_trash";
+    else if (/bagasse|बगास|khoi/i.test(t)) wasteType = "bagasse";
+    else if (/paddy|straw|धान|पराली|भात|parali|dhaan/i.test(t)) wasteType = "paddy_straw";
 
-    const qtyMatch = text.match(/(\d+(?:\.\d+)?)\s*(quintal|tonne|kg|टन|क्विंटल|किलो)/i);
-    const rateMatch = text.match(/(?:at|for|rs\.?|₹|rate)?\s*(\d+(?:\.\d+)?)\s*(?:rs|rupees|per|\/)/i);
+    let village = "Rewari";
+    if (/panipat|पानीपत/i.test(t)) village = "Panipat";
+    else if (/karnal|करनाल/i.test(t)) village = "Karnal";
+    else if (/ludhiana|लुधियाना/i.test(t)) village = "Ludhiana";
+    else if (/bawal|बावल/i.test(t)) village = "Bawal";
+    else if (/ratnagiri|रत्नागिरी/i.test(t)) village = "Ratnagiri";
+    else if (/nashik|nasik|नाशिक/i.test(t)) village = "Nashik";
+    else if (/kolhapur|कोल्हापूर/i.test(t)) village = "Kolhapur";
+
+    const qtyMatch = text.match(/(\d+(?:\.\d+)?)\s*(quintals?|tonnes?|tons?|kgs?|टन|क्विंटल|किलो|qtl)/i);
+    const rateMatch = text.match(/(?:at|for|rs\.?|₹|rate|price)?\s*(\d+(?:\.\d+)?)\s*(?:rs|rupees|प्रति|per|\/)?/i);
+
+    const qty = qtyMatch ? parseFloat(qtyMatch[1]) : undefined;
+    const unit = qtyMatch && /tonne|ton|टन/i.test(qtyMatch[2]) ? "tonne" : qtyMatch && /kg|किलो/i.test(qtyMatch[2]) ? "kg" : "quintal";
+    const rate = rateMatch ? parseFloat(rateMatch[1]) : undefined;
 
     return {
       wasteType,
-      quantity: qtyMatch ? parseFloat(qtyMatch[1]) : 50,
-      unit: qtyMatch && /tonne|टन/i.test(qtyMatch[2]) ? "tonne" : "quintal",
-      rate: rateMatch ? parseFloat(rateMatch[1]) : 1200,
-      rateUnit: "quintal",
-      village: "Rewari",
-      confidence: { wasteType: 0.94, quantity: 0.92, rate: 0.90, village: 0.85 },
+      quantity: qty,
+      unit,
+      rate,
+      rateUnit: unit,
+      village,
+      confidence: { wasteType: 0.94, quantity: qty ? 0.92 : 0.1, rate: rate ? 0.90 : 0.1, village: 0.85 },
       rawText: text,
     };
   }

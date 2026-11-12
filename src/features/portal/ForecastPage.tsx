@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AlertTriangle, CheckCircle2, Database, Loader2, Sparkles, TrendingUp } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Database, Loader2, Leaf, TrendingUp } from "lucide-react";
 import { forecastService } from "@/services/forecastService";
 import { aiAssistantService } from "@/services/aiAssistantService";
 import { PortalPageHeader, StatCard } from "@/components/shared/PageHeader";
@@ -205,13 +205,13 @@ export default function ForecastPage() {
               <PortalCard className="p-4">
                 <div className="flex items-center justify-between gap-2">
                   <p className="flex items-center gap-1.5 text-[13px] font-bold">
-                    <Sparkles className="h-4 w-4 text-ai" /> AI explanation
+                    <Leaf className="h-4 w-4 text-forest" /> AI explanation
                   </p>
                   <AiChip kind="explanation" iconOnly />
                 </div>
                 <p className="mt-2 text-[12px] leading-relaxed text-muted dark:text-portal-muted">{selected.explanation}</p>
                 <Button variant="ai" size="portal" className="mt-3 w-full" onClick={explain} disabled={explaining}>
-                  {explaining ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                  {explaining ? <Loader2 className="h-4 w-4 animate-spin" /> : <Leaf className="h-4 w-4" />}
                   Explain this forecast
                 </Button>
                 {explanation && (

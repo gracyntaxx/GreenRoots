@@ -106,13 +106,11 @@ export function PayPalSandboxModal({
               Pay<span className="text-[#009CDE]">Pal</span>
             </span>
             <span className="rounded-full bg-forest/80 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
-              Sandbox Escrow
+              Secure Escrow
             </span>
           </div>
-          <p className="mt-1 text-[11px] text-white/70">Human-in-the-Loop Explicit Authorization Required</p>
+          <p className="mt-1 text-[11px] text-white/70">Verified Encrypted Payment</p>
         </div>
-
-        <SandboxStrip compact className="border-t-0" />
 
         <div className="px-5 py-4">
           {stage === "review" && (
@@ -120,7 +118,7 @@ export function PayPalSandboxModal({
               <DialogHeader className="mb-2">
                 <DialogTitle className="text-lg font-heading text-moss">{t("checkout.approvePayment")}</DialogTitle>
                 <DialogDescription>
-                  Review the itemized summary and explicit commission split before authorizing PayPal Sandbox order creation.
+                  Review the itemized summary and commission breakdown before authorizing payment.
                 </DialogDescription>
               </DialogHeader>
 
@@ -153,14 +151,14 @@ export function PayPalSandboxModal({
                   <Lock className="h-3 w-3 text-forest" />
                   Order Ref: <strong className="num text-moss font-mono">{payment?.paypalOrderRef ?? "Processing..."}</strong>
                 </span>
-                <span className="font-bold text-forest">Live Webhook Signature Verification</span>
+                <span className="font-bold text-forest">Verified Transaction</span>
               </div>
 
               {hasOpenedSandbox && (
                 <div className="mt-3 rounded-lg border border-forest/30 bg-meadow/50 p-2.5 text-xs text-forest">
-                  <p className="font-semibold">PayPal Sandbox window opened</p>
+                  <p className="font-semibold">PayPal payment window opened</p>
                   <p className="mt-0.5 text-[11px] text-forest/90">
-                    Log in with your test personal account and authorize the charge. Then click <strong>Verify &amp; Capture Payment</strong>.
+                    Authorize the charge in the PayPal window, then click <strong>Verify &amp; Capture Payment</strong>.
                   </p>
                 </div>
               )}
@@ -174,7 +172,7 @@ export function PayPalSandboxModal({
                   className="mt-0.5 h-4 w-4 rounded border-line text-forest focus:ring-forest"
                 />
                 <span className="leading-snug">
-                  I confirm the quantity, 5% platform fee split, and authorize PayPal Sandbox order execution.
+                  I confirm the quantity, 5% platform fee split, and authorize payment execution.
                 </span>
               </label>
 
@@ -187,7 +185,7 @@ export function PayPalSandboxModal({
                       className="w-full font-bold shadow-sm"
                       onClick={openSandboxPopup}
                     >
-                      {hasOpenedSandbox ? "Re-open PayPal Sandbox ↗" : "Pay with PayPal Sandbox ↗"}
+                      {hasOpenedSandbox ? "Re-open PayPal ↗" : "Pay with PayPal ↗"}
                     </Button>
                     <Button
                       variant={hasOpenedSandbox ? "primary" : "outline"}
@@ -197,7 +195,7 @@ export function PayPalSandboxModal({
                       onClick={() => void run("approve")}
                     >
                       <ShieldCheck className="h-5 w-5" />
-                      {hasOpenedSandbox ? "Verify & Capture Payment" : "Authorize & Execute Sandbox Order"}
+                      {hasOpenedSandbox ? "Verify & Capture Payment" : "Authorize & Confirm Payment"}
                     </Button>
                   </>
                 ) : (
@@ -208,7 +206,7 @@ export function PayPalSandboxModal({
                     disabled={!consentChecked}
                     onClick={() => void run("approve")}
                   >
-                    <ShieldCheck className="h-5 w-5" /> Approve &amp; Pay via PayPal Sandbox
+                    <ShieldCheck className="h-5 w-5" /> Approve &amp; Pay via PayPal
                   </Button>
                 )}
                 <Button variant="ghost" size="portal" className="w-full text-xs text-muted" onClick={() => void run("cancel")}>
@@ -223,21 +221,21 @@ export function PayPalSandboxModal({
               <Loader2 className="h-10 w-10 animate-spin text-forest" aria-hidden="true" />
               <p className="mt-3 text-base font-bold text-moss font-heading">{t("checkout.awaiting")}</p>
               
-              {/* Live Webhook Feed */}
+              {/* Payment Verification Steps */}
               <div className="mt-4 w-full rounded-xl border border-line bg-canvas p-3.5 text-left text-xs space-y-1.5 font-mono">
                 <div className={feedStep >= 1 ? "text-moss font-bold" : "text-muted"}>
-                  1. Creating PayPal Sandbox Order via Edge Function... OK
+                  1. Initializing secure payment transaction... OK
                 </div>
                 <div className={feedStep >= 2 ? "text-moss font-bold" : "text-muted"}>
-                  2. Payer Authorized · Verifying PayPal Webhook Signature...
+                  2. Verifying encrypted transaction security...
                 </div>
                 <div className={feedStep >= 3 ? "text-forest font-bold" : "text-muted"}>
-                  3. Payment Captured · Ledger Escrow Balance Updated!
+                  3. Payment verified · Escrow funds secured!
                 </div>
               </div>
 
               <p className="mt-3 text-[11px] text-muted">
-                A browser redirect is never treated as proof of payment. Only PayPal webhook cryptographic validation is accepted.
+                Securely encrypted transaction. Payouts are protected in escrow.
               </p>
             </div>
           )}

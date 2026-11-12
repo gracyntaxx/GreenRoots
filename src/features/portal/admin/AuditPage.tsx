@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollText, Search, ShieldCheck, Sparkles, UserCheck } from "lucide-react";
+import { ScrollText, Search, ShieldCheck, Leaf, UserCheck } from "lucide-react";
 import { auditService } from "@/services/auditService";
 import { PortalPageHeader, StatCard } from "@/components/shared/PageHeader";
 import { PortalCard } from "@/components/ui/card";
@@ -50,7 +50,7 @@ export default function AuditPage() {
         <StatCard label="Total actions" value={all.length} icon={<ScrollText className="h-5 w-5 text-forest" />} />
         <StatCard label="Human confirmations" value={all.filter((a) => a.confirmedBy.trim().length > 0).length} sub="No action without a person" tone="success" icon={<UserCheck className="h-5 w-5 text-growth" />} />
         <StatCard label="Admin decisions" value={all.filter((a) => a.actorRole === "admin").length} icon={<ShieldCheck className="h-5 w-5 text-navy" />} />
-        <StatCard label="Last 24 hours" value={all.filter((a) => new Date(a.at).getTime() > dayAgo).length} icon={<Sparkles className="h-5 w-5 text-ai" />} />
+        <StatCard label="Last 24 hours" value={all.filter((a) => new Date(a.at).getTime() > dayAgo).length} icon={<Leaf className="h-5 w-5 text-forest" />} />
       </div>
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -181,8 +181,8 @@ export default function AuditPage() {
                 </DialogDescription>
               </DialogHeader>
               <div className="rounded-lg border border-[#D9D2F7] bg-aitint p-3">
-                <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#4b3f97]">
-                  <Sparkles className="h-3.5 w-3.5" /> AI prepared
+                <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-forest">
+                  <Leaf className="h-3.5 w-3.5" /> AI prepared
                 </p>
                 <p className="mt-1 text-[13px] leading-relaxed text-[#4b3f97]">{selected.aiPreparedSummary}</p>
               </div>

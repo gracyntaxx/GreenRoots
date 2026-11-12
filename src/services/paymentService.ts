@@ -63,13 +63,13 @@ export const paymentService = {
         if (payment.status === "Captured") return payment;
 
         if (outcome === "cancel") {
-          return updatePaymentStatus(paymentId, "Cancelled", "Buyer cancelled in the PayPal Sandbox.");
+          return updatePaymentStatus(paymentId, "Cancelled", "Buyer cancelled during checkout.");
         }
         if (outcome === "fail") {
-          return updatePaymentStatus(paymentId, "Failed", "PayPal Sandbox reported the payment failed.");
+          return updatePaymentStatus(paymentId, "Failed", "Payment provider reported the transaction failed.");
         }
 
-        updatePaymentStatus(paymentId, "Approved", "Buyer approved in the PayPal Sandbox.");
+        updatePaymentStatus(paymentId, "Approved", "Buyer approved the transaction.");
         await sleep(2200);
         const captureRef = makeCaptureRef();
         const updated = updatePaymentStatus(

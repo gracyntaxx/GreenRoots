@@ -9,7 +9,6 @@ import {
   PackageSearch,
   ShieldCheck,
   ShoppingBasket,
-  Sparkles,
   TrendingUp,
   Users,
   Wallet,
@@ -45,7 +44,7 @@ export function LandingHero() {
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
             <div className="eyebrow">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              <Leaf className="h-3.5 w-3.5 text-forest" aria-hidden="true" />
               Zero stubble burning · Instant PayPal settlement
             </div>
 
@@ -54,8 +53,8 @@ export function LandingHero() {
             </h1>
 
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-              Speak or type in your local language to list rice husk, wheat straw, or bagasse. Gemini matches
-              your harvest with verified industries while PayPal Sandbox keeps every settlement transparent.
+              Speak or type in your local language to list rice husk, wheat straw, or bagasse. Intelligent AI matches
+              your harvest with verified industries while secure escrow keeps every settlement transparent.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2" aria-label="Choose your workspace role">
@@ -169,7 +168,7 @@ export function LandingHero() {
                 </span>
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-muted">Escrow protected</p>
-                  <p className="text-xs font-bold text-moss">PayPal Sandbox</p>
+                  <p className="text-xs font-bold text-moss">PayPal Escrow</p>
                 </div>
               </div>
             </div>

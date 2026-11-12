@@ -343,7 +343,7 @@ export const ORDERS: Order[] = [
     paypalCaptureRef: "CAP-9D31B7", createdAt: ago(600),
     timeline: [
       { id: "t1", at: ago(620), label: "Order placed", detail: "Buyer approved checkout", state: "done" },
-      { id: "t2", at: ago(610), label: "Payment captured", detail: "Verified directly with PayPal Sandbox", state: "done" },
+      { id: "t2", at: ago(610), label: "Payment captured", detail: "Verified directly with PayPal", state: "done" },
       { id: "t3", at: ago(600), label: "Awaiting drop-off", detail: "Farmer has not delivered yet", state: "current" },
       { id: "t4", at: "", label: "Payout to farmer", detail: "Due after verified delivery", state: "upcoming" },
     ],
@@ -427,7 +427,7 @@ export const NOTIFICATIONS: AppNotification[] = [
   { id: "n2", group: "Pool", title: "Pool is 62% filled", body: "Paddy straw pool in Panipat still needs 38 tonnes.", at: ago(35), read: false, link: "/pools/pool_paddy_panipat" },
   { id: "n3", group: "Area", title: "Pool area expanded to 60 km", body: "Rice husk pool in Karnal now reaches more farmers.", at: ago(90), read: false, link: "/pools/pool_husk_karnal" },
   { id: "n4", group: "Order", title: "Drop-off confirmed", body: "1,000 kg mustard stubble accepted at Bawal.", at: ago(200), read: true, link: "/orders/order_mustard_1000" },
-  { id: "n5", group: "Payment", title: "Payment captured", body: "PayPal Sandbox captured ₹1,200 for order ORD-8841.", at: ago(610), read: true, link: "/orders/order_ricehusk_500" },
+  { id: "n5", group: "Payment", title: "Payment captured", body: "PayPal captured ₹1,200 for order ORD-8841.", at: ago(610), read: true, link: "/orders/order_ricehusk_500" },
   { id: "n6", group: "Seasonal", title: "Paddy straw demand rising", body: "Demand is expected to rise in 3 weeks around Rewari.", at: ago(700), read: true, link: "/forecast" },
   { id: "n7", group: "Pool", title: "Pool ready for pickup", body: "Cotton stalk pool in Sangrur reached its target.", at: ago(900), read: true, link: "/pools/pool_cotton_sangrur" },
 ];

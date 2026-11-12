@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertTriangle, Flag, History, Loader2, MapPin, Search, ShieldAlert, ShieldCheck, Sparkles } from "lucide-react";
+import { AlertTriangle, Flag, History, Loader2, MapPin, Search, ShieldAlert, ShieldCheck, Leaf } from "lucide-react";
 import { useSession } from "@/store/session";
 import { useUi } from "@/store/ui";
 import { moderationService } from "@/services/moderationService";
@@ -117,7 +117,7 @@ export default function ModerationPage() {
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Open" value={all.filter((f) => f.status === "Open").length} tone={all.some((f) => f.status === "Open") ? "warning" : "success"} icon={<ShieldAlert className="h-5 w-5 text-settle" />} />
-        <StatCard label="AI flagged" value={all.filter((f) => f.source === "AI").length} sub="Needs human review" icon={<Sparkles className="h-5 w-5 text-ai" />} />
+        <StatCard label="AI flagged" value={all.filter((f) => f.source === "AI").length} sub="Needs human review" icon={<Leaf className="h-5 w-5 text-forest" />} />
         <StatCard label="Rule flagged" value={all.filter((f) => f.source === "Rule").length} />
         <StatCard label="Resolved" value={all.filter((f) => f.status !== "Open").length} />
       </div>
@@ -171,7 +171,7 @@ export default function ModerationPage() {
                       f.source === "AI" ? "bg-aitint text-[#4b3f97]" : "bg-canvas text-muted dark:bg-portal-bg dark:text-portal-muted"
                     )}
                   >
-                    {f.source === "AI" && <Sparkles className="h-2.5 w-2.5" />}
+                    {f.source === "AI" && <Leaf className="h-2.5 w-2.5" />}
                     {f.source}
                   </span>
                   <span className="text-[10px] text-muted dark:text-portal-muted">{timeAgo(f.createdAt)}</span>

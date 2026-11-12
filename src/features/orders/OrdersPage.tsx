@@ -61,7 +61,7 @@ export default function OrdersPage() {
           <span className="eyebrow mb-2">Fintech Settlement Ledger</span>
           <h1 className="font-heading text-2xl sm:text-3xl font-bold text-moss dark:text-portal-ink">{t("orders.title")}</h1>
           <p className="mt-1 text-sm text-muted dark:text-portal-muted">
-            Transparent PayPal Sandbox escrow settlement with explicit 5% platform fee and pro-rata farmer disbursements.
+            Transparent escrow settlement with explicit 5% platform fee and pro-rata farmer disbursements.
           </p>
         </div>
         

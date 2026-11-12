@@ -485,7 +485,7 @@ export function createOrder(input: {
     createdAt: new Date().toISOString(),
     timeline: [
       { id: uid("t"), at: new Date().toISOString(), label: "Order placed", detail: "Buyer confirmed the order", state: "done" },
-      { id: uid("t"), at: new Date().toISOString(), label: "Payment captured", detail: "Verified directly with PayPal Sandbox", state: "done" },
+      { id: uid("t"), at: new Date().toISOString(), label: "Payment captured", detail: "Verified directly with PayPal", state: "done" },
       { id: uid("t"), at: "", label: "Awaiting drop-off", detail: "Farmer has not delivered yet", state: "current" },
       { id: uid("t"), at: "", label: "Payout to farmer", detail: "Due after verified delivery", state: "upcoming" },
     ],

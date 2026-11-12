@@ -8,7 +8,7 @@ import {
   Expand,
   Loader2,
   MapPin,
-  Sparkles,
+  Leaf,
   Users,
   Wallet,
 } from "lucide-react";
@@ -565,7 +565,7 @@ export default function IndustryPoolDetailPage() {
       />
 
       <p className="mt-3 flex items-center gap-1 text-[11px] text-muted dark:text-portal-muted">
-        <Sparkles className="h-3 w-3 text-ai" /> AI suggestions are based on recorded pool numbers and never act alone.
+        <Leaf className="h-3 w-3 text-forest" /> AI suggestions are based on recorded pool numbers and never act alone.
       </p>
     </PageContainer>
   );

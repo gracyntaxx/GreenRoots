@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Globe, Menu, X, ArrowRight, Sparkles } from "lucide-react";
+import { Globe, Menu, X, ArrowRight } from "lucide-react";
 import { LogoMark } from "@/components/shared/Brand";
 import { useUi } from "@/store/ui";
 import { LANGUAGES } from "@/types";

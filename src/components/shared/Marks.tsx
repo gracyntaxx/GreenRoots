@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BadgeCheck, FlaskConical, Info, ShieldAlert, Sparkles } from "lucide-react";
+import { BadgeCheck, FlaskConical, Info, ShieldAlert, Leaf } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -30,7 +30,7 @@ export function AiChip({
         className
       )}
     >
-      <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+      <Leaf className="h-3.5 w-3.5" aria-hidden="true" />
       {!iconOnly && <span>{label}</span>}
     </span>
   );

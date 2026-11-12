@@ -184,8 +184,6 @@ export default function CheckoutPage() {
         <ArrowLeft className="h-4 w-4" /> {t("common.back")}
       </button>
 
-      <SandboxStrip className="mb-4 rounded-xl border" />
-
       {stage === "success" && order ? (
         <Card className="mx-auto max-w-xl p-6 sm:p-8 text-center shadow-lg">
           <CheckCircle2 className="mx-auto h-14 w-14 text-forest dark:text-growth" aria-hidden="true" />

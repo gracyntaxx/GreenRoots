@@ -176,7 +176,7 @@ export default function MePage() {
                   <h3 className="font-heading text-base font-bold text-moss dark:text-portal-ink">
                     {t("me.payoutReadiness")}
                   </h3>
-                  <span className="text-[11px] text-muted">PayPal Sandbox Disbursement Escrow</span>
+                  <span className="text-[11px] text-muted">PayPal Disbursement Escrow</span>
                 </div>
               </div>
               <span

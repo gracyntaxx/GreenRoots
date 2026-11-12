@@ -9,7 +9,7 @@ import {
   MapPin,
   Mic,
   Search,
-  Sparkles,
+  Leaf,
   Star,
   X,
 } from "lucide-react";
@@ -225,8 +225,8 @@ export default function MarketPage() {
                         </button>
                       </PopoverTrigger>
                       <PopoverContent align="end" className="w-64">
-                        <p className="flex items-center gap-1.5 text-[12px] font-bold text-ai">
-                          <Sparkles className="h-3.5 w-3.5" /> {t("common.aiSuggested")}
+                        <p className="flex items-center gap-1.5 text-[12px] font-bold text-forest">
+                          <Leaf className="h-3.5 w-3.5" /> {t("common.aiSuggested")}
                         </p>
                         <p className="mt-1 text-[12px] leading-relaxed text-muted">{reason}</p>
                         <p className="mt-2 text-[11px] text-muted">Based only on real listing data.</p>

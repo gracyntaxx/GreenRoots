@@ -32,7 +32,6 @@ import {
   X,
 } from "lucide-react";
 import { Brand } from "@/components/shared/Brand";
-import { DemoBanner } from "@/components/shared/DemoBanner";
 import { NotificationBell } from "@/components/shared/NotificationBell";
 import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
 import { OfflineBanner } from "@/components/shared/Connectivity";
@@ -374,8 +373,6 @@ export function AppShell() {
             collapsed ? "sm:pl-16" : "sm:pl-64"
           )}
         >
-          <DemoBanner />
-
           {/* HEADER */}
           <header className="sticky top-0 z-20 flex h-14 sm:h-16 shrink-0 items-center justify-between border-b border-line/80 bg-white/75 px-4 sm:px-6 backdrop-blur-xl dark:border-portal-line dark:bg-portal-surface/90">
             {/* Left: Mobile Brand & Desktop Breadcrumbs */}

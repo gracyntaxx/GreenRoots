@@ -10,7 +10,6 @@ import {
   Navigation,
   PackageCheck,
   Route,
-  Sparkles,
   Truck,
 } from "lucide-react";
 import { useSession } from "@/store/session";

@@ -8,7 +8,7 @@ import {
   CheckCircle2,
   Loader2,
   MapPin,
-  Sparkles,
+  Leaf,
   Users,
   Wallet,
 } from "lucide-react";
@@ -236,7 +236,7 @@ export default function PoolDetailPage() {
 
               <div className="mt-4 flex gap-2">
                 <Button variant="ai" size="portal" className="font-semibold" onClick={doExplain}>
-                  <Sparkles className="h-4 w-4" /> {t("pools.explainPool")}
+                  <Leaf className="h-4 w-4" /> {t("pools.explainPool")}
                 </Button>
               </div>
             </div>
@@ -477,7 +477,7 @@ export default function PoolDetailPage() {
         <DialogContent variant="sheet">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-ai" /> {t("pools.explainTitle")}
+              <Leaf className="h-5 w-5 text-forest" /> {t("pools.explainTitle")}
             </DialogTitle>
             <DialogDescription>AI explanation based on the pool&apos;s recorded numbers.</DialogDescription>
           </DialogHeader>

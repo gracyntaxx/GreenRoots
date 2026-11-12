@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, MapPin, Sparkles, Users, Wheat } from "lucide-react";
+import { Loader2, MapPin, Leaf, Users, Wheat } from "lucide-react";
 import { useSession } from "@/store/session";
 import { requirementService } from "@/services/requirementService";
 import { aiAssistantService } from "@/services/aiAssistantService";
@@ -164,7 +164,7 @@ export default function MatchesPage() {
 
             <div className="mt-3 flex items-center gap-2">
               <Button variant="ai" size="portal" className="flex-1" onClick={() => explain(m)}>
-                <Sparkles className="h-4 w-4" /> Why this rank
+                <Leaf className="h-4 w-4" /> Why this rank
               </Button>
               <Link
                 to={`/portal/pools/${m.poolId}`}
@@ -178,7 +178,7 @@ export default function MatchesPage() {
       </div>
 
       <p className="mt-3 flex items-center gap-1 text-[11px] text-muted dark:text-portal-muted">
-        <Sparkles className="h-3 w-3 text-ai" /> Ranking uses recorded data only. AI never contacts a farmer on your
+        <Leaf className="h-3 w-3 text-forest" /> Ranking uses recorded data only. AI never contacts a farmer on your
         behalf.
       </p>
 
@@ -186,7 +186,7 @@ export default function MatchesPage() {
         <DialogContent variant="center" className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-ai" /> Why this farmer is ranked here
+              <Leaf className="h-5 w-5 text-forest" /> Why this farmer is ranked here
             </DialogTitle>
             <DialogDescription>{active?.farmer.name} · {active?.poolLabel}</DialogDescription>
           </DialogHeader>

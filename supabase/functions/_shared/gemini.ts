@@ -2,7 +2,7 @@ import { ApiError } from "./errors.ts";
 import type { QtyUnit, WasteType } from "./units.ts";
 
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
-const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-1.5-flash";
+const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
 export interface ParsedListing {
@@ -92,15 +92,15 @@ export async function callGemini(
 
 // Fallback regex parsers matching frontend src/services/aiAssistantService.ts
 const WASTE_KEYWORDS: { type: WasteType; words: string[] }[] = [
-  { type: "paddy_straw", words: ["paddy straw", "paddy", "धान", "पराली", "भाताचे काड", "भात"] },
-  { type: "rice_husk", words: ["rice husk", "husk", "भूसी", "चावल की भूसी", "भूस", "भाताची भूस"] },
-  { type: "mustard_stubble", words: ["mustard stubble", "mustard", "सरसों", "मोहरी", "मोहरीचे"] },
-  { type: "wheat_straw", words: ["wheat straw", "wheat", "गेहूं", "गेहूँ", "गहू"] },
-  { type: "sugarcane_trash", words: ["sugarcane trash", "sugarcane", "गन्ना", "ऊस", "ऊसाचा"] },
-  { type: "cashew_shell", words: ["cashew shell", "cashew", "काजू"] },
-  { type: "cotton_stalk", words: ["cotton stalk", "cotton", "कपास", "कापूस"] },
-  { type: "groundnut_shell", words: ["groundnut shell", "groundnut", "मूंगफली", "भुईमूग"] },
-  { type: "bagasse", words: ["bagasse", "बगास", "शेवाळ"] },
+  { type: "paddy_straw", words: ["paddy straw", "paddy", "धान", "पराली", "भाताचे काड", "भात", "parali", "dhaan", "dhan", "chawal", "paddi"] },
+  { type: "rice_husk", words: ["rice husk", "husk", "भूसी", "चावल की भूसी", "भूस", "भाताची भूस", "bhusi", "chawal ki bhusi"] },
+  { type: "mustard_stubble", words: ["mustard stubble", "mustard", "सरसों", "मोहरी", "मोहरीचे", "sarson", "sarso", "rai"] },
+  { type: "wheat_straw", words: ["wheat straw", "wheat", "गेहूं", "गेहूँ", "गहू", "gehu", "gehun", "toori", "turi", "bhusa", "bhoosa"] },
+  { type: "sugarcane_trash", words: ["sugarcane trash", "sugarcane", "गन्ना", "ऊस", "ऊसाचा", "ganna", "trash", "pattal"] },
+  { type: "cashew_shell", words: ["cashew shell", "cashew", "काजू", "kaju"] },
+  { type: "cotton_stalk", words: ["cotton stalk", "cotton", "कपास", "कापूस", "kapas", "kapus"] },
+  { type: "groundnut_shell", words: ["groundnut shell", "groundnut", "मूंगफली", "भुईमूग", "mungfali", "moongfali", "peanut", "peanuts"] },
+  { type: "bagasse", words: ["bagasse", "बगास", "शेवाळ", "khoi", "khoyi"] },
 ];
 
 const VILLAGES: { names: string[]; village: string; state: string }[] = [
@@ -117,9 +117,9 @@ const VILLAGES: { names: string[]; village: string; state: string }[] = [
 ];
 
 const UNIT_WORDS: { re: string; unit: QtyUnit }[] = [
-  { re: "quintals?|क्विंटल", unit: "quintal" },
-  { re: "tonnes?|tons?|टन", unit: "tonne" },
-  { re: "kgs?|kilograms?|किलो|किलोग्राम", unit: "kg" },
+  { re: "quintals?|क्विंटल|qtl|qtls?", unit: "quintal" },
+  { re: "tonnes?|tons?|टन|ton|tonne", unit: "tonne" },
+  { re: "kgs?|kilograms?|किलो|किलोग्राम|kilos?|kg", unit: "kg" },
 ];
 
 function fallbackDetectWaste(text: string): WasteType | undefined {
@@ -221,7 +221,16 @@ Respond in valid JSON matching this schema:
   // Deterministic fallback
   const nums = fallbackParseUnits(text);
   const quantity = nums.find((n) => !n.isRate);
-  const rate = nums.find((n) => n.isRate);
+  let rate = nums.find((n) => n.isRate);
+  if (!rate) {
+    const standaloneMatch = text.match(/(?:at|rate|price|for|रुपये|rs\.?|rupees?|₹)\s*([\d,]+(?:\.\d+)?)/i);
+    if (standaloneMatch) {
+      const val = Number(standaloneMatch[1].replace(/,/g, ""));
+      if (!quantity || val !== quantity.value) {
+        rate = { value: val, unit: quantity?.unit || "quintal", isRate: true, index: standaloneMatch.index || 0 };
+      }
+    }
+  }
   const waste = fallbackDetectWaste(text);
   const village = fallbackDetectVillage(text);
 
@@ -369,6 +378,7 @@ export async function callGeminiAudio(
     throw new ApiError(500, "GEMINI_API_KEY is not configured", "AI_NOT_CONFIGURED");
   }
 
+  const cleanMime = mimeType.split(";")[0].trim() || "audio/webm";
   const url = `${GEMINI_API_BASE}/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
   const requestBody: Record<string, unknown> = {
@@ -378,7 +388,7 @@ export async function callGeminiAudio(
           { text: prompt },
           {
             inlineData: {
-              mimeType,
+              mimeType: cleanMime,
               data: audioBase64,
             },
           },
@@ -472,31 +482,24 @@ Extract the listing details into JSON:
       const raw = await callGeminiAudio(audioBase64, mimeType, prompt, system, schema);
       const clean = raw.replace(/```json/g, "").replace(/```/g, "").trim();
       const parsed = JSON.parse(clean);
+      if (!parsed.wasteType && !parsed.quantity && !parsed.rate && !parsed.rawText) {
+        throw new Error("No recognizable speech or listing attributes in audio.");
+      }
       return {
         wasteType: parsed.wasteType as WasteType,
-        quantity: Number(parsed.quantity),
+        quantity: parsed.quantity ? Number(parsed.quantity) : undefined,
         unit: (parsed.unit || "quintal") as QtyUnit,
-        rate: Number(parsed.rate),
-        rateUnit: (parsed.rateUnit || "quintal") as QtyUnit,
-        village: parsed.village,
-        confidence: parsed.confidence || { wasteType: 0.9, quantity: 0.9, rate: 0.9 },
+        rate: parsed.rate ? Number(parsed.rate) : undefined,
+        rateUnit: (parsed.rateUnit || parsed.unit || "quintal") as QtyUnit,
+        village: parsed.village || undefined,
+        confidence: parsed.confidence || { wasteType: 0.88, quantity: 0.88, rate: 0.88 },
         rawText: parsed.rawText || "",
       };
     } catch (err) {
-      console.warn("[Gemini parseListingAudio] Audio parse error, falling back to simulated result:", err);
+      console.warn("[Gemini parseListingAudio] Audio parse error:", err);
     }
   }
 
-  // Fallback if key missing or call fails
-  return {
-    wasteType: "paddy_straw",
-    quantity: 50,
-    unit: "quintal",
-    rate: 1400,
-    rateUnit: "quintal",
-    village: "Rewari",
-    confidence: { wasteType: 0.88, quantity: 0.85, rate: 0.85, village: 0.8 },
-    rawText: "Recorded speech for 50 quintals paddy straw in Rewari at 1400 rupees per quintal",
-  };
+  throw new ApiError(422, "Unable to transcribe audio. Please speak clearly or type your listing details.", "SPEECH_UNRECOGNIZED");
 }
 

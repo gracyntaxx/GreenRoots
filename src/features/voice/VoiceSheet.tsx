@@ -7,11 +7,11 @@ import {
   Check,
   CheckCircle2,
   Keyboard,
+  Leaf,
   Loader2,
   MapPin,
   Mic,
   RotateCcw,
-  Sparkles,
   Square,
   Volume2,
   VolumeX,
@@ -68,7 +68,8 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
   const recognitionRef = useRef<any>(null);
   const listeningRef = useRef(false);
-  const finalRef = useRef("");
+  const accumulatedFinalRef = useRef("");
+  const currentSessionFinalRef = useRef("");
   const transcriptRef = useRef("");
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -132,7 +133,8 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     setMode("idle");
     setTranscript("");
     transcriptRef.current = "";
-    finalRef.current = "";
+    accumulatedFinalRef.current = "";
+    currentSessionFinalRef.current = "";
     setDraft(null);
     setSelectedPointId("");
     setNotice(null);
@@ -184,14 +186,17 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     setMode("understanding");
     try {
       const d = await aiAssistantService.parseListingAudio(blob, language);
+      if (!d.wasteType && !d.quantity && !d.rate && !d.rawText) {
+        throw new Error("Could not detect crop details from audio.");
+      }
       setDraft(d);
       if (d.rawText) updateTranscript(d.rawText);
       setMode("review");
     } catch (e) {
       setMode("typing");
       setNotice({
-        title: t("voice.aiTimeout"),
-        body: e instanceof Error && e.message ? `${t("voice.aiTimeoutBody")} (${e.message})` : t("voice.aiTimeoutBody"),
+        title: t("voice.noSpeech"),
+        body: t("voice.noSpeechBody"),
         tone: "warning",
       });
     }
@@ -199,11 +204,13 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
   const startListening = async () => {
     setNotice(null);
-    finalRef.current = "";
+    accumulatedFinalRef.current = "";
+    currentSessionFinalRef.current = "";
     updateTranscript("");
     setMode("listening");
     audioChunksRef.current = [];
     setRecordingSeconds(0);
+    listeningRef.current = true;
 
     // 1. Request microphone access via Web MediaDevices API
     let stream: MediaStream | null = null;
@@ -212,6 +219,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
       streamRef.current = stream;
     } catch (err) {
       console.warn("Microphone access denied or unavailable:", err);
+      listeningRef.current = false;
       setNotice({
         title: t("voice.micDenied"),
         body: t("voice.micDeniedBody"),
@@ -260,48 +268,66 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
       recorder.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
       };
-      recorder.start(150);
+      recorder.start(250);
       mediaRecorderRef.current = recorder;
     } catch (err) {
       console.warn("MediaRecorder setup failed:", err);
     }
 
     // 4. Timer counter
-    listeningRef.current = true;
     timerRef.current = setInterval(() => {
       setRecordingSeconds((s) => s + 1);
     }, 1000);
 
-    // 5. Parallel live SpeechRecognition for live on-screen text
+    // 5. Speech recognition with auto-restart on pauses
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SR) {
-      try {
-        const rec = new SR();
-        rec.lang = bcp47;
-        rec.continuous = true;
-        rec.interimResults = true;
-        rec.onresult = (event: any) => {
-          let interim = "";
-          let final = finalRef.current;
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const result = event.results[i];
-            if (result.isFinal) final += `${result[0].transcript} `;
-            else interim += result[0].transcript;
-          }
-          finalRef.current = final;
-          updateTranscript(`${final}${interim}`.trim());
-        };
-        rec.onerror = () => {
-          // Do not fail: MediaRecorder captures the actual voice audio
-        };
-        rec.onend = () => {
-          recognitionRef.current = null;
-        };
-        recognitionRef.current = rec;
-        rec.start();
-      } catch {
-        /* proceed with MediaRecorder only */
-      }
+      const initRecognizer = () => {
+        if (!listeningRef.current) return;
+        try {
+          const rec = new SR();
+          rec.lang = bcp47;
+          rec.continuous = true;
+          rec.interimResults = true;
+          rec.maxAlternatives = 1;
+
+          rec.onresult = (event: any) => {
+            let sessionText = "";
+            for (let i = 0; i < event.results.length; i++) {
+              sessionText += `${event.results[i][0].transcript} `;
+            }
+            const full = `${accumulatedFinalRef.current} ${sessionText}`.replace(/\s+/g, " ").trim();
+            updateTranscript(full);
+          };
+
+          rec.onerror = (e: any) => {
+            console.warn("Live speech recognition event:", e?.error);
+            // Non-fatal, recognition will restart if needed on onend
+          };
+
+          rec.onend = () => {
+            if (transcriptRef.current) {
+              accumulatedFinalRef.current = transcriptRef.current;
+            }
+            if (listeningRef.current) {
+              setTimeout(() => {
+                if (listeningRef.current) {
+                  initRecognizer();
+                }
+              }, 100);
+            } else {
+              recognitionRef.current = null;
+            }
+          };
+
+          recognitionRef.current = rec;
+          rec.start();
+        } catch (e) {
+          console.warn("SpeechRecognition init exception:", e);
+        }
+      };
+
+      initRecognizer();
     }
   };
 
@@ -314,6 +340,10 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     try {
       recognitionRef.current?.stop?.();
     } catch {}
+
+    // Allow 350ms for final speech recognition buffers to flush
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    recognitionRef.current = null;
 
     try {
       audioContextRef.current?.close?.();
@@ -334,7 +364,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     }
 
     const text = transcriptRef.current.trim();
-    if (text.length > 5) {
+    if (text.length > 2) {
       void parse(text);
     } else if (audioChunksRef.current.length > 0) {
       const mime = audioChunksRef.current[0].type || "audio/webm";
@@ -424,7 +454,8 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     cleanupAudio();
     setMode("idle");
     updateTranscript("");
-    finalRef.current = "";
+    accumulatedFinalRef.current = "";
+    currentSessionFinalRef.current = "";
     setDraft(null);
     setSelectedPointId("");
     setNotice(null);
@@ -462,7 +493,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
           <DialogDescription>
             {mode === "review" || mode === "saving" || mode === "saved"
               ? t("voice.reviewHint")
-              : "Speak in Hindi, English, Punjabi, Marathi, Tamil, or Telugu. Gemini AI understands and prepares your listing draft."}
+              : "Speak in Hindi, English, Punjabi, Marathi, Tamil, or Telugu. Voice AI understands and prepares your listing draft."}
           </DialogDescription>
         </DialogHeader>
 
@@ -581,8 +612,8 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
         {mode === "understanding" && (
           <div className="flex flex-col items-center py-10">
             <Loader2 className="h-10 w-10 animate-spin text-ai" aria-hidden="true" />
-            <p className="mt-4 flex items-center gap-2 text-base font-bold text-ai font-heading">
-              <Sparkles className="h-5 w-5" /> Parsing speech with Gemini AI…
+            <p className="mt-4 flex items-center gap-2 text-base font-bold text-forest font-heading">
+              <Leaf className="h-5 w-5 animate-pulse text-forest" /> Parsing your voice listing…
             </p>
             <p className="mt-2 max-w-xs text-center text-[12px] text-muted">
               Extracting crop type, quantity, rate, and delivery hub.
@@ -618,7 +649,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
               onClick={() => void parse(transcript)}
               disabled={!transcript.trim()}
             >
-              <Sparkles className="h-5 w-5" /> Parse with AI
+              <Leaf className="h-5 w-5 mr-1" /> Parse with AI
             </Button>
           </div>
         )}

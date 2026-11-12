@@ -5,6 +5,7 @@ import {
   parseRequirementText,
   explainPoolProgress,
   parseListingAudio,
+  callGemini,
 } from "../_shared/gemini.ts";
 import { logAiAudit } from "../_shared/audit.ts";
 
