@@ -454,7 +454,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? onOpenChange(true) : onOpenChange(false))}>
-      <DialogContent variant="sheet" className="max-w-lg">
+      <DialogContent variant="sheet" className="max-w-2xl">
         <DialogHeader className="mb-2">
           <DialogTitle className="flex items-center gap-2 text-xl font-bold font-heading text-ink">
             <Mic className="h-6 w-6 text-forest" /> {t("voice.title")}
@@ -487,12 +487,12 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
         {mode === "idle" && (
           <div className="flex flex-col items-center pb-2">
             <div className="relative mt-2 flex h-40 w-40 items-center justify-center">
-              <span className="absolute h-36 w-36 animate-pulse rounded-full bg-forest/15" aria-hidden="true" />
-              <span className="absolute h-28 w-28 rounded-full bg-forest/25" aria-hidden="true" />
+              <span className="absolute h-36 w-36 animate-pulse rounded-full bg-sage/80" aria-hidden="true" />
+              <span className="absolute h-28 w-28 rounded-full bg-sage" aria-hidden="true" />
               <button
                 type="button"
                 onClick={startListening}
-                className="relative flex h-24 w-24 items-center justify-center rounded-full bg-forest text-white shadow-xl transition-all hover:scale-105 active:scale-95"
+                className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[linear-gradient(135deg,#D96B27_0%,#EAB308_100%)] text-[#152E21] shadow-[0_14px_34px_rgba(217,107,39,0.32)] transition-all hover:scale-105 active:scale-95"
                 aria-label={t("voice.title")}
               >
                 <Mic className="h-10 w-10 text-white" aria-hidden="true" />
@@ -514,7 +514,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
                     key={idx}
                     type="button"
                     onClick={() => runPreset(p.text)}
-                    className="flex flex-col items-start rounded-xl border border-line bg-surface p-2.5 text-left transition-all hover:border-forest hover:bg-forest/5 hover:shadow-sm"
+                    className="flex flex-col items-start rounded-xl border border-line bg-surface p-2.5 text-left transition-all hover:border-forest hover:bg-sage-light hover:shadow-sm"
                   >
                     <span className="text-xs font-bold text-ink">{p.label}</span>
                     <span className="mt-0.5 text-[11px] text-muted line-clamp-1">“{p.text}”</span>
@@ -554,7 +554,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
                   <span
                     key={i}
                     style={{ height: `${height}px` }}
-                    className="w-1.5 rounded-full bg-forest transition-all duration-75"
+                    className="w-1.5 rounded-full bg-[linear-gradient(180deg,#D96B27,#EAB308)] transition-all duration-75"
                   />
                 );
               })}
@@ -568,11 +568,11 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
               Speak clearly. When done, tap the red button to generate your draft.
             </p>
 
-            <div className="mt-4 min-h-[76px] w-full rounded-xl border-[1.5px] border-dashed border-forest/30 bg-meadow/30 p-3 text-[15px] leading-relaxed text-ink">
+            <div className="mt-4 min-h-[76px] w-full rounded-xl border-[1.5px] border-dashed border-terracotta/35 bg-wheat-soft/70 p-3 text-[15px] leading-relaxed text-ink">
               {transcript || <span className="italic text-muted">Listening to your voice…</span>}
             </div>
 
-            <Button variant="primary" size="field" className="mt-4 w-full bg-forest" onClick={stopListening}>
+            <Button variant="primary" size="field"  onClick={stopListening}>
               <Check className="h-5 w-5" /> Done Speaking · Generate Draft
             </Button>
           </div>

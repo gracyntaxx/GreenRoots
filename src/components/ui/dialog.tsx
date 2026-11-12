@@ -15,17 +15,17 @@ export const DialogContent = React.forwardRef<
   }
 >(({ className, children, variant = "center", hideClose, ...props }, ref) => (
   <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-ink/50 backdrop-blur-[1px] animate-fade-in" />
+    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-moss-deep/55 backdrop-blur-sm animate-fade-in" />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed z-50 bg-surface shadow-xl focus:outline-none dark:bg-portal-surface",
+        "fixed z-50 border-[1.5px] border-line bg-white/95 shadow-[0_24px_70px_rgba(21,46,33,0.28)] backdrop-blur-xl focus:outline-none dark:border-portal-line dark:bg-portal-surface/95",
         variant === "center" &&
-          "left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line p-5 sm:p-6 animate-fade-in dark:border-portal-line",
+          "left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-organic p-5 sm:p-6 animate-fade-in dark:border-portal-line",
         variant === "wide" &&
-          "left-1/2 top-1/2 max-h-[90dvh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-line p-6 dark:border-portal-line",
+          "left-1/2 top-1/2 max-h-[90dvh] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-organic p-6 dark:border-portal-line",
         variant === "sheet" &&
-          "bottom-0 left-0 right-0 max-h-[92dvh] w-full sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85dvh] sm:max-w-xl sm:-translate-x-1/2 sm:-translate-y-1/2 overflow-y-auto rounded-t-3xl sm:rounded-2xl border-t sm:border border-line px-5 sm:px-6 pb-8 pt-3 sm:py-6 animate-sheet-up sm:animate-fade-in dark:border-portal-line",
+          "bottom-0 left-0 right-0 max-h-[92dvh] w-full sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85dvh] sm:max-w-xl sm:-translate-x-1/2 sm:-translate-y-1/2 overflow-y-auto rounded-t-[28px] sm:rounded-organic border-t sm:border px-5 sm:px-6 pb-8 pt-3 sm:py-6 animate-sheet-up sm:animate-fade-in dark:border-portal-line",
         className
       )}
       {...props}

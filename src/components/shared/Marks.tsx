@@ -26,7 +26,7 @@ export function AiChip({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border border-[#D9D2F7] bg-aitint px-2.5 py-1 text-[12px] font-semibold text-[#4b3f97]",
+        "inline-flex items-center gap-1.5 rounded-full border border-wheat/50 bg-aitint px-2.5 py-1 text-[12px] font-semibold text-[#8A5300]",
         className
       )}
     >

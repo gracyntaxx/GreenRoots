@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useSession } from "@/store/session";
 import { homeForRole } from "@/lib/routing";
 
+import { DemoBanner } from "@/components/shared/DemoBanner";
 import { LandingNavbar } from "@/features/landing/LandingNavbar";
 import { LandingHero } from "@/features/landing/LandingHero";
 import { ValuePropositionSection } from "@/features/landing/ValuePropositionSection";
@@ -23,7 +24,8 @@ export default function WelcomePage() {
   if (profile) return <Navigate to={homeForRole(profile.role)} replace />;
 
   return (
-    <div className="min-h-screen bg-white text-[#101A12] selection:bg-[#DFF1E5] selection:text-[#0E4D2F] font-sans antialiased">
+    <div className="min-h-screen botanical-mist text-bark selection:bg-[#F6DFC9] selection:text-moss-deep antialiased">
+      <DemoBanner />
       {/* 1. Navbar (~72px, sticky, brand logo, nav links, contact button, language switcher) */}
       <LandingNavbar
         onOpenLangModal={() => setLangModalOpen(true)}

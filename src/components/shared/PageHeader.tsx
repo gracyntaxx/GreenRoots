@@ -15,8 +15,8 @@ export function PortalPageHeader({
   return (
     <div className={cn("mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between", className)}>
       <div>
-        <h1 className="text-[28px] font-bold leading-tight tracking-tight text-ink dark:text-portal-ink">{title}</h1>
-        {description && <p className="mt-1 max-w-3xl text-sm text-muted dark:text-portal-muted">{description}</p>}
+        <h1 className="font-heading text-[30px] font-bold leading-[1.1] tracking-[-0.03em] text-moss dark:text-portal-ink sm:text-[34px]">{title}</h1>
+        {description && <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-muted dark:text-portal-muted">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
@@ -59,13 +59,13 @@ export function StatCard({
   icon?: React.ReactNode;
 }) {
   const tones = {
-    default: "border-line bg-surface dark:border-portal-line dark:bg-portal-surface",
-    success: "border-growth/30 bg-[#F0FDF4] dark:border-growth/25 dark:bg-[#0F2A1B]",
-    warning: "border-settle/40 bg-[#FFFBEB] dark:border-settle/30 dark:bg-[#2A2110]",
-    info: "border-navy/20 bg-[#EFF6FF] dark:border-[#2A4C8F] dark:bg-[#101E36]",
+    default: "border-line/90 bg-white/85 backdrop-blur-sm dark:border-portal-line dark:bg-portal-surface",
+    success: "border-growth/25 bg-sage dark:border-growth/25 dark:bg-[#0F2A1B]",
+    warning: "border-wheat/40 bg-wheat-soft dark:border-settle/30 dark:bg-[#2A2110]",
+    info: "border-navy/15 bg-[#E8EEF9] dark:border-[#2A4C8F] dark:bg-[#101E36]",
   };
   return (
-    <div className={cn("rounded-portal border p-4", tones[tone])}>
+    <div className={cn("rounded-panel border p-4 shadow-card", tones[tone])}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-[12px] font-bold uppercase tracking-wide text-muted dark:text-portal-muted">{label}</p>
         {icon}

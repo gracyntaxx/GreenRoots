@@ -4,7 +4,7 @@ import { LogoMark } from "@/components/shared/Brand";
 
 export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) {
   return (
-    <footer id="footer" className="bg-[#0A3A24] text-white pt-16 pb-12 border-t border-white/10">
+    <footer id="footer" className="bg-[#152E21] text-white pt-16 pb-12 border-t border-white/10">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         {/* Main 4-Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-white/10">
@@ -15,23 +15,23 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
                 <LogoMark className="h-6 w-6" />
               </span>
               <span className="font-heading text-2xl font-bold tracking-tight text-white">
-                Green<span className="text-[#22C55E]">Roots</span>
+                Green<span className="text-[#2E6F40]">Roots</span>
               </span>
             </div>
 
-            <p className="text-sm leading-relaxed text-[#DFF1E5]/80 max-w-sm">
+            <p className="text-sm leading-relaxed text-[#E3EFE8]/80 max-w-sm">
               Empowering farmers to monetize crop residue, stop field burning, and power clean bio-energy industries with instant verified settlement.
             </p>
 
-            <div className="pt-2 flex items-center gap-2 text-xs text-[#DFF1E5]/90">
-              <ShieldCheck className="h-4 w-4 text-[#22C55E]" />
+            <div className="pt-2 flex items-center gap-2 text-xs text-[#E3EFE8]/90">
+              <ShieldCheck className="h-4 w-4 text-[#2E6F40]" />
               <span>Payments secured with PayPal Escrow & Webhooks</span>
             </div>
           </div>
 
           {/* Column 2: Quick Links (2-3 cols) */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#DFF1E5]">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#E3EFE8]">
               Quick Links
             </h4>
             <ul className="space-y-2 text-sm text-white/80">
@@ -65,7 +65,7 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
 
           {/* Column 3: Solutions / Resources (3 cols) */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#DFF1E5]">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#E3EFE8]">
               Marketplace Solutions
             </h4>
             <ul className="space-y-2 text-sm text-white/80">
@@ -99,26 +99,26 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
 
           {/* Column 4: Contact Information + Follow Us Icons (3 cols) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#DFF1E5]">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#E3EFE8]">
               Contact Information
             </h4>
             <ul className="space-y-2.5 text-xs text-white/80">
               <li className="flex items-start gap-2.5">
-                <MapPin className="h-4 w-4 shrink-0 text-[#22C55E] mt-0.5" />
+                <MapPin className="h-4 w-4 shrink-0 text-[#2E6F40] mt-0.5" />
                 <span>GreenRoots Agri Hub, Rewari Central & Panipat Yard, Haryana, India</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone className="h-4 w-4 shrink-0 text-[#22C55E]" />
+                <Phone className="h-4 w-4 shrink-0 text-[#2E6F40]" />
                 <span>+91 98123 45670 (Toll-Free Helpline)</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail className="h-4 w-4 shrink-0 text-[#22C55E]" />
+                <Mail className="h-4 w-4 shrink-0 text-[#2E6F40]" />
                 <span>support@greenroots.agri</span>
               </li>
             </ul>
 
             <div className="pt-2">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#DFF1E5]/70 mb-2">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#E3EFE8]/70 mb-2">
                 Follow Us
               </p>
               <div className="flex items-center gap-2.5">
@@ -126,7 +126,7 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
                   href="https://twitter.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-[#22C55E] hover:text-[#0A3A24] transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-[#2E6F40] hover:text-[#152E21] transition-colors"
                   aria-label="Twitter"
                 >
                   <Twitter className="h-3.5 w-3.5" />
@@ -135,7 +135,7 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-[#22C55E] hover:text-[#0A3A24] transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-[#2E6F40] hover:text-[#152E21] transition-colors"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-3.5 w-3.5" />
@@ -144,7 +144,7 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
                   href="https://github.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-[#22C55E] hover:text-[#0A3A24] transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-[#2E6F40] hover:text-[#152E21] transition-colors"
                   aria-label="GitHub"
                 >
                   <Github className="h-3.5 w-3.5" />
@@ -162,7 +162,7 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
         </div>
 
         {/* Bottom Bar: Copyright line left, Privacy Policy and Terms right */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#DFF1E5]/70">
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#E3EFE8]/70">
           <p>
             &copy; {new Date().getFullYear()} GreenRoots Sustainable Agri Exchange. All rights reserved.
           </p>

@@ -5,7 +5,7 @@ export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
   return (
     <div
       className={cn(
-        "rounded-2xl border border-line bg-surface shadow-sm transition-all dark:border-portal-line dark:bg-portal-surface",
+        "rounded-organic border border-line/90 bg-white/85 shadow-card backdrop-blur-sm transition-all dark:border-portal-line dark:bg-portal-surface/90",
         className
       )}
       {...props}
@@ -33,7 +33,7 @@ export function PortalCard({ className, ...props }: React.HTMLAttributes<HTMLDiv
   return (
     <div
       className={cn(
-        "rounded-2xl border border-line bg-surface shadow-sm transition-all dark:border-portal-line dark:bg-portal-surface",
+        "rounded-organic border border-line/90 bg-white/85 shadow-card backdrop-blur-sm transition-all dark:border-portal-line dark:bg-portal-surface/90",
         className
       )}
       {...props}

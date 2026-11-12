@@ -9,6 +9,8 @@ import {
   Leaf,
   MapPin,
   Mic,
+  ReceiptText,
+  ShoppingBasket,
   Sprout,
   TrendingUp,
 } from "lucide-react";
@@ -66,29 +68,54 @@ export default function HomePage() {
 
   return (
     <PageContainer className="space-y-5">
-      <div className="flex items-start justify-between gap-3 border-b border-line pb-4 dark:border-portal-line">
+      <div className="flex flex-col gap-4 border-b border-line/80 pb-5 dark:border-portal-line sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink">{t("home.greeting", { name: (profile?.name || "Farmer").split(" ")[0] })}</h1>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-muted dark:text-portal-muted">
-            <MapPin className="h-4 w-4 text-forest" aria-hidden="true" />
+          <span className="eyebrow mb-2">Farm workspace</span>
+          <h1 className="font-heading text-[32px] font-bold leading-[1.05] text-moss dark:text-portal-ink sm:text-[38px]">{t("home.greeting", { name: (profile?.name || "Farmer").split(" ")[0] })}</h1>
+          <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted dark:text-portal-muted">
+            <MapPin className="h-4 w-4 text-terracotta" aria-hidden="true" />
             {t("home.villageLine", { village: profile?.village || "Rewari", state: profile?.state || "Haryana" })}
           </p>
         </div>
         <ReputationBadge score={profile?.reputation ?? 4.5} factors={profile?.reputationFactors ?? []} showScore />
       </div>
 
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+        {[
+          { to: "/app/market", label: t("common.market"), detail: "Direct farm lots", icon: ShoppingBasket },
+          { to: "/app/pools", label: t("common.pools"), detail: "Village demand", icon: Layers },
+          { to: "/app/orders", label: t("common.orders"), detail: "Payout ledger", icon: ReceiptText },
+          { to: "/app/collection-points", label: t("collection.title"), detail: "Pickup route", icon: MapPin },
+        ].map(({ to, label, detail, icon: Icon }) => (
+          <Link
+            key={to}
+            to={to}
+            className="group glass-panel flex items-center gap-2.5 rounded-panel p-3 transition hover:-translate-y-0.5 hover:border-terracotta/30 hover:shadow-card"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sage text-moss transition group-hover:bg-wheat-soft group-hover:text-terracotta-dark">
+              <Icon className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-xs font-bold text-moss dark:text-portal-ink">{label}</span>
+              <span className="block truncate text-[10px] text-muted">{detail}</span>
+            </span>
+          </Link>
+        ))}
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="overflow-hidden p-0">
-          <div className="bg-forest px-4 pb-4 pt-3.5 text-white">
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-meadow/80">{t("home.seasonEarnings")}</p>
-            <p className="num mt-1 text-[28px] sm:text-[32px] font-bold leading-none">{formatMoney(paid + pending)}</p>
+        <Card className="overflow-hidden border-moss/20 p-0">
+          <div className="relative overflow-hidden bg-[linear-gradient(135deg,#1B3B2B_0%,#2E6F40_100%)] px-4 pb-4 pt-3.5 text-white">
+            <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-wheat/20 blur-2xl" aria-hidden="true" />
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#FDE68A]">{t("home.seasonEarnings")}</p>
+            <p className="num mt-1 text-[30px] font-bold leading-none sm:text-[34px]">{formatMoney(paid + pending)}</p>
             <div className="mt-3 grid grid-cols-2 gap-2 text-[12px]">
-              <div className="rounded-lg bg-white/10 px-2.5 py-1.5">
-                <p className="text-meadow/80">{t("home.paid")}</p>
+              <div className="rounded-xl border border-white/10 bg-white/10 px-2.5 py-1.5 backdrop-blur">
+                <p className="text-white/65">{t("home.paid")}</p>
                 <p className="num font-bold">{formatMoney(paid)}</p>
               </div>
-              <div className="rounded-lg bg-white/10 px-2.5 py-1.5">
-                <p className="text-meadow/80">{t("home.pendingPayout")}</p>
+              <div className="rounded-xl border border-white/10 bg-white/10 px-2.5 py-1.5 backdrop-blur">
+                <p className="text-white/65">{t("home.pendingPayout")}</p>
                 <p className="num font-bold">{formatMoney(pending)}</p>
               </div>
             </div>
@@ -127,16 +154,16 @@ export default function HomePage() {
         <button
           type="button"
           onClick={openVoice}
-          className="flex min-h-[72px] sm:col-span-2 lg:col-span-1 items-center gap-3 rounded-xl border border-forest/30 bg-meadow px-4 py-3 text-left hover:bg-meadow/80 transition-colors shadow-sm"
+          className="group flex min-h-[72px] items-center gap-3 rounded-organic border border-terracotta/20 bg-[linear-gradient(135deg,#FEF6E4_0%,#F4E6D5_100%)] px-4 py-3 text-left shadow-card transition hover:-translate-y-0.5 hover:shadow-glass sm:col-span-2 lg:col-span-1"
         >
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-forest text-white shadow-md">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#D96B27_0%,#EAB308_100%)] text-moss-deep shadow-md">
             <Mic className="h-6 w-6" aria-hidden="true" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-base font-bold text-forest">{t("home.voiceAction")}</span>
-            <span className="block text-xs text-forest/80">Say what you have. Check draft. Confirm &amp; list.</span>
+            <span className="block text-base font-bold text-moss">{t("home.voiceAction")}</span>
+            <span className="block text-xs text-muted">Say what you have. Check draft. Confirm and list.</span>
           </span>
-          <ArrowRight className="h-5 w-5 text-forest" aria-hidden="true" />
+          <ArrowRight className="h-5 w-5 text-terracotta" aria-hidden="true" />
         </button>
       </div>
 

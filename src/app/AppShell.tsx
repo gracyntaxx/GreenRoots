@@ -32,6 +32,7 @@ import {
   X,
 } from "lucide-react";
 import { Brand } from "@/components/shared/Brand";
+import { DemoBanner } from "@/components/shared/DemoBanner";
 import { NotificationBell } from "@/components/shared/NotificationBell";
 import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
 import { OfflineBanner } from "@/components/shared/Connectivity";
@@ -242,16 +243,16 @@ export function AppShell() {
 
   return (
     <AppShellContext.Provider value={api}>
-      <div className="flex min-h-screen bg-canvas text-ink transition-colors dark:bg-portal-bg dark:text-portal-ink">
+      <div className="flex min-h-screen bg-transparent text-ink transition-colors dark:bg-portal-bg dark:text-portal-ink">
         {/* DESKTOP & TABLET SIDEBAR (Hidden on phone < 640px) */}
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-30 hidden sm:flex flex-col border-r border-line bg-surface transition-all duration-200 dark:border-portal-line dark:bg-portal-surface",
+            "fixed inset-y-0 left-0 z-30 hidden sm:flex flex-col border-r border-line/80 bg-white/80 backdrop-blur-xl transition-all duration-200 dark:border-portal-line dark:bg-portal-surface/90",
             collapsed ? "w-16" : "w-64"
           )}
         >
           {/* Sidebar Header */}
-          <div className="flex h-16 shrink-0 items-center justify-between border-b border-line px-3.5 dark:border-portal-line">
+          <div className="flex h-16 shrink-0 items-center justify-between border-b border-line/80 px-3.5 dark:border-portal-line">
             {!collapsed ? (
               <div className="flex items-center justify-between w-full">
                 <Brand compact />
@@ -287,10 +288,10 @@ export function AppShell() {
                   end={item.end}
                   className={({ isActive }) =>
                     cn(
-                      "flex min-h-[44px] items-center gap-3 rounded-lg px-3 text-[14px] font-semibold transition-colors",
+                      "relative flex min-h-[46px] items-center gap-3 rounded-xl px-3 text-[14px] font-semibold transition-all",
                       isActive
-                        ? "bg-meadow text-forest dark:bg-portal-line dark:text-growth"
-                        : "text-muted hover:bg-canvas hover:text-ink dark:text-portal-muted dark:hover:bg-portal-bg dark:hover:text-portal-ink",
+                        ? "bg-sage text-moss shadow-[inset_3px_0_0_#D96B27] dark:bg-portal-line dark:text-growth"
+                        : "text-muted hover:bg-sage-light hover:text-moss dark:text-portal-muted dark:hover:bg-portal-bg dark:hover:text-portal-ink",
                       collapsed && "justify-center px-0"
                     )
                   }
@@ -373,8 +374,10 @@ export function AppShell() {
             collapsed ? "sm:pl-16" : "sm:pl-64"
           )}
         >
+          <DemoBanner />
+
           {/* HEADER */}
-          <header className="sticky top-0 z-20 flex h-14 sm:h-16 shrink-0 items-center justify-between border-b border-line bg-surface/95 px-4 sm:px-6 backdrop-blur dark:border-portal-line dark:bg-portal-surface/95">
+          <header className="sticky top-0 z-20 flex h-14 sm:h-16 shrink-0 items-center justify-between border-b border-line/80 bg-white/75 px-4 sm:px-6 backdrop-blur-xl dark:border-portal-line dark:bg-portal-surface/90">
             {/* Left: Mobile Brand & Desktop Breadcrumbs */}
             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
               <div className="sm:hidden">
@@ -455,7 +458,7 @@ export function AppShell() {
               type="button"
               onClick={openVoice}
               aria-label={t("home.voiceAction") || "Voice Assistant"}
-              className="fixed bottom-20 right-4 z-40 sm:hidden flex h-14 w-14 items-center justify-center rounded-full bg-forest text-white shadow-[0_8px_20px_rgba(21,128,61,0.4)] ring-4 ring-surface active:scale-95 transition-transform"
+              className="fixed bottom-20 right-4 z-40 sm:hidden flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#D96B27_0%,#EAB308_100%)] text-moss-deep shadow-[0_10px_26px_rgba(217,107,39,0.38)] ring-4 ring-oat active:scale-95 transition-transform"
             >
               <Mic className="h-7 w-7" aria-hidden="true" />
             </button>
@@ -464,7 +467,7 @@ export function AppShell() {
           {/* FIXED BOTTOM TAB BAR (Phone only < 640px) */}
           <nav
             aria-label="Mobile navigation"
-            className="fixed bottom-0 left-0 right-0 z-40 sm:hidden flex border-t border-line bg-surface/95 px-1 pb-[max(env(safe-area-inset-bottom),8px)] pt-1 backdrop-blur dark:border-portal-line dark:bg-portal-surface/95"
+            className="fixed bottom-0 left-0 right-0 z-40 sm:hidden flex border-t border-line/80 bg-white/85 px-1 pb-[max(env(safe-area-inset-bottom),8px)] pt-1 backdrop-blur-xl dark:border-portal-line dark:bg-portal-surface/90"
           >
             {primaryBottomNav.map((item) => {
               const Icon = item.icon;

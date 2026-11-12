@@ -23,7 +23,7 @@ export function Progress({
       className={cn("h-3 w-full overflow-hidden rounded-full bg-line dark:bg-portal-line", className)}
     >
       <div
-        className={cn("h-full rounded-full bg-forest transition-all duration-500", barClassName)}
+        className={cn("h-full rounded-full bg-[linear-gradient(90deg,#2E6F40_0%,#EAB308_100%)] transition-all duration-500", barClassName)}
         style={{ width: `${clamped}%` }}
       />
     </div>

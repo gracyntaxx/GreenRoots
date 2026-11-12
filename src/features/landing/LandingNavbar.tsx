@@ -48,22 +48,22 @@ export function LandingNavbar({
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-200 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-[0_2px_12px_rgba(16,26,18,0.06)] border-b border-[#E7ECE8]"
-          : "bg-white border-b border-[#E7ECE8]/60"
+          ? "bg-oat/85 backdrop-blur-xl shadow-[0_2px_18px_rgba(27,59,43,0.07)] border-b border-[#DCE4DF]/80"
+          : "bg-oat/70 border-b border-transparent backdrop-blur-md"
       }`}
       style={{ height: "72px" }}
     >
       <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <Link to="/welcome" className="flex items-center gap-2.5 group">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0E4D2F] text-white shadow-sm transition-transform group-hover:scale-105">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B3B2B] shadow-[3px_3px_0_#EAB308] text-white shadow-sm transition-transform group-hover:scale-105">
             <LogoMark className="h-6 w-6" />
           </span>
           <div className="leading-tight">
-            <span className="font-heading text-xl font-bold tracking-tight text-[#101A12]">
-              Green<span className="text-[#0E4D2F]">Roots</span>
+            <span className="font-heading text-xl font-bold tracking-tight text-[#18261F]">
+              Green<span className="text-[#1B3B2B]">Roots</span>
             </span>
-            <span className="hidden sm:block text-[10px] font-medium uppercase tracking-[0.12em] text-[#5C6B60]">
+            <span className="hidden sm:block text-[10px] font-medium uppercase tracking-[0.12em] text-[#52635A]">
               Eco Waste Exchange
             </span>
           </div>
@@ -79,7 +79,7 @@ export function LandingNavbar({
                 e.preventDefault();
                 handleNavClick(item.href);
               }}
-              className="text-[15px] font-medium text-[#5C6B60] hover:text-[#0E4D2F] transition-colors"
+              className="text-[15px] font-medium text-[#52635A] hover:text-[#1B3B2B] transition-colors"
             >
               {item.label}
             </a>
@@ -92,17 +92,17 @@ export function LandingNavbar({
           <button
             type="button"
             onClick={onOpenLangModal}
-            className="flex items-center gap-1.5 rounded-full border border-[#DCE5DE] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#101A12] hover:border-[#0E4D2F] hover:bg-[#F3F7F4] transition-all"
+            className="flex items-center gap-1.5 rounded-full border border-[#DCE4DF] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#18261F] hover:border-[#1B3B2B] hover:bg-[#F1F6F2] transition-all"
             title="Change Language"
           >
-            <Globe className="h-3.5 w-3.5 text-[#0E4D2F]" />
+            <Globe className="h-3.5 w-3.5 text-[#1B3B2B]" />
             <span>{currentLangObj.native}</span>
           </button>
 
           {/* Log In Link */}
           <Link
             to="/login"
-            className="rounded-full px-5 py-2 text-sm font-semibold text-[#101A12] hover:text-[#0E4D2F] transition-colors"
+            className="rounded-full px-5 py-2 text-sm font-semibold text-[#18261F] hover:text-[#1B3B2B] transition-colors"
           >
             Log in
           </Link>
@@ -111,7 +111,7 @@ export function LandingNavbar({
           <button
             type="button"
             onClick={onOpenContactModal}
-            className="rounded-full bg-[#0E4D2F] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#0A3A24] transition-all active:scale-[0.98]"
+            className="rounded-full bg-[linear-gradient(135deg,#D96B27_0%,#EAB308_100%)] px-6 py-2.5 text-sm font-bold text-[#152E21] shadow-[0_6px_16px_rgba(217,107,39,0.22)] hover:brightness-95 transition-all active:scale-[0.98]"
           >
             Contact
           </button>
@@ -122,7 +122,7 @@ export function LandingNavbar({
           <button
             type="button"
             onClick={onOpenLangModal}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DCE5DE] text-[#0E4D2F]"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DCE4DF] text-[#1B3B2B]"
             aria-label="Language selector"
           >
             <Globe className="h-4 w-4" />
@@ -131,7 +131,7 @@ export function LandingNavbar({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DCE5DE] text-[#101A12] hover:bg-[#F3F7F4]"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DCE4DF] text-[#18261F] hover:bg-[#F1F6F2]"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -141,7 +141,7 @@ export function LandingNavbar({
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-x-0 top-[72px] z-50 border-b border-[#E7ECE8] bg-white px-6 py-6 shadow-xl lg:hidden animate-fade-in">
+        <div className="fixed inset-x-0 top-[72px] z-50 border-b border-[#DCE4DF] bg-white px-6 py-6 shadow-xl lg:hidden animate-fade-in">
           <nav className="flex flex-col space-y-4">
             {navLinks.map((item) => (
               <a
@@ -151,23 +151,23 @@ export function LandingNavbar({
                   e.preventDefault();
                   handleNavClick(item.href);
                 }}
-                className="text-base font-medium text-[#101A12] hover:text-[#0E4D2F]"
+                className="text-base font-medium text-[#18261F] hover:text-[#1B3B2B]"
               >
                 {item.label}
               </a>
             ))}
-            <div className="pt-4 border-t border-[#E7ECE8] flex flex-col gap-3">
+            <div className="pt-4 border-t border-[#DCE4DF] flex flex-col gap-3">
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-full border border-[#DCE5DE] text-sm font-semibold text-[#101A12]"
+                className="w-full text-center py-2.5 rounded-full border border-[#DCE4DF] text-sm font-semibold text-[#18261F]"
               >
                 Log in
               </Link>
               <Link
                 to="/signup"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-full bg-[#0E4D2F] text-sm font-semibold text-white shadow-sm"
+                className="w-full text-center py-2.5 rounded-full bg-[linear-gradient(135deg,#D96B27_0%,#EAB308_100%)] text-sm font-bold text-[#152E21] shadow-sm"
               >
                 Get Started Today
               </Link>
@@ -177,7 +177,7 @@ export function LandingNavbar({
                   setMobileMenuOpen(false);
                   onOpenContactModal();
                 }}
-                className="w-full text-center py-2 rounded-full text-xs font-semibold text-[#5C6B60] hover:text-[#0E4D2F]"
+                className="w-full text-center py-2 rounded-full text-xs font-semibold text-[#52635A] hover:text-[#1B3B2B]"
               >
                 Contact Support
               </button>

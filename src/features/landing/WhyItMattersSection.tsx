@@ -71,16 +71,16 @@ export function WhyItMattersSection() {
   ];
 
   return (
-    <section id="why-it-matters" className="bg-white py-14 sm:py-20 lg:py-28 border-b border-[#E7ECE8]">
+    <section id="why-it-matters" className="bg-white py-14 sm:py-20 lg:py-28 border-b border-[#DCE4DF]">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto">
-          <span className="rounded-full bg-[#DFF1E5] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#0E4D2F]">
+          <span className="rounded-full bg-[#E3EFE8] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#1B3B2B]">
             Environmental & Economic Impact
           </span>
-          <h2 className="font-heading mt-3 text-3xl sm:text-4xl lg:text-[40px] font-bold leading-[1.2] tracking-[-0.015em] text-[#101A12]">
+          <h2 className="font-heading mt-3 text-3xl sm:text-4xl lg:text-[40px] font-bold leading-[1.2] tracking-[-0.015em] text-[#18261F]">
             Why It Matters
           </h2>
-          <p className="mt-4 text-base sm:text-lg leading-[1.6] text-[#5C6B60]">
+          <p className="mt-4 text-base sm:text-lg leading-[1.6] text-[#52635A]">
             From stopping toxic smog to ensuring farmer livelihoods, our circular model turns agricultural residue into a win for the climate and rural economy.
           </p>
         </div>
@@ -97,8 +97,8 @@ export function WhyItMattersSection() {
                 className={cn(
                   "overflow-hidden rounded-[16px] transition-all duration-300",
                   isActive
-                    ? "bg-[#0E4D2F] text-white shadow-[0_12px_28px_rgba(14,77,47,0.22)]"
-                    : "bg-white text-[#101A12] border border-[#DCE5DE] hover:border-[#0E4D2F]/50 hover:bg-[#F3F7F4]/60"
+                    ? "bg-[#1B3B2B] text-white shadow-[0_12px_28px_rgba(14,77,47,0.22)]"
+                    : "bg-white text-[#18261F] border border-[#DCE4DF] hover:border-[#1B3B2B]/50 hover:bg-[#F1F6F2]/60"
                 )}
               >
                 <button
@@ -111,7 +111,7 @@ export function WhyItMattersSection() {
                     <span
                       className={cn(
                         "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors",
-                        isActive ? "bg-white/15 text-white" : "bg-[#DFF1E5] text-[#0E4D2F]"
+                        isActive ? "bg-white/15 text-white" : "bg-[#E3EFE8] text-[#1B3B2B]"
                       )}
                     >
                       <Icon className="h-5 w-5" />
@@ -120,7 +120,7 @@ export function WhyItMattersSection() {
                       <h3
                         className={cn(
                           "font-heading text-lg sm:text-xl font-bold leading-tight",
-                          isActive ? "text-white" : "text-[#101A12]"
+                          isActive ? "text-white" : "text-[#18261F]"
                         )}
                       >
                         {item.title}
@@ -128,7 +128,7 @@ export function WhyItMattersSection() {
                       <p
                         className={cn(
                           "mt-0.5 text-xs sm:text-sm font-medium",
-                          isActive ? "text-[#DFF1E5]" : "text-[#5C6B60]"
+                          isActive ? "text-[#E3EFE8]" : "text-[#52635A]"
                         )}
                       >
                         {item.subtitle}
@@ -139,7 +139,7 @@ export function WhyItMattersSection() {
                   <span
                     className={cn(
                       "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-transform duration-300",
-                      isActive ? "bg-white/20 text-white rotate-180" : "bg-[#F3F7F4] text-[#101A12]"
+                      isActive ? "bg-white/20 text-white rotate-180" : "bg-[#F1F6F2] text-[#18261F]"
                     )}
                   >
                     <ChevronDown className="h-4 w-4" />
@@ -154,7 +154,7 @@ export function WhyItMattersSection() {
                     <ul className="mt-4 space-y-2 text-xs sm:text-sm text-white/85">
                       {item.bulletPoints.map((bp, i) => (
                         <li key={i} className="flex items-start gap-2.5">
-                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#22C55E]" />
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#2E6F40]" />
                           <span>{bp}</span>
                         </li>
                       ))}
@@ -170,7 +170,7 @@ export function WhyItMattersSection() {
         <div className="mt-12 text-center">
           <Link
             to="/signup"
-            className="inline-flex items-center gap-2.5 rounded-full bg-[#0E4D2F] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_8px_20px_rgba(14,77,47,0.22)] hover:bg-[#0A3A24] transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2.5 rounded-full bg-[#1B3B2B] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_8px_20px_rgba(14,77,47,0.22)] hover:bg-[#152E21] transition-all active:scale-[0.98]"
           >
             Start Your Recycling Journey
             <ArrowRight className="h-4 w-4" />

@@ -3,12 +3,11 @@ import { cn } from "@/lib/utils";
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 40 40" className={cn("h-9 w-9", className)} aria-hidden="true">
-      <rect width="40" height="40" rx="10" fill="#15803D" />
-      <path d="M10 30h20" stroke="#DCFCE7" strokeWidth="2" strokeLinecap="round" opacity="0.55" />
-      <path d="M20 31V15" stroke="#DCFCE7" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M20 21c0-5 3.8-8.8 8.8-8.8 0 5-3.8 8.8-8.8 8.8Z" fill="#22C55E" />
-      <path d="M20 26c0-3.8-3-6.9-6.9-6.9 0 3.8 3 6.9 6.9 6.9Z" fill="#DCFCE7" />
-      <circle cx="31" cy="9" r="3" fill="#F59E0B" />
+      <rect width="40" height="40" rx="12" fill="#1B3B2B" />
+      <path d="M20 34C20 24 20 18 20 12" stroke="#FBF9F5" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M20 22C13 22 8.5 17.5 8.5 11.5C14.5 11.5 20 15.5 20 22Z" fill="#7FB069" stroke="#FBF9F5" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M20 17C27 17 31.5 12.5 31.5 6.5C25.5 6.5 20 10.5 20 17Z" fill="#EAB308" stroke="#FBF9F5" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M11 34C15 32.5 25 32.5 29 34" stroke="#D96B27" strokeWidth="2.3" strokeLinecap="round" />
     </svg>
   );
 }
@@ -18,12 +17,17 @@ export function Brand({ className, compact }: { className?: string; compact?: bo
     <div className={cn("flex items-center gap-2.5", className)}>
       <LogoMark className={compact ? "h-8 w-8" : undefined} />
       <div className="leading-none">
-        <span className={cn("font-bold tracking-tight text-ink dark:text-portal-ink", compact ? "text-base" : "text-lg")}>
-          Green<span className="text-forest dark:text-growth">Roots</span>
+        <span
+          className={cn(
+            "font-heading font-bold tracking-[-0.03em] text-moss dark:text-portal-ink",
+            compact ? "text-lg" : "text-xl"
+          )}
+        >
+          Green<span className="text-terracotta">Roots</span>
         </span>
         {!compact && (
-          <span className="mt-1 block text-[11px] font-medium uppercase tracking-wider text-muted dark:text-portal-muted">
-            Sell residue, not smoke
+          <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-muted dark:text-portal-muted">
+            Agri-Waste Circular Exchange
           </span>
         )}
       </div>

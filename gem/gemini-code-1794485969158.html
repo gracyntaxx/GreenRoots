@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenRoots — AI & PayPal Agricultural Waste Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Sandbox Environment Banner (SRS Sec 2.4 & 4.3) -->
+  <div class="sandbox-banner" role="region" aria-label="Sandbox Notice">
+    <svg class="doodle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+    <span><strong>HACKATHON DEMO MODE:</strong> Connected to PayPal Developer Sandbox & Gemini AI. No real funds are processed.</span>
+    <span class="badge-pill">Webhook Verified</span>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="brand" aria-label="GreenRoots Home">
+        <!-- Hand-drawn Sprout Doodle Logo -->
+        <svg class="brand-doodle" viewBox="0 0 40 40" fill="none">
+          <path d="M20 35C20 24 20 18 20 12" stroke="#1B3B2B" stroke-width="2.8" stroke-linecap="round"/>
+          <path d="M20 22C13 22 8 17 8 11C14 11 20 15 20 22Z" fill="#7FB069" stroke="#1B3B2B" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M20 17C27 17 32 12 32 6C26 6 20 10 20 17Z" fill="#EAB308" stroke="#1B3B2B" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M11 35C15 33.5 25 33.5 29 35" stroke="#D96B27" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <span class="brand-name">GreenRoots</span>
+          <span class="brand-tag">Agri-Waste Circular Exchange</span>
+        </div>
+      </a>
+
+      <!-- Role Switcher (FR-1, FR-2, FR-4) -->
+      <nav class="role-switcher" aria-label="Switch User Role">
+        <button class="role-btn active" data-role="farmer">Farmer View</button>
+        <button class="role-btn" data-role="buyer">Buyer View</button>
+        <button class="role-btn" data-role="industry">Industry View</button>
+        <button class="role-btn" data-role="admin">Admin View</button>
+      </nav>
+
+      <!-- Language & Profile (FR-5, FR-6, FR-27) -->
+      <div class="nav-actions">
+        <select class="lang-select" aria-label="Select Regional Language">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="kok">कोंकणी (Konkani)</option>
+        </select>
+        <div class="profile-chip" title="Verified Reputation Score">
+          <div class="avatar">RP</div>
+          <div class="profile-meta">
+            <span class="profile-name" id="currentUserName">Ramesh Patil</span>
+            <span class="rep-score">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#EAB308" stroke="#1B3B2B" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              4.92 Trust Score
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-layout">
+    <!-- Hero Banner with Custom Botanical Doodles -->
+    <section class="hero-card">
+      <div class="hero-content">
+        <div class="eyebrow-tag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <span>Zero Stubble Burning • Instant PayPal Settlement</span>
+        </div>
+        <h1>Turn crop residue into verified farm income.</h1>
+        <p>Speak or type in your local language to list rice husk, wheat straw, or bagasse. AI matches your harvest with verified industries and settles payouts transparently via PayPal.</p>
+        <div class="hero-stats">
+          <div class="stat-box">
+            <span class="stat-num">14,280 kg</span>
+            <span class="stat-label">Waste Diverted This Week</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-num">$4,820.00</span>
+            <span class="stat-label">Verified PayPal Payouts</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-num">98.4%</span>
+            <span class="stat-label">Pool Fulfillment Rate</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hand-drawn Illustration: Wheat Sheaf + Circular Supply Doodle -->
+      <div class="hero-doodle-wrap" aria-hidden="true">
+        <svg class="hero-svg" viewBox="0 0 320 260" fill="none">
+          <!-- Soft Organic Blob Backdrop -->
+          <path d="M62 48C105 18 225 14 268 62C311 110 296 205 242 232C188 259 74 246 38 194C2 142 19 78 62 48Z" fill="#E6EFEA"/>
+          <!-- Dotted Circular Flow Path -->
+          <circle cx="160" cy="130" r="92" stroke="#1B3B2B" stroke-width="2" stroke-dasharray="6 6"/>
+          <!-- Wheat Stalk Doodle -->
+          <path d="M160 205V68" stroke="#1B3B2B" stroke-width="3" stroke-linecap="round"/>
+          <path d="M160 165C138 162 128 148 132 134C146 136 158 148 160 165Z" fill="#EAB308" stroke="#1B3B2B" stroke-width="2.2"/>
+          <path d="M160 165C182 162 192 148 188 134C174 136 162 148 160 165Z" fill="#EAB308" stroke="#1B3B2B" stroke-width="2.2"/>
+          <path d="M160 132C138 129 128 115 132 101C146 103 158 115 160 132Z" fill="#7FB069" stroke="#1B3B2B" stroke-width="2.2"/>
+          <path d="M160 132C182 129 192 115 188 101C174 103 162 115 160 132Z" fill="#7FB069" stroke="#1B3B2B" stroke-width="2.2"/>
+          <path d="M160 99C144 96 136 84 140 72C151 74 159 84 160 99Z" fill="#D96B27" stroke="#1B3B2B" stroke-width="2.2"/>
+          <path d="M160 99C176 96 184 84 180 72C169 74 161 84 160 99Z" fill="#D96B27" stroke="#1B3B2B" stroke-width="2.2"/>
+          <!-- Floating Sparkle Doodles -->
+          <path d="M74 82L78 92L88 96L78 100L74 110L70 100L60 96L70 92L74 82Z" fill="#D96B27"/>
+          <path d="M248 156L251 163L258 166L251 169L248 176L245 169L238 166L245 163L248 156Z" fill="#EAB308"/>
+          <!-- Floating Card Pill -->
+          <rect x="184" y="42" width="112" height="36" rx="18" fill="#FFFFFF" stroke="#1B3B2B" stroke-width="2"/>
+          <circle cx="204" cy="60" r="7" fill="#2E7D32"/>
+          <text x="218" y="64" fill="#1B3B2B" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="700">AI Matched</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Primary Workspace Grid -->
+    <div class="workspace-grid">
+      <!-- LEFT COLUMN: AI Voice/Text Copilot (FR-15, FR-28, FR-30 to FR-36) -->
+      <aside class="ai-panel card" aria-label="Gemini AI Marketplace Assistant">
+        <div class="card-header">
+          <div class="title-with-doodle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D96B27" stroke-width="2.2" stroke-linecap="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+            </svg>
+            <h2>AI Harvest Assistant</h2>
+          </div>
+          <span class="ai-badge">Gemini + Human-in-the-Loop</span>
+        </div>
+
+        <p class="helper-text">Speak or type naturally. AI extracts listing fields or prepares a PayPal summary—nothing is published or paid without your confirmation.</p>
+
+        <!-- Voice Recorder Button -->
+        <div class="voice-box">
+          <button type="button" class="mic-btn" id="micToggleBtn" aria-pressed="false">
+            <span class="mic-pulse"></span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+            </svg>
+            <span id="micLabel">Tap to Speak Listing</span>
+          </button>
+          <span class="voice-hint">Try: "I have 200 kg of dry rice husk at Verna Point for $0.18/kg"</span>
+        </div>
+
+        <!-- Natural Language Input -->
+        <div class="prompt-input-group">
+          <textarea id="aiPromptInput" rows="3" placeholder="Or type here: e.g., List 200 kg rice husk at Verna Collection Point for $36 total..."></textarea>
+          <button type="button" class="btn btn-primary" id="extractDraftBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            Generate Structured Draft
+          </button>
+        </div>
+
+        <!-- Human-in-the-Loop Editable Preview Card (FR-28 & FR-32) -->
+        <div class="draft-preview" id="aiDraftCard">
+          <div class="draft-header">
+            <span class="draft-title">Review Extracted Listing Draft</span>
+            <button type="button" class="tts-btn" id="readAloudBtn" title="Read listing aloud">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+              Read Aloud
+            </button>
+          </div>
+
+          <div class="draft-fields">
+            <label>
+              <span>Waste Type</span>
+              <input type="text" id="draftWasteType" value="Dry Rice Husk" />
+            </label>
+            <div class="field-row">
+              <label>
+                <span>Quantity (kg)</span>
+                <input type="number" id="draftQty" value="200" />
+              </label>
+              <label>
+                <span>Price / kg ($)</span>
+                <input type="number" step="0.01" id="draftPrice" value="0.18" />
+              </label>
+            </div>
+            <label>
+              <span>Collection Point (FR-21)</span>
+              <select id="draftLocation">
+                <option value="Verna Village Hub (CP-01)">Verna Village Hub (CP-01) • 1.8 km</option>
+                <option value="Margao Agro Depot (CP-02)">Margao Agro Depot (CP-02) • 4.2 km</option>
+                <option value="Ponda East Silo (CP-03)">Ponda East Silo (CP-03) • 9.5 km</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="draft-summary-bar">
+            <span>Estimated Payout:</span>
+            <strong id="draftTotal">$36.00 USD</strong>
+          </div>
+
+          <div class="draft-actions">
+            <button type="button" class="btn btn-secondary" id="resetDraftBtn">Edit / Clear</button>
+            <button type="button" class="btn btn-accent" id="confirmPublishBtn">Confirm & Publish</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: Dynamic Role Workspace -->
+      <section class="content-area">
+        <!-- Seasonal Alert Banner (FR-25, FR-26) -->
+        <div class="alert-card">
+          <div class="alert-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B3B2B" stroke-width="2.2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div class="alert-body">
+            <strong>AI Seasonal Demand Forecast (South Goa Cluster • Nov–Dec):</strong>
+            <span>Bio-pellet industries project a <strong>+34% surge in Rice Husk demand</strong> over the next 21 days based on Q4 historical pool data.</span>
+          </div>
+          <span class="forecast-tag">Estimate • Historical Model</span>
+        </div>
+
+        <!-- Sub-Navigation Tabs -->
+        <div class="tabs-bar" role="tablist">
+          <button class="tab-btn active" data-tab="pools" role="tab" aria-selected="true">Industry Demand Pools</button>
+          <button class="tab-btn" data-tab="listings" role="tab" aria-selected="false">Farmer Listings</button>
+          <button class="tab-btn" data-tab="orders" role="tab" aria-selected="false">PayPal Orders & Ledger</button>
+          <button class="tab-btn" data-tab="collection" role="tab" aria-selected="false">Collection Points & TSP Route</button>
+        </div>
+
+        <!-- TAB 1: INDUSTRY REQUIREMENT POOLS (FR-7 to FR-14) -->
+        <div class="tab-panel active" id="tab-pools">
+          <div class="section-head">
+            <div>
+              <h3>Active Industry Requirement Pools</h3>
+              <p>Combine harvests with nearby farmers to fulfill bulk industrial orders at guaranteed rates.</p>
+            </div>
+            <button class="btn btn-primary" id="openNewReqModalBtn">+ Post Industry Requirement</button>
+          </div>
+
+          <div class="cards-grid" id="poolsContainer">
+            <!-- Pool Card 1 -->
+            <article class="market-card">
+              <div class="card-top">
+                <span class="match-pill">96% AI Location Match</span>
+                <span class="status-pill status-open">Pool Filling</span>
+              </div>
+              <h4>BioThermal Energy Ltd. <span class="verified-tick" title="Admin Verified Industry">Verified</span></h4>
+              <p class="waste-spec"><strong>Requirement:</strong> Dry Rice Husk • $0.18 / kg</p>
+              <p class="meta-line">Pickup Hub: Verna Village Hub (CP-01) • Deadline: Nov 18, 2026</p>
+
+              <!-- Pool Stage Progress (FR-11) -->
+              <div class="pool-progress">
+                <div class="progress-labels">
+                  <span><strong>1,600 kg</strong> committed of 2,000 kg</span>
+                  <span>80% Filled</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" style="width: 80%;"></div>
+                </div>
+                <div class="stage-steps">
+                  <span class="step done">1. Open</span>
+                  <span class="step done">2. 75%+ Pooled</span>
+                  <span class="step">3. Ready for Pickup</span>
+                  <span class="step">4. PayPal Settled</span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-secondary btn-sm contribute-btn" data-pool="BioThermal Energy Ltd." data-rate="0.18" data-remaining="400">
+                  Commit Harvest (+400 kg needed)
+                </button>
+                <button class="btn btn-paypal btn-sm pay-pool-btn" data-item="Pool #GR-402: 2,000 kg Rice Husk" data-amount="360.00" data-recipient="3 Farmers (Pro-rata Split)">
+                  Fund Pool via PayPal
+                </button>
+              </div>
+            </article>
+
+            <!-- Pool Card 2 -->
+            <article class="market-card">
+              <div class="card-top">
+                <span class="match-pill">89% AI Match</span>
+                <span class="status-pill status-ready">Ready for Pickup</span>
+              </div>
+              <h4>EcoPack Pulp & Board <span class="verified-tick">Verified</span></h4>
+              <p class="waste-spec"><strong>Requirement:</strong> Sugarcane Bagasse • $0.22 / kg</p>
+              <p class="meta-line">Pickup Hub: Margao Agro Depot (CP-02) • Deadline: Nov 15, 2026</p>
+
+              <div class="pool-progress">
+                <div class="progress-labels">
+                  <span><strong>1,500 kg</strong> committed of 1,500 kg</span>
+                  <span>100% Filled</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill full" style="width: 100%;"></div>
+                </div>
+                <div class="stage-steps">
+                  <span class="step done">1. Open</span>
+                  <span class="step done">2. Pooled</span>
+                  <span class="step done">3. Ready for Pickup</span>
+                  <span class="step">4. PayPal Settled</span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <span class="helper-inline">4 Farmers Contributing</span>
+                <button class="btn btn-paypal btn-sm pay-pool-btn" data-item="Pool #GR-398: 1,500 kg Sugarcane Bagasse" data-amount="330.00" data-recipient="4 Farmers (Pro-rata Split)">
+                  Approve PayPal Release ($330.00)
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- TAB 2: DIRECT FARMER LISTINGS (FR-15 to FR-19) -->
+        <div class="tab-panel" id="tab-listings">
+          <div class="section-head">
+            <div>
+              <h3>Direct Farmer Listings</h3>
+              <p>Buyers can purchase agricultural waste directly from farmers with PayPal Buyer Protection.</p>
+            </div>
+            <div class="filter-bar">
+              <input type="search" id="listingSearch" placeholder="Search husk, straw, coconut shell..." aria-label="Search listings" />
+            </div>
+          </div>
+
+          <div class="cards-grid" id="listingsContainer">
+            <article class="market-card" data-keywords="rice husk verna">
+              <div class="card-top">
+                <span class="match-pill">Farmer Score: 4.92</span>
+                <span class="price-tag">$0.18 / kg</span>
+              </div>
+              <h4>Dry Rice Husk (200 kg)</h4>
+              <p class="meta-line">Seller: Ramesh Patil • Verna Village Hub (CP-01)</p>
+              <p class="waste-desc">Sun-dried, low moisture (&lt;10%), bagged in 40 kg sacks ready for immediate farm-gate or hub pickup.</p>
+              <div class="card-footer">
+                <span class="total-calc">Lot Total: <strong>$36.00</strong></span>
+                <button class="btn btn-paypal btn-sm pay-pool-btn" data-item="Direct Listing: 200 kg Dry Rice Husk" data-amount="36.00" data-recipient="Ramesh Patil (Farmer)">
+                  Buy with PayPal
+                </button>
+              </div>
+            </article>
+
+            <article class="market-card" data-keywords="coconut husk shell margao">
+              <div class="card-top">
+                <span class="match-pill">Farmer Score: 4.85</span>
+                <span class="price-tag">$0.25 / kg</span>
+              </div>
+              <h4>Shredded Coconut Husk & Coir Fiber (320 kg)</h4>
+              <p class="meta-line">Seller: Sunita Naik • Margao Agro Depot (CP-02)</p>
+              <p class="waste-desc">Ideal for organic mulch, nursery pots, and festive biodegradable decor.</p>
+              <div class="card-footer">
+                <span class="total-calc">Lot Total: <strong>$80.00</strong></span>
+                <button class="btn btn-paypal btn-sm pay-pool-btn" data-item="Direct Listing: 320 kg Coconut Husk" data-amount="80.00" data-recipient="Sunita Naik (Farmer)">
+                  Buy with PayPal
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- TAB 3: PAYPAL ORDERS, WEBHOOK STATUS & FARMER PAYOUT LEDGER (FR-14, FR-22, FR-23) -->
+        <div class="tab-panel" id="tab-orders">
+          <div class="section-head">
+            <div>
+              <h3>PayPal Transaction & Pro-Rata Payout Ledger</h3>
+              <p>Separates order fulfillment, PayPal capture/webhook verification, platform commission (5%), and farmer payouts.</p>
+            </div>
+          </div>
+
+          <div class="table-wrap card">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th>Order / Pool ID</th>
+                  <th>PayPal Ref</th>
+                  <th>Gross Amount</th>
+                  <th>Platform Fee (5%)</th>
+                  <th>Farmer Net Payable</th>
+                  <th>Payment State</th>
+                  <th>Fulfillment & Payout</th>
+                </tr>
+              </thead>
+              <tbody id="ledgerBody">
+                <tr>
+                  <td><strong>#GR-395</strong><br><small>500 kg Paddy Straw</small></td>
+                  <td><code>PAYID-8X9201SB</code></td>
+                  <td>$90.00</td>
+                  <td>$4.50</td>
+                  <td><strong>$85.50</strong></td>
+                  <td><span class="badge-state state-captured">Captured (Webhook OK)</span></td>
+                  <td><span class="badge-state state-paid">Delivered • Payout Sent</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#GR-402</strong><br><small>2,000 kg Rice Husk Pool</small></td>
+                  <td><code>PAYID-4M1190SB</code></td>
+                  <td>$360.00</td>
+                  <td>$18.00</td>
+                  <td><strong>$342.00</strong><br><small>(3 Farmers Split)</small></td>
+                  <td><span class="badge-state state-awaiting">Awaiting Buyer Approval</span></td>
+                  <td><span class="badge-state state-pending">Pending Delivery</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: VILLAGE COLLECTION POINTS & TSP ROUTE (FR-20, FR-21) -->
+        <div class="tab-panel" id="tab-collection">
+          <div class="section-head">
+            <div>
+              <h3>Village Collection Points & Optimized Pickup Route</h3>
+              <p>Deterministic Travelling Salesman (TSP) route minimizes industry truck fuel across village hubs.</p>
+            </div>
+          </div>
+
+          <div class="route-layout">
+            <div class="map-illustration card" aria-label="Collection Route Map Visualization">
+              <svg viewBox="0 0 460 230" fill="none" class="route-svg">
+                <rect width="460" height="230" rx="14" fill="#F3F7F4"/>
+                <!-- Rural Road Paths -->
+                <path d="M55 175 Q 155 65, 235 115 T 405 65" stroke="#1B3B2B" stroke-width="3.5" stroke-dasharray="8 6" fill="none"/>
+                <!-- Hub 1 -->
+                <circle cx="55" cy="175" r="14" fill="#D96B27" stroke="#1B3B2B" stroke-width="2.5"/>
+                <text x="55" y="179" text-anchor="middle" fill="#FFF" font-size="11" font-weight="700">1</text>
+                <text x="55" y="206" text-anchor="middle" fill="#1B3B2B" font-size="11" font-weight="700">Verna Hub (CP-01)</text>
+                <!-- Hub 2 -->
+                <circle cx="235" cy="115" r="14" fill="#EAB308" stroke="#1B3B2B" stroke-width="2.5"/>
+                <text x="235" y="119" text-anchor="middle" fill="#1B3B2B" font-size="11" font-weight="700">2</text>
+                <text x="235" y="146" text-anchor="middle" fill="#1B3B2B" font-size="11" font-weight="700">Margao Depot (CP-02)</text>
+                <!-- Hub 3 -->
+                <circle cx="405" cy="65" r="14" fill="#2E7D32" stroke="#1B3B2B" stroke-width="2.5"/>
+                <text x="405" y="69" text-anchor="middle" fill="#FFF" font-size="11" font-weight="700">3</text>
+                <text x="405" y="96" text-anchor="middle" fill="#1B3B2B" font-size="11" font-weight="700">Ponda Silo (CP-03)</text>
+              </svg>
+            </div>
+
+            <div class="hub-list">
+              <div class="hub-item card">
+                <strong>Stop 1: Verna Village Hub (CP-01)</strong>
+                <p>Current Load: 1,800 kg Rice Husk • Next Pickup: Tomorrow, 08:30 AM</p>
+              </div>
+              <div class="hub-item card">
+                <strong>Stop 2: Margao Agro Depot (CP-02)</strong>
+                <p>Current Load: 1,500 kg Bagasse • Next Pickup: Tomorrow, 10:15 AM</p>
+              </div>
+              <div class="hub-item card">
+                <strong>Stop 3: Ponda East Silo (CP-03)</strong>
+                <p>Current Load: 920 kg Paddy Straw • Next Pickup: Tomorrow, 12:00 PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- HUMAN-IN-THE-LOOP PAYPAL CHECKOUT MODAL (FR-22, FR-36) -->
+  <div class="modal-backdrop" id="paypalModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h3 id="modalTitle">Confirm PayPal Sandbox Payment</h3>
+        <button type="button" class="close-modal" id="closeModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="sandbox-notice-box">
+          <strong>Human-in-the-Loop Authorization Required:</strong> Review the AI-prepared transaction summary below before authorizing PayPal Checkout.
+        </div>
+
+        <dl class="summary-dl">
+          <div><dt>Transaction Item:</dt><dd id="modalItemName">—</dd></div>
+          <div><dt>Beneficiary:</dt><dd id="modalRecipient">—</dd></div>
+          <div><dt>Platform Fee (5%):</dt><dd id="modalFee">$0.00</dd></div>
+          <div class="total-row"><dt>Total PayPal Charge:</dt><dd id="modalTotalAmount">$0.00 USD</dd></div>
+        </dl>
+
+        <label class="confirm-check">
+          <input type="checkbox" id="explicitConsentCheck" />
+          <span>I confirm the quantity, recipient split, and authorize PayPal Sandbox order creation.</span>
+        </label>
+
+        <div id="paymentStatusFeed" class="payment-feed" hidden></div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelPayBtn">Cancel</button>
+          <button type="button" class="btn btn-paypal" id="executePaypalBtn" disabled>
+            Approve & Pay with PayPal Sandbox
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastMsg" role="status" aria-live="polite"></div>
+
+  <script>
+    // Interactive Demo State & Human-in-the-Loop Controls
+    const roleNames = {
+      farmer: "Ramesh Patil (Farmer)",
+      buyer: "Ananya Desai (Local Buyer)",
+      industry: "BioThermal Energy Ltd.",
+      admin: "System Admin (Goa Cluster)"
+    };
+
+    document.querySelectorAll(".role-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".role-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("currentUserName").textContent = roleNames[btn.dataset.role];
+        showToast(`Switched workspace view to ${roleNames[btn.dataset.role]}`);
+      });
+    });
+
+    // Tab Switching
+    document.querySelectorAll(".tab-btn").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(t => {
+          t.classList.remove("active");
+          t.setAttribute("aria-selected", "false");
+        });
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        tab.setAttribute("aria-selected", "true");
+        document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
+      });
+    });
+
+    // Live Total Calculation in AI Draft Preview
+    const qtyInput = document.getElementById("draftQty");
+    const priceInput = document.getElementById("draftPrice");
+    const totalOut = document.getElementById("draftTotal");
+
+    function updateDraftTotal() {
+      const total = (parseFloat(qtyInput.value || 0) * parseFloat(priceInput.value || 0)).toFixed(2);
+      totalOut.textContent = `$${total} USD`;
+    }
+    qtyInput.addEventListener("input", updateDraftTotal);
+    priceInput.addEventListener("input", updateDraftTotal);
+
+    // Simulated Voice Input Toggle
+    const micBtn = document.getElementById("micToggleBtn");
+    const micLabel = document.getElementById("micLabel");
+    micBtn.addEventListener("click", () => {
+      const active = micBtn.classList.toggle("recording");
+      micBtn.setAttribute("aria-pressed", active);
+      micLabel.textContent = active ? "Listening... Tap to Finish" : "Tap to Speak Listing";
+      if (!active) {
+        document.getElementById("aiPromptInput").value = "I have 250 kg of dry wheat straw at Margao Agro Depot for $0.20 per kg";
+        document.getElementById("draftWasteType").value = "Dry Wheat Straw";
+        qtyInput.value = 250;
+        priceInput.value = 0.20;
+        document.getElementById("draftLocation").value = "Margao Agro Depot (CP-02)";
+        updateDraftTotal();
+        showToast("Gemini extracted structured fields from voice input. Please verify before publishing.");
+      }
+    });
+
+    // Read Aloud (FR-28)
+    document.getElementById("readAloudBtn").addEventListener("click", () => {
+      const text = `Listing preview: ${qtyInput.value} kilograms of ${document.getElementById("draftWasteType").value} at ${document.getElementById("draftLocation").value}, priced at ${totalOut.textContent}.`;
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+      }
+      showToast("Reading listing summary aloud...");
+    });
+
+    // Confirm & Publish Listing (FR-15)
+    document.getElementById("confirmPublishBtn").addEventListener("click", () => {
+      const waste = document.getElementById("draftWasteType").value;
+      const qty = qtyInput.value;
+      const price = parseFloat(priceInput.value).toFixed(2);
+      const loc = document.getElementById("draftLocation").value;
+      const total = (qty * price).toFixed(2);
+
+      const card = document.createElement("article");
+      card.className = "market-card";
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="match-pill">New • AI Verified</span>
+          <span class="price-tag">$${price} / kg</span>
+        </div>
+        <h4>${waste} (${qty} kg)</h4>
+        <p class="meta-line">Seller: Ramesh Patil • ${loc}</p>
+        <p class="waste-desc">Farmer-confirmed listing verified via GreenRoots AI Assistant.</p>
+        <div class="card-footer">
+          <span class="total-calc">Lot Total: <strong>$${total}</strong></span>
+          <button class="btn btn-paypal btn-sm pay-pool-btn" data-item="Direct Listing: ${qty} kg ${waste}" data-amount="${total}" data-recipient="Ramesh Patil (Farmer)">
+            Buy with PayPal
+          </button>
+        </div>
+      `;
+      document.getElementById("listingsContainer").prepend(card);
+      bindPayButtons();
+      showToast("Listing confirmed and published to Marketplace!");
+    });
+
+    // PayPal Modal Flow with Explicit Confirmation
+    const modal = document.getElementById("paypalModal");
+    const consentCheck = document.getElementById("explicitConsentCheck");
+    const execBtn = document.getElementById("executePaypalBtn");
+    const feed = document.getElementById("paymentStatusFeed");
+
+    function bindPayButtons() {
+      document.querySelectorAll(".pay-pool-btn").forEach(btn => {
+        btn.onclick = () => {
+          const amt = parseFloat(btn.dataset.amount);
+          document.getElementById("modalItemName").textContent = btn.dataset.item;
+          document.getElementById("modalRecipient").textContent = btn.dataset.recipient;
+          document.getElementById("modalFee").textContent = `$${(amt * 0.05).toFixed(2)} USD`;
+          document.getElementById("modalTotalAmount").textContent = `$${amt.toFixed(2)} USD`;
+          consentCheck.checked = false;
+          execBtn.disabled = true;
+          feed.hidden = true;
+          modal.hidden = false;
+        };
+      });
+    }
+    bindPayButtons();
+
+    consentCheck.addEventListener("change", () => {
+      execBtn.disabled = !consentCheck.checked;
+    });
+
+    execBtn.addEventListener("click", () => {
+      execBtn.disabled = true;
+      feed.hidden = false;
+      feed.innerHTML = "1. Creating PayPal Sandbox Order via Edge Function...";
+      setTimeout(() => {
+        feed.innerHTML += "<br>2. Payer Approved • Verifying PayPal Webhook Signature...";
+      }, 700);
+      setTimeout(() => {
+        const refId = "PAYID-" + Math.random().toString(36).substring(2, 9).toUpperCase() + "SB";
+        feed.innerHTML += `<br><strong>3. Payment Captured (${refId}) • Farmer Ledger Updated!</strong>`;
+        showToast(`PayPal Sandbox payment verified (${refId})`);
+      }, 1500);
+    });
+
+    document.getElementById("closeModalBtn").onclick = () => modal.hidden = true;
+    document.getElementById("cancelPayBtn").onclick = () => modal.hidden = true;
+
+    function showToast(msg) {
+      const t = document.getElementById("toastMsg");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3400);
+    }
+  </script>
+</body>
+</html>
