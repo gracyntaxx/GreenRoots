@@ -156,7 +156,7 @@ Deno.serve(async (req: Request) => {
 
       const farmerId = farmer?.id || body.farmerId || "demo_farmer";
       const quantityKg = toKg(Number(draft.quantity), draft.unit || "quintal");
-      const village = draft.village || farmer?.village || "Rewari";
+      const village = draft.village || farmer?.village || "Margao";
 
       const { data: newRow, error } = await supabase
         .from("listings")

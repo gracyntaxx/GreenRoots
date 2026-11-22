@@ -51,7 +51,7 @@ export const collectionService = {
         village: point.village ?? "",
         district: point.district ?? "",
         state: point.state ?? "",
-        location: point.location ?? { lat: 28.61, lng: 77.2 },
+        location: point.location ?? { lat: 15.3614, lng: 73.9312 },
         capacityTonnes: point.capacityTonnes ?? 50,
         hours: point.hours ?? "6:00 AM – 6:00 PM",
         active: point.active ?? true,

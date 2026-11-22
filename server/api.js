@@ -93,7 +93,7 @@ export async function handleApiRequest(path, method, body, query = {}) {
     db.prepare(`
       INSERT INTO profiles (id, name, role, phone, email, village, district, state, language, lat, lng, reputation, reputation_factors, payout_readiness, verified, avatar_initials)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(newId, role === "industry" ? (companyName || name) : name, role, phone || null, email || null, village, district || village, state || "", language, 28.61, 77.2, 4.5, "[]", "Ready", role === "industry" ? 0 : 1, initials);
+    `).run(newId, role === "industry" ? (companyName || name) : name, role, phone || null, email || null, village, district || village, state || "", language, 15.3614, 73.9312, 4.5, "[]", "Ready", role === "industry" ? 0 : 1, initials);
 
     if (role === "industry") {
       db.prepare(`
@@ -167,7 +167,7 @@ export async function handleApiRequest(path, method, body, query = {}) {
       unit: "tonne",
       rate: 2300,
       rateUnit: "tonne",
-      village: "Panipat",
+      village: "Panjim",
       deadline: new Date(Date.now() + 7 * 86400000).toISOString(),
       confidence: { wasteType: 0.93, quantity: 0.95, rate: 0.91, village: 0.88 },
       rawText: text,
@@ -227,7 +227,7 @@ export async function handleApiRequest(path, method, body, query = {}) {
     sql += " ORDER BY l.created_at DESC";
 
     const rows = db.prepare(sql).all(...params);
-    const origin = body.origin || { lat: 28.61, lng: 77.2 };
+    const origin = body.origin || { lat: 15.3614, lng: 73.9312 };
 
     return rows.map(r => {
       const loc = { lat: r.lat, lng: r.lng };
@@ -443,7 +443,7 @@ export async function handleApiRequest(path, method, body, query = {}) {
     sql += " ORDER BY pl.created_at DESC";
 
     const pools = db.prepare(sql).all();
-    const origin = body.origin || { lat: 28.61, lng: 77.2 };
+    const origin = body.origin || { lat: 15.3614, lng: 73.9312 };
 
     return pools.map(p => {
       const targetKg = Number(p.target_kg);
@@ -768,7 +768,7 @@ export async function handleApiRequest(path, method, body, query = {}) {
   // 8. COLLECTION POINTS
   if (cleanPath === "collection-points/list" || cleanPath === "admin/collection-points") {
     const rows = db.prepare("SELECT * FROM collection_points ORDER BY active DESC").all();
-    const origin = body.origin || { lat: 28.61, lng: 77.2 };
+    const origin = body.origin || { lat: 15.3614, lng: 73.9312 };
     return rows.map(c => ({
       id: c.id,
       name: c.name,

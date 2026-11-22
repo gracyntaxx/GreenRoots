@@ -19,7 +19,7 @@ export function formatDistance(km: number) {
 }
 
 export function midpoint(points: LatLng[]): LatLng {
-  if (!points.length) return { lat: 28.5, lng: 76.8 };
+  if (!points.length) return { lat: 15.3614, lng: 73.9312 };
   return {
     lat: points.reduce((s, p) => s + p.lat, 0) / points.length,
     lng: points.reduce((s, p) => s + p.lng, 0) / points.length,

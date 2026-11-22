@@ -145,7 +145,7 @@ Deno.serve(async (req: Request) => {
           deadline,
           status: "Open",
           pool_id: poolId,
-          village: village || industry?.village || "Bawal",
+          village: village || industry?.village || "Vasco",
           location: pointStr,
           notes: notes || null,
         })
@@ -170,7 +170,7 @@ Deno.serve(async (req: Request) => {
         deadline,
         radius_km: 15,
         stage: "Open for Commitments",
-        village: village || industry?.village || "Bawal",
+        village: village || industry?.village || "Vasco",
         location: pointStr,
         contribution_count: 0,
       });

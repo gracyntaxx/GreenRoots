@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarClock, ChevronRight, Layers, MapPin, Users } from "lucide-react";
+import { CalendarClock, CheckCircle2, ChevronRight, Layers, MapPin, Users } from "lucide-react";
 import { useSession } from "@/store/session";
 import { poolService, type PoolWithMeta } from "@/services/poolService";
 import { PoolProgress } from "@/components/shared/PoolProgress";
@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { PageContainer } from "@/components/shared/PageContainer";
+import { DijkstraPoolMap } from "@/components/shared/DijkstraPoolMap";
 import { WASTE_LABELS } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -123,6 +124,147 @@ export default function PoolsPage() {
         <h1 className="font-heading text-2xl sm:text-3xl font-bold text-moss dark:text-portal-ink">{t("pools.title")}</h1>
         <p className="mt-1.5 max-w-2xl text-sm text-muted dark:text-portal-muted">{t("pools.subtitle")}</p>
       </div>
+
+      {/* Featured 4-Farmer Collaborative Aggregation Pool with Dijkstra Logistics Map at the Side */}
+      <section className="mt-5 rounded-2xl border border-forest/25 bg-gradient-to-br from-emerald-50/60 via-white to-meadow/30 p-4 sm:p-5 shadow-sm dark:border-portal-line dark:from-[#0E2419] dark:via-portal-surface dark:to-[#0F2D1E]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 border-b border-line/60 pb-3 dark:border-portal-line">
+          <div className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-forest text-white font-bold text-xs shadow-xs">
+              <Users className="h-4 w-4" />
+            </span>
+            <div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-forest dark:text-growth">
+                Live Reverse-Auction Aggregation · 4 Farmers Pooled
+              </span>
+              <h2 className="text-lg sm:text-xl font-bold font-heading text-moss dark:text-portal-ink">
+                Verna Bio-Energy Stubble Pool (40,000 kg Target)
+              </h2>
+            </div>
+          </div>
+          <span className="inline-flex items-center rounded-full bg-forest/10 px-3 py-1 text-xs font-bold text-forest border border-forest/20 dark:bg-growth/10 dark:text-growth">
+            100% Target Met · Ready for Weighbridge Drop-off
+          </span>
+        </div>
+
+        {/* Side-by-Side: Left = Pool Listing Card & 4 Farmers Breakdown, Right = Dijkstra Logistics Map */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          {/* Left Column: Pool Listing Details & The 4 Contributing Farmers */}
+          <div className="lg:col-span-5 space-y-3.5">
+            <div className="rounded-xl border border-line bg-white/90 p-4 shadow-xs dark:bg-portal-surface dark:border-portal-line">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Procuring Industry</span>
+                  <h3 className="font-heading text-base font-bold text-ink dark:text-portal-ink">Verna Agro Pellets (Goa)</h3>
+                  <p className="text-xs text-muted flex items-center gap-1 mt-0.5">
+                    <MapPin className="h-3.5 w-3.5 text-terracotta" /> Verna Industrial Estate · Central Goa
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Fixed Rate</span>
+                  <p className="num text-base font-bold text-forest dark:text-growth">₹1,200/tonne</p>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mt-3 pt-3 border-t border-line/60 dark:border-portal-line/60">
+                <div className="flex justify-between text-xs mb-1.5 font-semibold">
+                  <span className="text-muted">Target: 40,000 kg</span>
+                  <span className="text-forest dark:text-growth font-bold">40,000 kg (100% Filled)</span>
+                </div>
+                <div className="h-2.5 w-full rounded-full bg-line dark:bg-portal-line overflow-hidden">
+                  <div className="h-full bg-forest rounded-full transition-all duration-500 w-full" />
+                </div>
+              </div>
+            </div>
+
+            {/* The 4 Contributing Farmers List */}
+            <div className="rounded-xl border border-forest/15 bg-white/95 p-3.5 shadow-xs dark:bg-portal-surface dark:border-portal-line">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-forest dark:text-growth flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> 4 Contributing Farmers in this Pool
+                </h4>
+                <span className="text-[10px] text-muted font-mono font-semibold">Shortest Dijkstra Paths</span>
+              </div>
+
+              <div className="divide-y divide-line/60 dark:divide-portal-line text-xs">
+                {/* Farmer 1 */}
+                <div className="py-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white text-[10px] font-bold">1</span>
+                    <div>
+                      <p className="font-bold text-ink dark:text-portal-ink">Sunita Devi</p>
+                      <p className="text-[10px] text-muted">Vasco da Gama · 14.8 km to hub</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="num font-bold text-ink dark:text-portal-ink">10,000 kg</p>
+                    <span className="text-[10px] text-forest font-semibold">₹12,000</span>
+                  </div>
+                </div>
+
+                {/* Farmer 2 */}
+                <div className="py-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-white text-[10px] font-bold">2</span>
+                    <div>
+                      <p className="font-bold text-ink dark:text-portal-ink">Ramesh Yadav</p>
+                      <p className="text-[10px] text-muted">Margao · 9.4 km to hub</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="num font-bold text-ink dark:text-portal-ink">12,000 kg</p>
+                    <span className="text-[10px] text-forest font-semibold">₹14,400</span>
+                  </div>
+                </div>
+
+                {/* Farmer 3 */}
+                <div className="py-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-white text-[10px] font-bold">3</span>
+                    <div>
+                      <p className="font-bold text-ink dark:text-portal-ink">Fatima Begum</p>
+                      <p className="text-[10px] text-muted">Panjim · 18.4 km to hub</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="num font-bold text-ink dark:text-portal-ink">8,000 kg</p>
+                    <span className="text-[10px] text-forest font-semibold">₹9,600</span>
+                  </div>
+                </div>
+
+                {/* Farmer 4 */}
+                <div className="py-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-500 text-white text-[10px] font-bold">4</span>
+                    <div>
+                      <p className="font-bold text-ink dark:text-portal-ink">Rajesh Kumar</p>
+                      <p className="text-[10px] text-muted">Mapusa · 30.4 km to hub</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="num font-bold text-ink dark:text-portal-ink">10,000 kg</p>
+                    <span className="text-[10px] text-forest font-semibold">₹12,000</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-2 border-t border-line/70 flex items-center justify-between">
+                <Link
+                  to="/app/pools/pool_cotton_sangrur"
+                  className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-forest text-white text-xs font-bold hover:bg-forest/90 transition-colors shadow-xs"
+                >
+                  Open This Pool Detail Page <ChevronRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Animated Dijkstra Shortest Path Map at the side */}
+          <div className="lg:col-span-7">
+            <DijkstraPoolMap />
+          </div>
+        </div>
+      </section>
 
       <Tabs value={tab} onValueChange={setTab} className="mt-5">
         <TabsList className="w-full sm:w-84 bg-sage/60 p-1">

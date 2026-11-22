@@ -330,7 +330,7 @@ export const PAYABLES: FarmerPayable[] = CONTRIBUTIONS.filter(
   return {
     id: `payable_${c.id}`,
     poolId: c.poolId,
-    poolLabel: "Wheat straw pool · Ludhiana",
+    poolLabel: "Wheat straw pool · Verna",
     farmerId: c.farmerId,
     farmerName: c.farmerName,
     farmerMasked: `${c.farmerName.slice(0, 1)}•••• ${c.farmerId.slice(-2)}`,
@@ -367,7 +367,7 @@ export const ORDERS: Order[] = [
     timeline: [
       { id: "t1", at: ago(4100), label: "Order placed", state: "done" },
       { id: "t2", at: ago(4090), label: "Payment captured", state: "done" },
-      { id: "t3", at: ago(3900), label: "Drop-off verified", detail: "1,000 kg accepted at Bawal", state: "done" },
+      { id: "t3", at: ago(3900), label: "Drop-off verified", detail: "1,000 kg accepted at Vasco Port Agro Depot", state: "done" },
       { id: "t4", at: ago(3800), label: "Payout pending", detail: "Admin review in progress", state: "current" },
     ],
   },
@@ -401,7 +401,7 @@ export const PAYMENTS: Payment[] = [
 ];
 
 export const FORECASTS: Forecast[] = [
-  { id: "fc_haryana_paddy", region: "Haryana (Rewari, Panipat, Karnal)", state: "Haryana", season: "Kharif 2026", wasteType: "paddy_straw", dataPeriod: "Oct 2023 – Oct 2026", sampleSize: 1840, confidence: "High", limitedData: false,
+  { id: "fc_haryana_paddy", region: "Goa (Vasco, Margao, Panjim)", state: "Goa", season: "Kharif 2026", wasteType: "paddy_straw", dataPeriod: "Oct 2023 – Oct 2026", sampleSize: 1840, confidence: "High", limitedData: false,
     points: [
       { period: "Nov", availabilityTonnes: 42000, demandTonnes: 36000 },
       { period: "Dec", availabilityTonnes: 51000, demandTonnes: 41000 },
@@ -410,9 +410,9 @@ export const FORECASTS: Forecast[] = [
       { period: "Mar", availabilityTonnes: 18000, demandTonnes: 27000 },
       { period: "Apr", availabilityTonnes: 9000, demandTonnes: 15000 },
     ],
-    explanation: "Paddy straw supply is expected to peak in December. Demand from biomass plants is steady and may exceed local supply from February.",
+    explanation: "Paddy straw supply is expected to peak in December across Goa. Demand from biomass plants is steady and may exceed local supply from February.",
     actions: ["Book transport for the December peak", "Notify farmers within 60 km in mid-November", "Prepare storage for wet-weather delays"] },
-  { id: "fc_punjab_wheat", region: "Punjab (Ludhiana, Sangrur)", state: "Punjab", season: "Rabi 2026", wasteType: "wheat_straw", dataPeriod: "Apr 2023 – Oct 2026", sampleSize: 2210, confidence: "High", limitedData: false,
+  { id: "fc_punjab_wheat", region: "Karnataka (Belagavi, Dharwad)", state: "Karnataka", season: "Rabi 2026", wasteType: "wheat_straw", dataPeriod: "Apr 2023 – Oct 2026", sampleSize: 2210, confidence: "High", limitedData: false,
     points: [
       { period: "Apr", availabilityTonnes: 64000, demandTonnes: 48000 },
       { period: "May", availabilityTonnes: 72000, demandTonnes: 52000 },
@@ -420,9 +420,9 @@ export const FORECASTS: Forecast[] = [
       { period: "Jul", availabilityTonnes: 39000, demandTonnes: 42000 },
       { period: "Aug", availabilityTonnes: 24000, demandTonnes: 33000 },
     ],
-    explanation: "Wheat straw availability peaks in May. Demand is likely to be met locally, with surplus available for nearby states.",
+    explanation: "Wheat straw availability peaks in May. Demand is likely to be met locally, with surplus available for nearby coastal districts.",
     actions: ["Schedule extra collection vehicles in May", "Offer early-commitment rates to repeat farmers"] },
-  { id: "fc_maharashtra_sugarcane", region: "Maharashtra (Nashik, Kolhapur)", state: "Maharashtra", season: "Crushing 2026–27", wasteType: "sugarcane_trash", dataPeriod: "Insufficient history", sampleSize: 120, confidence: "Insufficient", limitedData: true,
+  { id: "fc_maharashtra_sugarcane", region: "Maharashtra (Kolhapur, Sawantwadi)", state: "Maharashtra", season: "Crushing 2026–27", wasteType: "sugarcane_trash", dataPeriod: "Insufficient history", sampleSize: 120, confidence: "Insufficient", limitedData: true,
     points: [
       { period: "Nov", availabilityTonnes: null, demandTonnes: null },
       { period: "Dec", availabilityTonnes: null, demandTonnes: null },
@@ -433,29 +433,29 @@ export const FORECASTS: Forecast[] = [
 ];
 
 export const NOTIFICATIONS: AppNotification[] = [
-  { id: "n1", group: "Requirement", title: "New requirement 12 km away", body: "Paddy straw · 100 tonnes needed in Panipat by 10 Nov.", at: ago(8), read: false, link: "/pools/pool_paddy_panipat" },
-  { id: "n2", group: "Pool", title: "Pool is 62% filled", body: "Paddy straw pool in Panipat still needs 38 tonnes.", at: ago(35), read: false, link: "/pools/pool_paddy_panipat" },
-  { id: "n3", group: "Area", title: "Pool area expanded to 60 km", body: "Rice husk pool in Karnal now reaches more farmers.", at: ago(90), read: false, link: "/pools/pool_husk_karnal" },
-  { id: "n4", group: "Order", title: "Drop-off confirmed", body: "1,000 kg mustard stubble accepted at Bawal.", at: ago(200), read: true, link: "/orders/order_mustard_1000" },
-  { id: "n5", group: "Payment", title: "Payment captured", body: "PayPal captured ₹1,200 for order ORD-8841.", at: ago(610), read: true, link: "/orders/order_ricehusk_500" },
-  { id: "n6", group: "Seasonal", title: "Paddy straw demand rising", body: "Demand is expected to rise in 3 weeks around Rewari.", at: ago(700), read: true, link: "/forecast" },
-  { id: "n7", group: "Pool", title: "Pool ready for pickup", body: "Cotton stalk pool in Sangrur reached its target.", at: ago(900), read: true, link: "/pools/pool_cotton_sangrur" },
+  { id: "n1", group: "Requirement", title: "New requirement 12 km away", body: "Paddy straw · 100 tonnes needed in Panjim by 10 Nov.", at: ago(8), read: false, link: "/pools/pool_paddy_panipat" },
+  { id: "n2", group: "Pool", title: "Pool is 62% filled", body: "Paddy straw pool in Panjim still needs 38 tonnes.", at: ago(35), read: false, link: "/pools/pool_paddy_panipat" },
+  { id: "n3", group: "Area", title: "Pool area expanded to 60 km", body: "Rice husk pool in Mapusa now reaches more farmers.", at: ago(90), read: false, link: "/pools/pool_husk_karnal" },
+  { id: "n4", group: "Order", title: "Drop-off confirmed", body: "1,000 kg mustard stubble accepted at Vasco Port Agro Depot.", at: ago(200), read: true, link: "/orders/order_mustard_1000" },
+  { id: "n5", group: "Payment", title: "Payment captured", body: "Escrow captured ₹1,200 for order ORD-8841.", at: ago(610), read: true, link: "/orders/order_ricehusk_500" },
+  { id: "n6", group: "Seasonal", title: "Paddy straw demand rising", body: "Demand is expected to rise in 3 weeks around Vasco.", at: ago(700), read: true, link: "/forecast" },
+  { id: "n7", group: "Pool", title: "Pool ready for pickup", body: "Cotton stalk pool in Verna reached its target.", at: ago(900), read: true, link: "/pools/pool_cotton_sangrur" },
 ];
 
 export const VERIFICATIONS: IndustryVerification[] = [
-  { id: "ver_1", industryId: "industry_5", businessName: "Rewari Bio-Products", licenseNumber: "HR-REW-2024-00871", registeredAddress: "Plot 14, Industrial Area, Rewari, Haryana 123401", contactPerson: "Naveen Sharma", documents: [
+  { id: "ver_1", industryId: "industry_5", businessName: "Margao Bio-Products", licenseNumber: "GA-MRG-2024-00871", registeredAddress: "Plot 14, Industrial Estate, Margao, Goa 403601", contactPerson: "Naveen Sharma", documents: [
     { name: "GST registration.pdf", type: "PDF", uploadedAt: ago(2000) },
     { name: "Factory licence.pdf", type: "PDF", uploadedAt: ago(2000) },
     { name: "PAN card.pdf", type: "PDF", uploadedAt: ago(1990) },
   ], status: "Pending", submittedAt: ago(2000) },
-  { id: "ver_2", industryId: "industry_4", businessName: "Nashik Sugarcane Power", licenseNumber: "MH-NSK-2021-00442", registeredAddress: "Gat 220, Sinnar Road, Nashik, Maharashtra 422112", contactPerson: "Rohit Deshmukh", documents: [
+  { id: "ver_2", industryId: "industry_4", businessName: "Kolhapur Sugarcane Power", licenseNumber: "MH-KLP-2021-00442", registeredAddress: "Gat 220, Shirol Road, Kolhapur, Maharashtra 416103", contactPerson: "Rohit Deshmukh", documents: [
     { name: "GST registration.pdf", type: "PDF", uploadedAt: ago(9000) },
     { name: "Pollution clearance.pdf", type: "PDF", uploadedAt: ago(9000) },
   ], status: "Verified", submittedAt: ago(9000) },
-  { id: "ver_3", industryId: "industry_3", businessName: "Ludhiana Agro Pellets", licenseNumber: "PB-LDH-2020-00119", registeredAddress: "Village Jagraon, Ludhiana, Punjab 142026", contactPerson: "Harjeet Singh", documents: [
+  { id: "ver_3", industryId: "industry_3", businessName: "Verna Agro Pellets", licenseNumber: "GA-VRN-2020-00119", registeredAddress: "Verna Industrial Estate, Verna, Goa 403722", contactPerson: "Harjeet Singh", documents: [
     { name: "GST registration.pdf", type: "PDF", uploadedAt: ago(15000) },
   ], status: "Verified", submittedAt: ago(15000) },
-  { id: "ver_4", industryId: "industry_2", businessName: "Haryana Green Fuels", licenseNumber: "HR-KNL-2022-00307", registeredAddress: "Sector 12, Karnal, Haryana 132001", contactPerson: "Meena Rani", documents: [
+  { id: "ver_4", industryId: "industry_2", businessName: "Goa Green Bio-Fuels", licenseNumber: "GA-MAP-2022-00307", registeredAddress: "Mapusa Industrial Yard, Mapusa, Goa 403507", contactPerson: "Meena Rani", documents: [
     { name: "GST registration.pdf", type: "PDF", uploadedAt: ago(12000) },
   ], status: "Verified", submittedAt: ago(12000) },
 ];
@@ -468,11 +468,11 @@ export const FLAGS: ModerationFlag[] = [
 ];
 
 export const AUDIT_LOG: AiActionAudit[] = [
-  { id: "aud_1", at: ago(610), actor: "Amit Traders", actorRole: "buyer", aiPreparedSummary: "Order summary for 500 kg paddy straw at ₹2,400/tonne", confirmedBy: "Amit Traders", action: "PayPal capture", reference: "PP-7K2A1M4QX / CAP-9D31B7", outcome: "Captured" },
-  { id: "aud_2", at: ago(700), actor: "Ramesh Yadav", actorRole: "farmer", aiPreparedSummary: "Listing draft: 200 kg rice husk at ₹8/kg, Rewari", confirmedBy: "Ramesh Yadav", action: "Listing published", reference: "listing_ricehusk_200", outcome: "Active" },
-  { id: "aud_3", at: ago(900), actor: "Panipat Biomass Energy Ltd", actorRole: "industry", aiPreparedSummary: "Requirement: 100 tonnes paddy straw, ₹2,300/tonne, Panipat", confirmedBy: "Procurement manager", action: "Requirement published", reference: "req_paddy_panipat", outcome: "Open" },
-  { id: "aud_4", at: ago(2000), actor: "Priya Menon", actorRole: "admin", aiPreparedSummary: "Verification review for Nashik Sugarcane Power", confirmedBy: "Priya Menon", action: "Industry verified", reference: "ver_2", outcome: "Verified" },
-  { id: "aud_5", at: ago(4980), actor: "Ludhiana Agro Pellets", actorRole: "industry", aiPreparedSummary: "Pool settlement for 80,000 kg wheat straw, 4 farmers", confirmedBy: "Harjeet Singh", action: "PayPal capture", reference: "PP-2W9E5L8QX / CAP-3A77D2", outcome: "Captured" },
+  { id: "aud_1", at: ago(610), actor: "Amit Traders", actorRole: "buyer", aiPreparedSummary: "Order summary for 500 kg paddy straw at ₹2,400/tonne", confirmedBy: "Amit Traders", action: "Payment capture", reference: "PP-7K2A1M4QX / CAP-9D31B7", outcome: "Captured" },
+  { id: "aud_2", at: ago(700), actor: "Ramesh Yadav", actorRole: "farmer", aiPreparedSummary: "Listing draft: 200 kg rice husk at ₹8/kg, Margao", confirmedBy: "Ramesh Yadav", action: "Listing published", reference: "listing_ricehusk_200", outcome: "Active" },
+  { id: "aud_3", at: ago(900), actor: "Panjim Biomass Energy Ltd", actorRole: "industry", aiPreparedSummary: "Requirement: 100 tonnes paddy straw, ₹2,300/tonne, Panjim", confirmedBy: "Procurement manager", action: "Requirement published", reference: "req_paddy_panipat", outcome: "Open" },
+  { id: "aud_4", at: ago(2000), actor: "Priya Menon", actorRole: "admin", aiPreparedSummary: "Verification review for Kolhapur Sugarcane Power", confirmedBy: "Priya Menon", action: "Industry verified", reference: "ver_2", outcome: "Verified" },
+  { id: "aud_5", at: ago(4980), actor: "Verna Agro Pellets", actorRole: "industry", aiPreparedSummary: "Pool settlement for 80,000 kg wheat straw, 4 farmers", confirmedBy: "Harjeet Singh", action: "Escrow capture", reference: "PP-2W9E5L8QX / CAP-3A77D2", outcome: "Captured" },
   { id: "aud_6", at: ago(5000), actor: "Priya Menon", actorRole: "admin", aiPreparedSummary: "Payout batch for 4 farmers, ₹1,36,800 net", confirmedBy: "Priya Menon", action: "Payout approval", reference: "payout_batch_wheat_1", outcome: "Partially completed · 1 simulated" },
 ];
 

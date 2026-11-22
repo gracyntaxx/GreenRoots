@@ -26,7 +26,7 @@ const blank: FormState = {
   capacityTonnes: 50,
   hours: "6:00 AM - 6:00 PM",
   active: true,
-  location: { lat: 28.61, lng: 77.2 },
+  location: { lat: 15.3614, lng: 73.9312 },
 };
 
 export default function AdminCollectionPointsPage() {
@@ -40,7 +40,7 @@ export default function AdminCollectionPointsPage() {
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const all = points.data ?? [];
-  const center = form?.location ?? all[0]?.location ?? { lat: 28.61, lng: 77.2 };
+  const center = form?.location ?? all[0]?.location ?? { lat: 15.3614, lng: 73.9312 };
   const markers: MapMarker[] = useMemo(
     () =>
       all.map((p) => ({
@@ -98,7 +98,7 @@ export default function AdminCollectionPointsPage() {
             variant="primary"
             size="portal"
             onClick={() => {
-              setForm({ ...blank, location: { lat: 28.61, lng: 77.2 } });
+              setForm({ ...blank, location: { lat: 15.3614, lng: 73.9312 } });
               setError(null);
             }}
           >
@@ -302,9 +302,9 @@ export default function AdminCollectionPointsPage() {
                   id="cp-lat"
                   type="number"
                   step="0.0001"
-                  value={form.location?.lat ?? 28.61}
+                  value={form.location?.lat ?? 15.3614}
                   onChange={(e) =>
-                    setForm({ ...form, location: { lat: Number(e.target.value), lng: form.location?.lng ?? 77.2 } })
+                    setForm({ ...form, location: { lat: Number(e.target.value), lng: form.location?.lng ?? 73.9312 } })
                   }
                   className="num"
                 />
@@ -315,9 +315,9 @@ export default function AdminCollectionPointsPage() {
                   id="cp-lng"
                   type="number"
                   step="0.0001"
-                  value={form.location?.lng ?? 77.2}
+                  value={form.location?.lng ?? 73.9312}
                   onChange={(e) =>
-                    setForm({ ...form, location: { lat: form.location?.lat ?? 28.61, lng: Number(e.target.value) } })
+                    setForm({ ...form, location: { lat: form.location?.lat ?? 15.3614, lng: Number(e.target.value) } })
                   }
                   className="num"
                 />

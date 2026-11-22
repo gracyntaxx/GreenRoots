@@ -212,122 +212,135 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     setRecordingSeconds(0);
     listeningRef.current = true;
 
-    // 1. Request microphone access via Web MediaDevices API
-    let stream: MediaStream | null = null;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-    } catch (err) {
-      console.warn("Microphone access denied or unavailable:", err);
-      listeningRef.current = false;
-      setNotice({
-        title: t("voice.micDenied"),
-        body: t("voice.micDeniedBody"),
-        tone: "warning",
-      });
-      setMode("typing");
-      return;
-    }
-
-    // 2. Set up AudioContext & AnalyserNode for real-time waveform animation
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtx) {
-        const ctx = new AudioCtx();
-        const source = ctx.createMediaStreamSource(stream);
-        const analyser = ctx.createAnalyser();
-        analyser.fftSize = 64;
-        source.connect(analyser);
-        audioContextRef.current = ctx;
-        analyserRef.current = analyser;
-
-        const dataArray = new Uint8Array(analyser.frequencyBinCount);
-        const checkVolume = () => {
-          if (!listeningRef.current) return;
-          analyser.getByteFrequencyData(dataArray);
-          let sum = 0;
-          for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-          const avg = sum / dataArray.length;
-          setAudioLevel(Math.min(100, Math.round((avg / 128) * 100)));
-          animFrameRef.current = requestAnimationFrame(checkVolume);
-        };
-        animFrameRef.current = requestAnimationFrame(checkVolume);
-      }
-    } catch {
-      /* waveform optional */
-    }
-
-    // 3. Set up MediaRecorder
-    try {
-      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : MediaRecorder.isTypeSupported("audio/webm")
-        ? "audio/webm"
-        : "";
-      const recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
-      recorder.ondataavailable = (e) => {
-        if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
-      };
-      recorder.start(250);
-      mediaRecorderRef.current = recorder;
-    } catch (err) {
-      console.warn("MediaRecorder setup failed:", err);
-    }
-
-    // 4. Timer counter
+    // Timer counter
     timerRef.current = setInterval(() => {
       setRecordingSeconds((s) => s + 1);
     }, 1000);
 
-    // 5. Speech recognition with auto-restart on pauses
+    const isMobile = typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    let hasSpeechRecognition = false;
+
+    // 1. On Android / mobile, start SpeechRecognition IMMEDIATELY & SYNCHRONOUSLY inside user tap gesture
     if (SR) {
-      const initRecognizer = () => {
-        if (!listeningRef.current) return;
-        try {
-          const rec = new SR();
-          rec.lang = bcp47;
-          rec.continuous = true;
-          rec.interimResults = true;
-          rec.maxAlternatives = 1;
+      try {
+        const rec = new SR();
+        rec.lang = bcp47;
+        rec.continuous = true;
+        rec.interimResults = true;
+        rec.maxAlternatives = 1;
 
-          rec.onresult = (event: any) => {
-            let sessionText = "";
-            for (let i = 0; i < event.results.length; i++) {
-              sessionText += `${event.results[i][0].transcript} `;
-            }
-            const full = `${accumulatedFinalRef.current} ${sessionText}`.replace(/\s+/g, " ").trim();
-            updateTranscript(full);
-          };
+        rec.onresult = (event: any) => {
+          let sessionText = "";
+          for (let i = 0; i < event.results.length; i++) {
+            sessionText += `${event.results[i][0].transcript} `;
+          }
+          const full = `${accumulatedFinalRef.current} ${sessionText}`.replace(/\s+/g, " ").trim();
+          updateTranscript(full);
+          setAudioLevel(Math.min(95, Math.max(35, Math.round(sessionText.length * 3))));
+        };
 
-          rec.onerror = (e: any) => {
-            console.warn("Live speech recognition event:", e?.error);
-            // Non-fatal, recognition will restart if needed on onend
-          };
+        rec.onsoundstart = () => setAudioLevel(65);
+        rec.onspeechstart = () => setAudioLevel(85);
+        rec.onspeechend = () => setAudioLevel(15);
 
-          rec.onend = () => {
-            if (transcriptRef.current) {
-              accumulatedFinalRef.current = transcriptRef.current;
-            }
-            if (listeningRef.current) {
-              setTimeout(() => {
-                if (listeningRef.current) {
-                  initRecognizer();
+        rec.onerror = (e: any) => {
+          console.warn("Live speech recognition event:", e?.error);
+          if (e?.error === "not-allowed" || e?.error === "service-not-allowed") {
+            setNotice({
+              title: t("voice.micDenied"),
+              body: "Microphone permission is blocked. Please tap the permissions/tune icon near your browser address bar and allow microphone access.",
+              tone: "warning",
+            });
+            cleanupAudio();
+            setMode("typing");
+          }
+        };
+
+        rec.onend = () => {
+          if (transcriptRef.current) {
+            accumulatedFinalRef.current = transcriptRef.current;
+          }
+          if (listeningRef.current) {
+            setTimeout(() => {
+              if (listeningRef.current && recognitionRef.current) {
+                try {
+                  rec.start();
+                } catch {
+                  /* ignore duplicate start */
                 }
-              }, 100);
-            } else {
-              recognitionRef.current = null;
-            }
+              }
+            }, 100);
+          } else {
+            recognitionRef.current = null;
+          }
+        };
+
+        recognitionRef.current = rec;
+        // Synchronous activation directly on the user's click event (required by Android Chrome)
+        rec.start();
+        hasSpeechRecognition = true;
+      } catch (err) {
+        console.warn("SpeechRecognition initialization failed:", err);
+      }
+    }
+
+    // 2. On desktop (or on mobile if SpeechRecognition is not supported), acquire getUserMedia for waveform & recording
+    if (!isMobile || !hasSpeechRecognition) {
+      let stream: MediaStream | null = null;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = stream;
+
+        // Waveform Analyser
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          const source = ctx.createMediaStreamSource(stream);
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 64;
+          source.connect(analyser);
+          audioContextRef.current = ctx;
+          analyserRef.current = analyser;
+
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+          const checkVolume = () => {
+            if (!listeningRef.current) return;
+            analyser.getByteFrequencyData(dataArray);
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+            const avg = sum / dataArray.length;
+            setAudioLevel(Math.min(100, Math.round((avg / 128) * 100)));
+            animFrameRef.current = requestAnimationFrame(checkVolume);
           };
-
-          recognitionRef.current = rec;
-          rec.start();
-        } catch (e) {
-          console.warn("SpeechRecognition init exception:", e);
+          animFrameRef.current = requestAnimationFrame(checkVolume);
         }
-      };
 
-      initRecognizer();
+        // MediaRecorder backup
+        const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+          ? "audio/webm;codecs=opus"
+          : MediaRecorder.isTypeSupported("audio/webm")
+          ? "audio/webm"
+          : "";
+        const recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+        recorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
+        };
+        recorder.start(250);
+        mediaRecorderRef.current = recorder;
+      } catch (err) {
+        console.warn("getUserMedia failed or unavailable:", err);
+        if (!hasSpeechRecognition) {
+          listeningRef.current = false;
+          setNotice({
+            title: t("voice.micDenied"),
+            body: t("voice.micDeniedBody"),
+            tone: "warning",
+          });
+          setMode("typing");
+        }
+      }
     }
   };
 

@@ -15,7 +15,8 @@ db.exec("PRAGMA journal_mode = WAL;");
 db.exec("PRAGMA foreign_keys = ON;");
 
 // Initialize schema
-db.exec(`
+export function createSchema() {
+  db.exec(`
 CREATE TABLE IF NOT EXISTS profiles (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
@@ -26,8 +27,8 @@ CREATE TABLE IF NOT EXISTS profiles (
   district TEXT,
   state TEXT,
   language TEXT DEFAULT 'en',
-  lat REAL DEFAULT 28.61,
-  lng REAL DEFAULT 77.2,
+  lat REAL DEFAULT 15.3614,
+  lng REAL DEFAULT 73.9312,
   reputation REAL DEFAULT 4.5,
   reputation_factors TEXT DEFAULT '[]',
   payout_readiness TEXT DEFAULT 'Ready',
@@ -42,8 +43,8 @@ CREATE TABLE IF NOT EXISTS collection_points (
   village TEXT NOT NULL,
   district TEXT,
   state TEXT,
-  lat REAL DEFAULT 28.199,
-  lng REAL DEFAULT 76.618,
+  lat REAL DEFAULT 15.3614,
+  lng REAL DEFAULT 73.9312,
   capacity_tonnes REAL DEFAULT 100,
   hours TEXT DEFAULT '6:00 AM – 8:00 PM',
   active INTEGER DEFAULT 1,
@@ -73,8 +74,8 @@ CREATE TABLE IF NOT EXISTS requirements (
   rate_per_unit REAL NOT NULL,
   rate_unit TEXT DEFAULT 'tonne',
   deadline TEXT NOT NULL,
-  lat REAL DEFAULT 28.18,
-  lng REAL DEFAULT 76.62,
+  lat REAL DEFAULT 15.3614,
+  lng REAL DEFAULT 73.9312,
   village TEXT NOT NULL,
   status TEXT DEFAULT 'Open',
   pool_id TEXT,
@@ -92,8 +93,8 @@ CREATE TABLE IF NOT EXISTS pools (
   rate_per_unit REAL NOT NULL,
   rate_unit TEXT DEFAULT 'tonne',
   deadline TEXT NOT NULL,
-  lat REAL DEFAULT 28.18,
-  lng REAL DEFAULT 76.62,
+  lat REAL DEFAULT 15.3614,
+  lng REAL DEFAULT 73.9312,
   village TEXT NOT NULL,
   radius_km REAL DEFAULT 35,
   stage TEXT DEFAULT 'Open for Commitments',
@@ -124,8 +125,8 @@ CREATE TABLE IF NOT EXISTS listings (
   rate_unit TEXT DEFAULT 'quintal',
   village TEXT NOT NULL,
   collection_point_id TEXT,
-  lat REAL DEFAULT 28.61,
-  lng REAL DEFAULT 77.2,
+  lat REAL DEFAULT 15.3614,
+  lng REAL DEFAULT 73.9312,
   status TEXT DEFAULT 'Active',
   crop_season TEXT,
   notes TEXT,
@@ -249,14 +250,57 @@ CREATE TABLE IF NOT EXISTS audit_log (
   created_at TEXT DEFAULT (datetime('now'))
 );
 `);
+}
 
-// Check if database needs initial seeding
-const countRes = db.prepare("SELECT COUNT(*) AS c FROM profiles").get();
-if (!countRes || countRes.c === 0) {
+// Initial table creation
+createSchema();
+
+// Auto-migrate if legacy Haryana data is present
+export function checkAndMigrateLegacy() {
+  try {
+    const legacyCheck = db.prepare("SELECT COUNT(*) as c FROM collection_points WHERE village IN ('Rewari', 'Bawal', 'Panipat', 'Karnal')").get();
+    if (legacyCheck && legacyCheck.c > 0) {
+      console.log("[Database] Legacy Rewari/Haryana data detected. Rebuilding clean Goa database...");
+      reseedDatabase();
+      return true;
+    }
+  } catch (err) {
+    // Tables might not exist yet
+  }
+  return false;
+}
+
+export function reseedDatabase() {
+  db.exec(`
+    DROP TABLE IF EXISTS audit_log;
+    DROP TABLE IF EXISTS moderation_flags;
+    DROP TABLE IF EXISTS notifications;
+    DROP TABLE IF EXISTS forecasts;
+    DROP TABLE IF EXISTS payouts;
+    DROP TABLE IF EXISTS farmer_payables;
+    DROP TABLE IF EXISTS payments;
+    DROP TABLE IF EXISTS orders;
+    DROP TABLE IF EXISTS listings;
+    DROP TABLE IF EXISTS pool_contributions;
+    DROP TABLE IF EXISTS pools;
+    DROP TABLE IF EXISTS requirements;
+    DROP TABLE IF EXISTS industry_verifications;
+    DROP TABLE IF EXISTS collection_points;
+    DROP TABLE IF EXISTS profiles;
+  `);
+  createSchema();
   seedDatabase();
 }
 
-function seedDatabase() {
+// Run check
+if (!checkAndMigrateLegacy()) {
+  const countRes = db.prepare("SELECT COUNT(*) AS c FROM profiles").get();
+  if (!countRes || countRes.c === 0) {
+    seedDatabase();
+  }
+}
+
+export function seedDatabase() {
   console.log("[Database] Initializing and seeding GreenRoots SQLite database...");
 
   // 1. Collection points
@@ -319,10 +363,10 @@ function seedDatabase() {
     INSERT INTO industry_verifications (id, industry_id, business_name, license_number, registered_address, contact_person, documents, status, reviewed_by)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  insertVer.run("ver_1", "industry_5", "Rewari Bio-Products", "HR-REW-2024-00871", "Plot 14, Industrial Area, Rewari, Haryana 123401", "Naveen Sharma", '["GST registration.pdf"]', "Pending", null);
-  insertVer.run("ver_2", "industry_4", "Nashik Sugarcane Power", "MH-NSK-2021-00442", "Gat 220, Sinnar Road, Nashik, Maharashtra 422112", "Rohit Deshmukh", '["GST registration.pdf"]', "Verified", "Priya Menon");
-  insertVer.run("ver_3", "industry_3", "Ludhiana Agro Pellets", "PB-LDH-2020-00119", "Village Jagraon, Ludhiana, Punjab 142026", "Harjeet Singh", '["GST registration.pdf"]', "Verified", "Priya Menon");
-  insertVer.run("ver_4", "industry_2", "Haryana Green Fuels", "HR-KNL-2022-00307", "Sector 12, Karnal, Haryana 132001", "Meena Rani", '["GST registration.pdf"]', "Verified", "Priya Menon");
+  insertVer.run("ver_1", "industry_5", "Margao Bio-Products", "GA-MRG-2024-00871", "Plot 14, Industrial Estate, Margao, Goa 403601", "Naveen Sharma", '["GST registration.pdf"]', "Pending", null);
+  insertVer.run("ver_2", "industry_4", "Kolhapur Sugarcane Power", "MH-KLP-2021-00442", "Gat 220, Shirol Road, Kolhapur, Maharashtra 416103", "Rohit Deshmukh", '["GST registration.pdf"]', "Verified", "Priya Menon");
+  insertVer.run("ver_3", "industry_3", "Verna Agro Pellets", "GA-VRN-2020-00119", "Verna Industrial Estate, Verna, Goa 403722", "Harjeet Singh", '["GST registration.pdf"]', "Verified", "Priya Menon");
+  insertVer.run("ver_4", "industry_2", "Goa Green Bio-Fuels", "GA-MAP-2022-00307", "Mapusa Industrial Yard, Mapusa, Goa 403507", "Meena Rani", '["GST registration.pdf"]', "Verified", "Priya Menon");
 
   // 4. Requirements & Pools
   const insertReq = db.prepare(`
@@ -335,22 +379,22 @@ function seedDatabase() {
   `);
 
   const reqs = [
-    ["req_paddy_panipat", "industry_1", "paddy_straw", 100000, 2300, "tonne", "2026-11-20T18:00:00Z", 29.39, 76.963, "Panipat", "Open", "pool_paddy_panipat", "Dry straw, moisture below 18%."],
-    ["req_mustard_rewari", "industry_5", "mustard_stubble", 50000, 1200, "quintal", "2026-11-22T18:00:00Z", 28.2, 76.62, "Rewari", "Open", "pool_mustard_rewari", null],
-    ["req_husk_karnal", "industry_2", "rice_husk", 20000, 950, "quintal", "2026-11-25T18:00:00Z", 29.69, 76.99, "Karnal", "Open", "pool_husk_karnal", "Clean husk, no stones."],
-    ["req_wheat_ludhiana", "industry_3", "wheat_straw", 80000, 1800, "tonne", "2026-10-30T18:00:00Z", 30.901, 75.857, "Ludhiana", "Fulfilled", "pool_wheat_ludhiana", null],
-    ["req_sugarcane_nashik", "industry_4", "sugarcane_trash", 120000, 1500, "tonne", "2026-11-18T18:00:00Z", 19.997, 73.789, "Nashik", "Open", "pool_sugarcane_nashik", null],
-    ["req_cotton_sangrur", "industry_3", "cotton_stalk", 40000, 1200, "tonne", "2026-11-21T18:00:00Z", 30.245, 75.842, "Sangrur", "Open", "pool_cotton_sangrur", null],
+    ["req_paddy_panipat", "industry_1", "paddy_straw", 100000, 2300, "tonne", "2026-11-20T18:00:00Z", 15.4909, 73.8278, "Panjim", "Open", "pool_paddy_panipat", "Dry straw, moisture below 18%."],
+    ["req_mustard_rewari", "industry_5", "mustard_stubble", 50000, 1200, "quintal", "2026-11-22T18:00:00Z", 15.2736, 73.9580, "Margao", "Open", "pool_mustard_rewari", null],
+    ["req_husk_karnal", "industry_2", "rice_husk", 20000, 950, "quintal", "2026-11-25T18:00:00Z", 15.5937, 73.8142, "Mapusa", "Open", "pool_husk_karnal", "Clean husk, no stones."],
+    ["req_wheat_ludhiana", "industry_3", "wheat_straw", 80000, 1800, "tonne", "2026-10-30T18:00:00Z", 15.3614, 73.9312, "Verna", "Fulfilled", "pool_wheat_ludhiana", null],
+    ["req_sugarcane_nashik", "industry_4", "sugarcane_trash", 120000, 1500, "tonne", "2026-11-18T18:00:00Z", 16.700, 74.243, "Kolhapur", "Open", "pool_sugarcane_nashik", null],
+    ["req_cotton_sangrur", "industry_3", "cotton_stalk", 40000, 1200, "tonne", "2026-11-21T18:00:00Z", 15.3614, 73.9312, "Verna", "Open", "pool_cotton_sangrur", null],
   ];
   for (const r of reqs) insertReq.run(...r);
 
   const pools = [
-    ["pool_paddy_panipat", "req_paddy_panipat", "industry_1", "paddy_straw", 100000, 62000, 2300, "tonne", "2026-11-20T18:00:00Z", 29.39, 76.963, "Panipat", 35, "Open for Commitments", 7],
-    ["pool_mustard_rewari", "req_mustard_rewari", "industry_5", "mustard_stubble", 50000, 50000, 1200, "quintal", "2026-11-22T18:00:00Z", 28.2, 76.62, "Rewari", 35, "Ready for Pickup", 5],
-    ["pool_husk_karnal", "req_husk_karnal", "industry_2", "rice_husk", 20000, 8000, 950, "quintal", "2026-11-25T18:00:00Z", 29.69, 76.99, "Karnal", 60, "Open for Commitments", 3],
-    ["pool_wheat_ludhiana", "req_wheat_ludhiana", "industry_3", "wheat_straw", 80000, 80000, 1800, "tonne", "2026-10-30T18:00:00Z", 30.901, 75.857, "Ludhiana", 35, "Closed", 4],
-    ["pool_sugarcane_nashik", "req_sugarcane_nashik", "industry_4", "sugarcane_trash", 120000, 30000, 1500, "tonne", "2026-11-18T18:00:00Z", 19.997, 73.789, "Nashik", 35, "Open for Commitments", 2],
-    ["pool_cotton_sangrur", "req_cotton_sangrur", "industry_3", "cotton_stalk", 40000, 40000, 1200, "tonne", "2026-11-21T18:00:00Z", 30.245, 75.842, "Sangrur", 35, "Ready for Pickup", 4],
+    ["pool_paddy_panipat", "req_paddy_panipat", "industry_1", "paddy_straw", 100000, 62000, 2300, "tonne", "2026-11-20T18:00:00Z", 15.4909, 73.8278, "Panjim", 35, "Open for Commitments", 7],
+    ["pool_mustard_rewari", "req_mustard_rewari", "industry_5", "mustard_stubble", 50000, 50000, 1200, "quintal", "2026-11-22T18:00:00Z", 15.2736, 73.9580, "Margao", 35, "Ready for Pickup", 5],
+    ["pool_husk_karnal", "req_husk_karnal", "industry_2", "rice_husk", 20000, 8000, 950, "quintal", "2026-11-25T18:00:00Z", 15.5937, 73.8142, "Mapusa", 60, "Open for Commitments", 3],
+    ["pool_wheat_ludhiana", "req_wheat_ludhiana", "industry_3", "wheat_straw", 80000, 80000, 1800, "tonne", "2026-10-30T18:00:00Z", 15.3614, 73.9312, "Verna", 35, "Closed", 4],
+    ["pool_sugarcane_nashik", "req_sugarcane_nashik", "industry_4", "sugarcane_trash", 120000, 30000, 1500, "tonne", "2026-11-18T18:00:00Z", 16.700, 74.243, "Kolhapur", 35, "Open for Commitments", 2],
+    ["pool_cotton_sangrur", "req_cotton_sangrur", "industry_3", "cotton_stalk", 40000, 40000, 1200, "tonne", "2026-11-21T18:00:00Z", 15.3614, 73.9312, "Verna", 35, "Ready for Pickup", 4],
   ];
   for (const p of pools) insertPool.run(...p);
 
@@ -380,16 +424,16 @@ function seedDatabase() {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   const listings = [
-    ["listing_ricehusk_200", "farmer_1", "rice_husk", 200, 8, "kg", "Rewari", "cp_rewari_central", 28.197, 76.617, "Active", "Dry husk stored under cover."],
-    ["listing_mustard_1", "farmer_2", "mustard_stubble", 5000, 1200, "quintal", "Bawal", "cp_rewari_south", 28.075, 76.585, "Active", null],
-    ["listing_paddy_1", "farmer_3", "paddy_straw", 12000, 2300, "tonne", "Panipat", "cp_panipat", 29.39, 76.96, "Active", null],
-    ["listing_wheat_1", "farmer_4", "wheat_straw", 18000, 1800, "tonne", "Jagraon", "cp_ludhiana", 30.787, 75.473, "Reserved", null],
-    ["listing_sugarcane_1", "farmer_5", "sugarcane_trash", 9000, 1500, "tonne", "Sangrur", "cp_sangrur", 30.245, 75.842, "Active", null],
-    ["listing_cashew_1", "farmer_8", "cashew_shell", 1200, 900, "quintal", "Ratnagiri", "cp_kolhapur", 16.99, 73.312, "Active", null],
-    ["listing_cotton_1", "farmer_6", "cotton_stalk", 15000, 1200, "tonne", "Nashik", "cp_nashik", 19.997, 73.789, "Active", null],
-    ["listing_groundnut_1", "farmer_12", "groundnut_shell", 2400, 800, "quintal", "Nashik", "cp_nashik", 20.01, 73.77, "Active", null],
-    ["listing_bagasse_1", "farmer_7", "bagasse", 22000, 1100, "tonne", "Kolhapur", "cp_kolhapur", 16.705, 74.243, "Sold", null],
-    ["listing_paddy_2", "farmer_10", "paddy_straw", 7500, 2400, "tonne", "Panipat", "cp_panipat", 29.377, 76.95, "Active", null],
+    ["listing_ricehusk_200", "farmer_1", "rice_husk", 200, 8, "kg", "Margao", "cp_rewari_central", 15.2736, 73.9580, "Active", "Dry husk stored under cover."],
+    ["listing_mustard_1", "farmer_2", "mustard_stubble", 5000, 1200, "quintal", "Vasco", "cp_rewari_south", 15.3982, 73.8113, "Active", null],
+    ["listing_paddy_1", "farmer_3", "paddy_straw", 12000, 2300, "tonne", "Panjim", "cp_panipat", 15.4909, 73.8278, "Active", null],
+    ["listing_wheat_1", "farmer_4", "wheat_straw", 18000, 1800, "tonne", "Mapusa", "cp_karnal", 15.5937, 73.8142, "Reserved", null],
+    ["listing_sugarcane_1", "farmer_5", "sugarcane_trash", 9000, 1500, "tonne", "Verna", "cp_ludhiana", 15.3614, 73.9312, "Active", null],
+    ["listing_cashew_1", "farmer_8", "cashew_shell", 1200, 900, "quintal", "Canacona", "cp_canacona", 15.0167, 74.0500, "Active", null],
+    ["listing_cotton_1", "farmer_6", "cotton_stalk", 15000, 1200, "tonne", "Ponda", "cp_sangrur", 15.4026, 74.0086, "Active", null],
+    ["listing_groundnut_1", "farmer_12", "groundnut_shell", 2400, 800, "quintal", "Porvorim", "cp_porvorim", 15.5350, 73.8288, "Active", null],
+    ["listing_bagasse_1", "farmer_7", "bagasse", 22000, 1100, "tonne", "Bicholim", "cp_nashik", 15.5912, 73.9515, "Sold", null],
+    ["listing_paddy_2", "farmer_10", "paddy_straw", 7500, 2400, "tonne", "Panjim", "cp_panipat", 15.4909, 73.8278, "Active", null],
   ];
   for (const l of listings) insertListing.run(...l);
 
@@ -424,20 +468,20 @@ function seedDatabase() {
     INSERT INTO forecasts (id, region, season, waste_type, historical_price_per_kg, predicted_price_per_kg, confidence, limited_data, harvest_peak_start, harvest_peak_end, sample_count, explanation, trend)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  insertFc.run("fc_haryana_paddy", "Haryana (Rewari, Panipat, Karnal)", "Kharif 2026", "paddy_straw", 2.10, 2.30, 0.88, 0, "2026-10-25", "2026-12-15", 1840, "Paddy straw supply peaks in November-December. High demand from regional bio-pellet plants keeps prices firm.", "Rising");
-  insertFc.run("fc_punjab_wheat", "Punjab (Ludhiana, Sangrur)", "Rabi 2026", "wheat_straw", 1.75, 1.80, 0.92, 0, "2026-04-15", "2026-05-30", 2210, "Wheat straw availability peaks in May. Steady demand for cattle fodder and packaging materials.", "Stable");
-  insertFc.run("fc_maharashtra_sugarcane", "Maharashtra (Nashik, Kolhapur)", "Crushing 2026–27", "sugarcane_trash", 1.40, 1.50, 0.45, 1, "2026-11-15", "2027-02-28", 120, "There is not enough recorded history for this region to produce a definitive forecast.", "Stable");
+  insertFc.run("fc_haryana_paddy", "Goa (Vasco, Margao, Panjim)", "Kharif 2026", "paddy_straw", 2.10, 2.30, 0.88, 0, "2026-10-25", "2026-12-15", 1840, "Paddy straw supply peaks in November-December across Goa. High demand from regional bio-pellet plants keeps prices firm.", "Rising");
+  insertFc.run("fc_punjab_wheat", "Karnataka (Belagavi, Dharwad)", "Rabi 2026", "wheat_straw", 1.75, 1.80, 0.92, 0, "2026-04-15", "2026-05-30", 2210, "Wheat straw availability peaks in May. Steady demand for cattle fodder and packaging materials.", "Stable");
+  insertFc.run("fc_maharashtra_sugarcane", "Maharashtra (Kolhapur, Sawantwadi)", "Crushing 2026–27", "sugarcane_trash", 1.40, 1.50, 0.45, 1, "2026-11-15", "2027-02-28", 120, "There is not enough recorded history for this region to produce a definitive forecast.", "Stable");
 
   // 10. Notifications
   const insertNotif = db.prepare(`
     INSERT INTO notifications (id, user_id, title, body, type, read, reference_id)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
-  insertNotif.run("n1", "farmer_1", "New requirement 12 km away", "Paddy straw · 100 tonnes needed in Panipat by 10 Nov.", "pool", 0, "pool_paddy_panipat");
-  insertNotif.run("n2", "farmer_1", "Pool is 62% filled", "Paddy straw pool in Panipat still needs 38 tonnes.", "pool", 0, "pool_paddy_panipat");
-  insertNotif.run("n3", "farmer_9", "Pool area expanded to 60 km", "Rice husk pool in Karnal now reaches more farmers.", "pool", 0, "pool_husk_karnal");
-  insertNotif.run("n4", "farmer_2", "Drop-off confirmed", "1,000 kg mustard stubble accepted at Bawal.", "system", 1, "order_mustard_1000");
-  insertNotif.run("n5", "buyer_1", "Payment captured", "PayPal Sandbox captured ₹1,200 for order ORD-8841.", "payment", 1, "order_ricehusk_500");
+  insertNotif.run("n1", "farmer_1", "New requirement 12 km away", "Paddy straw · 100 tonnes needed in Panjim by 10 Nov.", "pool", 0, "pool_paddy_panipat");
+  insertNotif.run("n2", "farmer_1", "Pool is 62% filled", "Paddy straw pool in Panjim still needs 38 tonnes.", "pool", 0, "pool_paddy_panipat");
+  insertNotif.run("n3", "farmer_9", "Pool area expanded to 60 km", "Rice husk pool in Mapusa now reaches more farmers.", "pool", 0, "pool_husk_karnal");
+  insertNotif.run("n4", "farmer_2", "Drop-off confirmed", "1,000 kg mustard stubble accepted at Vasco Port Agro Depot.", "system", 1, "order_mustard_1000");
+  insertNotif.run("n5", "buyer_1", "Payment captured", "Escrow captured ₹1,200 for order ORD-8841.", "payment", 1, "order_ricehusk_500");
 
   // 11. Moderation Flags
   const insertFlag = db.prepare(`
@@ -452,9 +496,9 @@ function seedDatabase() {
     INSERT INTO audit_log (id, actor, actor_role, action, reference, ai_prepared_summary, confirmed_by, outcome)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  insertAudit.run("aud_1", "Amit Traders", "buyer", "PayPal capture", "PP-7K2A1M4QX", "Order summary for 500 kg paddy straw at ₹2,400/tonne", "Amit Traders", "Captured");
-  insertAudit.run("aud_2", "Ramesh Yadav", "farmer", "Listing published", "listing_ricehusk_200", "Listing draft: 200 kg rice husk at ₹8/kg, Rewari", "Ramesh Yadav", "Active");
-  insertAudit.run("aud_4", "Priya Menon", "admin", "Industry verified", "ver_2", "Verification review for Nashik Sugarcane Power", "Priya Menon", "Verified");
+  insertAudit.run("aud_1", "Amit Traders", "buyer", "Payment capture", "PP-7K2A1M4QX", "Order summary for 500 kg paddy straw at ₹2,400/tonne", "Amit Traders", "Captured");
+  insertAudit.run("aud_2", "Ramesh Yadav", "farmer", "Listing published", "listing_ricehusk_200", "Listing draft: 200 kg rice husk at ₹8/kg, Margao", "Ramesh Yadav", "Active");
+  insertAudit.run("aud_4", "Priya Menon", "admin", "Industry verified", "ver_2", "Verification review for Kolhapur Agro Power", "Priya Menon", "Verified");
 
   console.log("[Database] Database initialized and seeded successfully.");
 }

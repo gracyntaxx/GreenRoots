@@ -40,14 +40,22 @@ export default function CollectionPointsPage() {
   const rows = points.data ?? [];
   const nearestActive = rows.find((p) => p.active);
 
+  // Fallback to Goa coordinates if user location is missing or legacy
+  const userLocation = useMemo(() => {
+    if (profile?.location && profile.location.lat >= 14 && profile.location.lat <= 17) {
+      return profile.location;
+    }
+    return { lat: 15.3614, lng: 73.9312 }; // Central Goa (Verna)
+  }, [profile?.location]);
+
   // Compute Travelling Salesman (TSP) Route Sequence
   const tspRoute = useMemo(() => {
     if (!rows.length) return null;
     return nearestNeighbourRoute(
-      profile.location,
+      userLocation,
       rows.map((r) => ({ id: r.id, name: r.name, location: r.location }))
     );
-  }, [rows, profile.location]);
+  }, [rows, userLocation]);
 
   const stopIndexMap = useMemo(() => {
     const map = new Map<string, number>();
@@ -119,17 +127,20 @@ export default function CollectionPointsPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              {tspRoute.order.slice(0, 4).map((s, idx) => (
-                <div key={s.id} className="flex items-center gap-1.5 text-xs font-semibold text-moss">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-forest text-[11px] font-bold text-white shadow-xs">
-                    {idx + 1}
-                  </span>
-                  <span className="truncate max-w-[110px]">{s.name.split(" ")[0]}</span>
-                  {idx < tspRoute.order.slice(0, 4).length - 1 && (
-                    <span className="text-muted">→</span>
-                  )}
-                </div>
-              ))}
+              {tspRoute.order.slice(0, 4).map((s, idx) => {
+                const cityName = s.name.replace(/APMC|Central|Hub|Market|Yard|Sub-Yard|Co-op|Industrial|Biomass|Farm|Residue|Eco|Collection|Point|Greens|Railhead/gi, "").trim() || s.name.split(" ")[0];
+                return (
+                  <div key={s.id} className="flex items-center gap-1.5 text-xs font-semibold text-moss">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-forest text-[11px] font-bold text-white shadow-xs">
+                      {idx + 1}
+                    </span>
+                    <span className="truncate max-w-[110px]">{cityName}</span>
+                    {idx < tspRoute.order.slice(0, 4).length - 1 && (
+                      <span className="text-muted">→</span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -250,7 +261,15 @@ export default function CollectionPointsPage() {
             <span className="text-xs text-muted">Interactive Leaflet Geo View</span>
           </div>
           <Card className="overflow-hidden rounded-panel border border-line/80 p-0 shadow-card">
-            <MapView center={profile.location} zoom={8} height={480} markers={markers} showLegend className="border-0" />
+            <MapView
+              center={userLocation}
+              zoom={10}
+              height={500}
+              markers={markers}
+              route={tspRoute ? tspRoute.order.map((s) => ({ id: s.id, name: s.name, location: s.location })) : undefined}
+              showLegend
+              className="border-0"
+            />
           </Card>
         </div>
       </div>

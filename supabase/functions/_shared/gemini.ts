@@ -104,16 +104,27 @@ const WASTE_KEYWORDS: { type: WasteType; words: string[] }[] = [
 ];
 
 const VILLAGES: { names: string[]; village: string; state: string }[] = [
-  { names: ["rewari", "रेवाड़ी", "रेवाडी"], village: "Rewari", state: "Haryana" },
-  { names: ["bawal", "बावल"], village: "Bawal", state: "Haryana" },
-  { names: ["panipat", "पानीपत"], village: "Panipat", state: "Haryana" },
-  { names: ["karnal", "करनाल"], village: "Karnal", state: "Haryana" },
-  { names: ["ludhiana", "लुधियाना"], village: "Ludhiana", state: "Punjab" },
-  { names: ["jagraon", "जगराओं"], village: "Jagraon", state: "Punjab" },
-  { names: ["sangrur", "संगरूर"], village: "Sangrur", state: "Punjab" },
-  { names: ["nashik", "nasik", "नाशिक"], village: "Nashik", state: "Maharashtra" },
+  { names: ["vasco", "vasco da gama", "वास्को"], village: "Vasco", state: "Goa" },
+  { names: ["margao", "madgaon", "मडगाव", "मडगांव"], village: "Margao", state: "Goa" },
+  { names: ["panjim", "panaji", "पणजी"], village: "Panjim", state: "Goa" },
+  { names: ["mapusa", "mapsa", "म्हापसा"], village: "Mapusa", state: "Goa" },
+  { names: ["verna", "वेर्णा"], village: "Verna", state: "Goa" },
+  { names: ["ponda", "पोंडा"], village: "Ponda", state: "Goa" },
+  { names: ["bicholim", "डिचोली"], village: "Bicholim", state: "Goa" },
+  { names: ["curchorem", "कुडचडे"], village: "Curchorem", state: "Goa" },
+  { names: ["canacona", "काणकोण"], village: "Canacona", state: "Goa" },
+  { names: ["porvorim", "पर्वरी"], village: "Porvorim", state: "Goa" },
+  { names: ["cuncolim", "कुंकळ्ळी"], village: "Cuncolim", state: "Goa" },
+  { names: ["valpoi", "वाळपई"], village: "Valpoi", state: "Goa" },
+  { names: ["pernem", "पेडणे"], village: "Pernem", state: "Goa" },
+  { names: ["quepem", "केपे"], village: "Quepem", state: "Goa" },
+  { names: ["sanguem", "सांगे"], village: "Sanguem", state: "Goa" },
+  { names: ["tivim", "थिवी"], village: "Tivim", state: "Goa" },
   { names: ["kolhapur", "कोल्हापूर", "कोल्हापुर"], village: "Kolhapur", state: "Maharashtra" },
+  { names: ["sawantwadi", "सावंतवाडी"], village: "Sawantwadi", state: "Maharashtra" },
   { names: ["ratnagiri", "रत्नागिरी"], village: "Ratnagiri", state: "Maharashtra" },
+  { names: ["belagavi", "belgaum", "बेळगाव", "बेलगाम"], village: "Belagavi", state: "Karnataka" },
+  { names: ["dharwad", "धारवाड"], village: "Dharwad", state: "Karnataka" },
 ];
 
 const UNIT_WORDS: { re: string; unit: QtyUnit }[] = [

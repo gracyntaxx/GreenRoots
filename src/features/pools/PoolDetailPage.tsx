@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   CalendarClock,
   CheckCircle2,
+  Cpu,
   Loader2,
   MapPin,
   Leaf,
@@ -23,6 +24,7 @@ import { VerifiedMark, AiChip, EstimateLabel } from "@/components/shared/Marks";
 import { WasteImage } from "@/components/shared/WasteImage";
 import { RateText } from "@/components/shared/Numbers";
 import { MapView, type MapMarker } from "@/components/shared/MapView";
+import { DijkstraPoolMap } from "@/components/shared/DijkstraPoolMap";
 import { ConfirmSheet } from "@/components/shared/ConfirmSheet";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -242,9 +244,21 @@ export default function PoolDetailPage() {
             </div>
           </Card>
 
-          <Card className="overflow-hidden p-0">
-            <MapView center={p.location} zoom={9} height={240} markers={markers} showLegend className="rounded-none border-0" />
-          </Card>
+          {contributions.data?.length === 4 || p.contributionCount === 4 ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-forest dark:text-growth flex items-center gap-1.5">
+                  <Cpu className="h-4 w-4" /> Dijkstra Shortest Path Logistics (4 Farmers to Central Hub)
+                </span>
+                <span className="text-[11px] text-muted">Optimal multi-source routing</span>
+              </div>
+              <DijkstraPoolMap />
+            </div>
+          ) : (
+            <Card className="overflow-hidden p-0">
+              <MapView center={p.location} zoom={9} height={240} markers={markers} showLegend className="rounded-none border-0" />
+            </Card>
+          )}
 
           <section className="mt-6">
             <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-ink dark:text-portal-ink">
