@@ -46,6 +46,52 @@ const QUICK_PRESETS = [
   { label: "Rice Husk · 100 Qtl", text: "I have 100 quintals of rice husk in Panjim at 2200 rupees per quintal." },
 ];
 
+function dedupeSpeechTranscript(raw: string): string {
+  if (!raw || typeof raw !== "string") return "";
+  const clean = raw.replace(/\s+/g, " ").trim();
+  if (!clean) return "";
+
+  let words = clean.split(" ");
+  if (words.length <= 1) return clean;
+
+  // 1. Remove consecutive single-word duplicates: "I I have have" -> "I have"
+  const deduped: string[] = [];
+  for (let i = 0; i < words.length; i++) {
+    if (i === 0 || words[i].toLowerCase() !== words[i - 1].toLowerCase()) {
+      deduped.push(words[i]);
+    }
+  }
+  words = deduped;
+
+  // 2. Remove repeating consecutive multi-word phrases (phrase length from 15 down to 2)
+  let changed = true;
+  let iterations = 0;
+  while (changed && iterations < 8) {
+    changed = false;
+    iterations++;
+    const maxK = Math.min(15, Math.floor(words.length / 2));
+    for (let k = maxK; k >= 2; k--) {
+      for (let i = 0; i <= words.length - 2 * k; i++) {
+        let match = true;
+        for (let m = 0; m < k; m++) {
+          if (words[i + m].toLowerCase() !== words[i + k + m].toLowerCase()) {
+            match = false;
+            break;
+          }
+        }
+        if (match) {
+          words.splice(i + k, k);
+          changed = true;
+          break;
+        }
+      }
+      if (changed) break;
+    }
+  }
+
+  return words.join(" ");
+}
+
 export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -68,8 +114,9 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
   const recognitionRef = useRef<any>(null);
   const listeningRef = useRef(false);
-  const accumulatedFinalRef = useRef("");
-  const currentSessionFinalRef = useRef("");
+  const committedTextRef = useRef("");
+  const sessionFinalRef = useRef("");
+  const sessionInterimRef = useRef("");
   const transcriptRef = useRef("");
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -133,8 +180,9 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     setMode("idle");
     setTranscript("");
     transcriptRef.current = "";
-    accumulatedFinalRef.current = "";
-    currentSessionFinalRef.current = "";
+    committedTextRef.current = "";
+    sessionFinalRef.current = "";
+    sessionInterimRef.current = "";
     setDraft(null);
     setSelectedPointId("");
     setNotice(null);
@@ -160,7 +208,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
   };
 
   const parse = async (text: string) => {
-    const clean = text.trim();
+    const clean = dedupeSpeechTranscript(text.trim());
     if (!clean) {
       setNotice({ title: t("voice.noSpeech"), body: t("voice.noSpeechBody"), tone: "warning" });
       return;
@@ -169,6 +217,9 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     setMode("understanding");
     try {
       const d = await aiAssistantService.parseListingText(clean, language);
+      if (d) {
+        d.rawText = dedupeSpeechTranscript(d.rawText || clean);
+      }
       setDraft(d);
       setMode("review");
     } catch (e) {
@@ -189,8 +240,11 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
       if (!d.wasteType && !d.quantity && !d.rate && !d.rawText) {
         throw new Error("Could not detect crop details from audio.");
       }
+      if (d.rawText) {
+        d.rawText = dedupeSpeechTranscript(d.rawText);
+        updateTranscript(d.rawText);
+      }
       setDraft(d);
-      if (d.rawText) updateTranscript(d.rawText);
       setMode("review");
     } catch (e) {
       setMode("typing");
@@ -202,10 +256,60 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     }
   };
 
+  const appendCommittedText = (newChunk: string) => {
+    const clean = newChunk.trim();
+    if (!clean) return;
+
+    const current = committedTextRef.current.trim();
+    if (!current) {
+      committedTextRef.current = clean;
+      return;
+    }
+
+    const currentLower = current.toLowerCase();
+    const cleanLower = clean.toLowerCase();
+
+    // 1. If existing already ends with this chunk or identical, don't duplicate
+    if (currentLower.endsWith(cleanLower) || currentLower === cleanLower) {
+      return;
+    }
+
+    // 2. If the new chunk already contains the existing string from the beginning, replace with new chunk
+    if (cleanLower.startsWith(currentLower)) {
+      committedTextRef.current = clean;
+      return;
+    }
+
+    // 3. Word-level boundary overlap detection (up to 8 words)
+    const currentWords = current.split(/\s+/);
+    const newWords = clean.split(/\s+/);
+    let overlap = 0;
+    const maxOverlap = Math.min(currentWords.length, newWords.length, 8);
+
+    for (let k = maxOverlap; k >= 1; k--) {
+      const tail = currentWords.slice(-k).join(" ").toLowerCase();
+      const head = newWords.slice(0, k).join(" ").toLowerCase();
+      if (tail === head) {
+        overlap = k;
+        break;
+      }
+    }
+
+    if (overlap > 0) {
+      const remainder = newWords.slice(overlap).join(" ");
+      if (remainder) {
+        committedTextRef.current = `${current} ${remainder}`.trim();
+      }
+    } else {
+      committedTextRef.current = `${current} ${clean}`.trim();
+    }
+  };
+
   const startListening = async () => {
     setNotice(null);
-    accumulatedFinalRef.current = "";
-    currentSessionFinalRef.current = "";
+    committedTextRef.current = "";
+    sessionFinalRef.current = "";
+    sessionInterimRef.current = "";
     updateTranscript("");
     setMode("listening");
     audioChunksRef.current = [];
@@ -222,23 +326,46 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
     let hasSpeechRecognition = false;
 
-    // 1. On Android / mobile, start SpeechRecognition IMMEDIATELY & SYNCHRONOUSLY inside user tap gesture
-    if (SR) {
+    // Factory to instantiate a clean SpeechRecognition instance
+    const createRecognitionInstance = () => {
+      if (!SR || !listeningRef.current) return null;
       try {
         const rec = new SR();
         rec.lang = bcp47;
-        rec.continuous = true;
+        // On desktop, continuous: true keeps stream open; on mobile/Android, false avoids engine buffer multiplication
+        rec.continuous = !isMobile;
         rec.interimResults = true;
         rec.maxAlternatives = 1;
 
         rec.onresult = (event: any) => {
-          let sessionText = "";
+          let thisSessionFinal = "";
+          let thisSessionInterim = "";
+
           for (let i = 0; i < event.results.length; i++) {
-            sessionText += `${event.results[i][0].transcript} `;
+            const res = event.results[i];
+            const text = res[0]?.transcript || "";
+            if (res.isFinal) {
+              thisSessionFinal += ` ${text}`;
+            } else {
+              thisSessionInterim += ` ${text}`;
+            }
           }
-          const full = `${accumulatedFinalRef.current} ${sessionText}`.replace(/\s+/g, " ").trim();
-          updateTranscript(full);
-          setAudioLevel(Math.min(95, Math.max(35, Math.round(sessionText.length * 3))));
+
+          thisSessionFinal = thisSessionFinal.replace(/\s+/g, " ").trim();
+          thisSessionInterim = thisSessionInterim.replace(/\s+/g, " ").trim();
+
+          sessionFinalRef.current = thisSessionFinal;
+          sessionInterimRef.current = thisSessionInterim;
+
+          // Combine committed text from previous completed turns + current turn final + current turn interim
+          const combined = [committedTextRef.current, thisSessionFinal, thisSessionInterim]
+            .filter(Boolean)
+            .join(" ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+          updateTranscript(combined);
+          setAudioLevel(Math.min(95, Math.max(35, Math.round((thisSessionFinal.length + thisSessionInterim.length) * 3))));
         };
 
         rec.onsoundstart = () => setAudioLevel(65);
@@ -259,14 +386,22 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
         };
 
         rec.onend = () => {
-          if (transcriptRef.current) {
-            accumulatedFinalRef.current = transcriptRef.current;
+          // Commit whatever text was finalized in this session
+          const toCommit = sessionFinalRef.current || (!listeningRef.current ? sessionInterimRef.current : "");
+          if (toCommit) {
+            appendCommittedText(toCommit);
           }
+          sessionFinalRef.current = "";
+          sessionInterimRef.current = "";
+
+          // If still in listening mode, instantiate a FRESH instance to avoid stale buffers
           if (listeningRef.current) {
             setTimeout(() => {
-              if (listeningRef.current && recognitionRef.current) {
+              if (listeningRef.current) {
+                const nextRec = createRecognitionInstance();
+                recognitionRef.current = nextRec;
                 try {
-                  rec.start();
+                  nextRec?.start();
                 } catch {
                   /* ignore duplicate start */
                 }
@@ -277,12 +412,24 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
           }
         };
 
-        recognitionRef.current = rec;
-        // Synchronous activation directly on the user's click event (required by Android Chrome)
-        rec.start();
-        hasSpeechRecognition = true;
+        return rec;
       } catch (err) {
-        console.warn("SpeechRecognition initialization failed:", err);
+        console.warn("SpeechRecognition creation failed:", err);
+        return null;
+      }
+    };
+
+    // 1. On Android / mobile, start SpeechRecognition IMMEDIATELY & SYNCHRONOUSLY inside user tap gesture
+    if (SR) {
+      const rec = createRecognitionInstance();
+      if (rec) {
+        recognitionRef.current = rec;
+        try {
+          rec.start();
+          hasSpeechRecognition = true;
+        } catch (err) {
+          console.warn("SpeechRecognition start failed:", err);
+        }
       }
     }
 
@@ -376,7 +523,12 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
       streamRef.current = null;
     }
 
-    const text = transcriptRef.current.trim();
+    const raw = transcriptRef.current.trim();
+    const text = dedupeSpeechTranscript(raw);
+    if (text !== raw) {
+      updateTranscript(text);
+    }
+
     if (text.length > 2) {
       void parse(text);
     } else if (audioChunksRef.current.length > 0) {
@@ -467,8 +619,9 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     cleanupAudio();
     setMode("idle");
     updateTranscript("");
-    accumulatedFinalRef.current = "";
-    currentSessionFinalRef.current = "";
+    committedTextRef.current = "";
+    sessionFinalRef.current = "";
+    sessionInterimRef.current = "";
     setDraft(null);
     setSelectedPointId("");
     setNotice(null);
@@ -793,7 +946,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
             <div className="rounded-xl border border-line bg-canvas p-3">
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted">What you said</p>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink">“{draft.rawText}”</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink">“{dedupeSpeechTranscript(draft.rawText || transcript)}”</p>
             </div>
 
             <div className="flex gap-2">
