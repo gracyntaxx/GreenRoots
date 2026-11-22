@@ -30,7 +30,7 @@ import { useConnectivity } from "@/lib/connectivity";
 import { WASTE_LABELS, type QtyUnit, type RequirementDraft, type WasteType } from "@/types";
 import { formatNumber } from "@/lib/money";
 
-const SAMPLE_TEXT = "We need 500 tonnes of paddy straw in Panipat by 15 May at 2300 rupees per tonne.";
+const SAMPLE_TEXT = "We need 500 tonnes of paddy straw in Verna by 15 May at 2300 rupees per tonne.";
 
 export default function CreateRequirementPage() {
   const navigate = useNavigate();
@@ -190,7 +190,7 @@ export default function CreateRequirementPage() {
               </Button>
             </div>
             <p className="mt-2 text-[11px] leading-relaxed text-muted dark:text-portal-muted">
-              Example: “We need 500 tonnes of paddy straw in Panipat by 15 May at 2300 rupees per tonne.”
+              Example: “We need 500 tonnes of paddy straw in Verna by 15 May at 2300 rupees per tonne.”
             </p>
             <FieldError>{error}</FieldError>
           </PortalCard>
@@ -395,7 +395,7 @@ export default function CreateRequirementPage() {
               <li>1. You confirm the structured requirement.</li>
               <li>2. A pool opens and nearby farmers see it.</li>
               <li>3. You approve area expansion if the pool needs more supply.</li>
-              <li>4. You pay the pool through PayPal after delivery is verified.</li>
+              <li>4. You fund the pool through secure Escrow after delivery is verified.</li>
             </ol>
           </PortalCard>
         </div>

@@ -5,11 +5,15 @@ import {
   ArrowRight,
   CalendarClock,
   ChevronRight,
+  Compass,
+  FileText,
   Layers,
   Leaf,
   MapPin,
   Mic,
   ReceiptText,
+  Scale,
+  ShieldCheck,
   ShoppingBasket,
   Sprout,
   TrendingUp,
@@ -39,7 +43,7 @@ export default function HomePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const profile = useSession((s) => s.profile)!;
-  const { openVoice } = useFieldShell();
+  const { openVoice, openOnboarding } = useFieldShell();
   const [alertOpen, setAlertOpen] = useState(false);
 
   const payables = useQuery({ queryKey: ["payouts", profile.id], queryFn: () => payoutService.list() });
@@ -74,10 +78,112 @@ export default function HomePage() {
           <h1 className="font-heading text-[32px] font-bold leading-[1.05] text-moss dark:text-portal-ink sm:text-[38px]">{t("home.greeting", { name: (profile?.name || "Farmer").split(" ")[0] })}</h1>
           <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted dark:text-portal-muted">
             <MapPin className="h-4 w-4 text-terracotta" aria-hidden="true" />
-            {t("home.villageLine", { village: profile?.village || "Rewari", state: profile?.state || "Haryana" })}
+            {t("home.villageLine", { village: profile?.village || "Margao", state: profile?.state || "Goa" })}
           </p>
         </div>
-        <ReputationBadge score={profile?.reputation ?? 4.5} factors={profile?.reputationFactors ?? []} showScore />
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => openOnboarding("farmer")}
+            className="border-forest/30 text-forest font-bold hover:bg-meadow"
+          >
+            <Compass className="h-4 w-4 mr-1.5" /> Farmer Guide
+          </Button>
+          <ReputationBadge score={profile?.reputation ?? 4.5} factors={profile?.reputationFactors ?? []} showScore />
+        </div>
+      </div>
+
+      {/* Step-by-Step Indicated Guide for Farmers */}
+      <div className="rounded-2xl border border-forest/20 bg-gradient-to-br from-emerald-50/70 via-white to-meadow/40 p-4 dark:border-portal-line dark:from-[#0E2419] dark:via-portal-surface dark:to-[#0F2D1E] shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-forest text-white text-xs font-bold shrink-0">
+              <Compass className="h-4 w-4" />
+            </span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-forest dark:text-growth">Indicated Step-by-Step Guide</p>
+              <h2 className="text-sm sm:text-base font-bold text-ink dark:text-portal-ink">How to List Your Residue &amp; Get Paid</h2>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openVoice}
+              className="text-xs font-bold text-forest border-forest/30 hover:bg-meadow"
+            >
+              <Mic className="h-3.5 w-3.5 mr-1" /> Try Voice
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openOnboarding("farmer")}
+              className="text-xs font-bold text-forest hover:text-forest hover:bg-meadow/60 dark:text-growth"
+            >
+              Launch Full Walkthrough &rarr;
+            </Button>
+          </div>
+        </div>
+
+        {/* 4 Step Indicated Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">1</span>
+                <Mic className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Start with Voice or Form</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Tap 'Speak' and say what crop stubble you have in Konkani, Marathi, Hindi, or English.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">AI detects crop &amp; quantity</span>
+          </div>
+
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">2</span>
+                <FileText className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Set Quantity &amp; Price</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Confirm your quantity in quintals or kg. View live Goa mandi benchmarks to get top rates.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">Live mandi rates for Goa</span>
+          </div>
+
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">3</span>
+                <MapPin className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Choose Local Drop-off Hub</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Select your nearby depot: Vasco Port Depot, Margao APMC, Panjim, Mapusa, or Verna.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">6 Goa weighbridge hubs</span>
+          </div>
+
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">4</span>
+                <Scale className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Weighbridge &amp; Escrow Payout</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Drop off at weighbridge. Weight slip is recorded and escrow funds are disbursed instantly.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">Zero middlemen deductions</span>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">

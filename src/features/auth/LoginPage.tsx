@@ -101,7 +101,7 @@ export default function LoginPage() {
                 Turn crop residue into guaranteed farm income.
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-white/80">
-                Join over 1,200 farmers and verified green industries trading biomass, preventing stubble fires, and settling via PayPal escrow.
+                Join over 1,200 farmers and verified green industries trading biomass, preventing stubble fires, and settling via secure escrow.
               </p>
             </div>
           </div>
@@ -109,15 +109,15 @@ export default function LoginPage() {
           <div className="relative z-10 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wheat text-forest-900 font-bold">
-                PR
+                RY
               </div>
               <div>
-                <p className="text-xs font-bold text-white">Ramesh Patil · Farmer</p>
-                <p className="text-[11px] text-white/70">Rewari Cluster · 4.92 Trust Score</p>
+                <p className="text-xs font-bold text-white">Ramesh Yadav · Farmer</p>
+                <p className="text-[11px] text-white/70">Goa Cluster (Margao) · 4.92 Trust Score</p>
               </div>
             </div>
             <p className="mt-2.5 text-xs italic text-white/90">
-              "I listed 200 kg of rice husk using my voice in Hindi. The buyer funded the pool via PayPal, and the payout was instant at the weighbridge."
+              "I listed 200 kg of rice husk using my voice in Hindi. The buyer funded the pool, and the payout was instant at the weighbridge."
             </p>
           </div>
 

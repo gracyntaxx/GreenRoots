@@ -141,7 +141,7 @@ export function PayPalSandboxModal({
                   <span className="num font-semibold text-terracotta">{formatMoney(fee)}</span>
                 </div>
                 <div className="flex items-center justify-between border-t border-line/80 pt-2 text-sm">
-                  <span className="font-bold text-moss">Total PayPal Charge:</span>
+                  <span className="font-bold text-moss">Total Amount to Pay:</span>
                   <span className="num text-xl font-bold text-moss">{formatMoney(amount)}</span>
                 </div>
               </div>
@@ -151,14 +151,14 @@ export function PayPalSandboxModal({
                   <Lock className="h-3 w-3 text-forest" />
                   Order Ref: <strong className="num text-moss font-mono">{payment?.paypalOrderRef ?? "Processing..."}</strong>
                 </span>
-                <span className="font-bold text-forest">Verified Transaction</span>
+                <span className="font-bold text-forest">Verified Escrow Transaction</span>
               </div>
 
               {hasOpenedSandbox && (
                 <div className="mt-3 rounded-lg border border-forest/30 bg-meadow/50 p-2.5 text-xs text-forest">
-                  <p className="font-semibold">PayPal payment window opened</p>
+                  <p className="font-semibold">Secure payment authorization opened</p>
                   <p className="mt-0.5 text-[11px] text-forest/90">
-                    Authorize the charge in the PayPal window, then click <strong>Verify &amp; Capture Payment</strong>.
+                    Authorize the charge in the window, then click <strong>Verify &amp; Capture Payment</strong>.
                   </p>
                 </div>
               )}
@@ -180,12 +180,12 @@ export function PayPalSandboxModal({
                 {payment?.approveUrl ? (
                   <>
                     <Button
-                      variant="paypal"
+                      variant="primary"
                       size="field"
                       className="w-full font-bold shadow-sm"
                       onClick={openSandboxPopup}
                     >
-                      {hasOpenedSandbox ? "Re-open PayPal ↗" : "Pay with PayPal ↗"}
+                      {hasOpenedSandbox ? "Re-open ↗" : "Buy ↗"}
                     </Button>
                     <Button
                       variant={hasOpenedSandbox ? "primary" : "outline"}
@@ -195,18 +195,18 @@ export function PayPalSandboxModal({
                       onClick={() => void run("approve")}
                     >
                       <ShieldCheck className="h-5 w-5" />
-                      {hasOpenedSandbox ? "Verify & Capture Payment" : "Authorize & Confirm Payment"}
+                      {hasOpenedSandbox ? "Verify & Capture Payment" : "Authorize & Buy"}
                     </Button>
                   </>
                 ) : (
                   <Button
-                    variant="paypal"
+                    variant="primary"
                     size="field"
                     className="w-full font-bold"
                     disabled={!consentChecked}
                     onClick={() => void run("approve")}
                   >
-                    <ShieldCheck className="h-5 w-5" /> Approve &amp; Pay via PayPal
+                    <ShieldCheck className="h-5 w-5" /> Buy
                   </Button>
                 )}
                 <Button variant="ghost" size="portal" className="w-full text-xs text-muted" onClick={() => void run("cancel")}>
@@ -273,13 +273,13 @@ export function PayPalSandboxModal({
           {stage === "error" && (
             <div className="flex flex-col items-center py-8 text-center">
               <AlertTriangle className="h-11 w-11 text-error" aria-hidden="true" />
-              <p className="mt-2 text-base font-bold text-moss font-heading">PayPal could not be reached</p>
+              <p className="mt-2 text-base font-bold text-moss font-heading">Payment gateway could not be reached</p>
               <p className="mt-1 text-xs text-muted">{message}</p>
               <div className="mt-4 flex gap-2">
                 <Button variant="outline" size="portal" onClick={() => onOpenChange(false)}>
                   {t("common.close")}
                 </Button>
-                <Button variant="paypal" size="portal" onClick={() => setStage("review")}>
+                <Button variant="primary" size="portal" onClick={() => setStage("review")}>
                   {t("checkout.retry")}
                 </Button>
               </div>

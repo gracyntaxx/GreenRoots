@@ -25,7 +25,7 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
 
             <div className="pt-2 flex items-center gap-2 text-xs text-[#E3EFE8]/90">
               <ShieldCheck className="h-4 w-4 text-[#2E6F40]" />
-              <span>Payments secured with PayPal Escrow & Webhooks</span>
+              <span>Payments secured with Escrow &amp; Webhooks</span>
             </div>
           </div>
 
@@ -105,15 +105,15 @@ export function LandingFooter({ onOpenContact }: { onOpenContact: () => void }) 
             <ul className="space-y-2.5 text-xs text-white/80">
               <li className="flex items-start gap-2.5">
                 <MapPin className="h-4 w-4 shrink-0 text-[#2E6F40] mt-0.5" />
-                <span>GreenRoots Agri Hub, Rewari Central & Panipat Yard, Haryana, India</span>
+                <span>GreenRoots Regional Desk, EDC Complex, Panjim &amp; Margao Hub, Goa 403001</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 shrink-0 text-[#2E6F40]" />
-                <span>+91 98123 45670 (Toll-Free Helpline)</span>
+                <span>+91 832 250 1234 (Toll-Free Helpline)</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="h-4 w-4 shrink-0 text-[#2E6F40]" />
-                <span>support@greenroots.agri</span>
+                <span>support@greenroots.org</span>
               </li>
             </ul>
 

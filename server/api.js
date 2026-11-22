@@ -128,13 +128,16 @@ export async function handleApiRequest(path, method, body, query = {}) {
     else if (/bagasse|बगास|khoi/i.test(t)) wasteType = "bagasse";
     else if (/paddy|straw|धान|पराली|भात|parali|dhaan/i.test(t)) wasteType = "paddy_straw";
 
-    let village = "Rewari";
-    if (/panipat|पानीपत/i.test(t)) village = "Panipat";
-    else if (/karnal|करनाल/i.test(t)) village = "Karnal";
-    else if (/ludhiana|लुधियाना/i.test(t)) village = "Ludhiana";
-    else if (/bawal|बावल/i.test(t)) village = "Bawal";
-    else if (/ratnagiri|रत्नागिरी/i.test(t)) village = "Ratnagiri";
-    else if (/nashik|nasik|नाशिक/i.test(t)) village = "Nashik";
+    let village = "Vasco";
+    if (/panjim|panaji|पणजी/i.test(t)) village = "Panjim";
+    else if (/margao|madgaon|मडगांव/i.test(t)) village = "Margao";
+    else if (/vasco|वास्को/i.test(t)) village = "Vasco";
+    else if (/mapusa|मापुसा/i.test(t)) village = "Mapusa";
+    else if (/verna|वेर्णा/i.test(t)) village = "Verna";
+    else if (/ponda|फोंडा/i.test(t)) village = "Ponda";
+    else if (/bicholim|डिचोली/i.test(t)) village = "Bicholim";
+    else if (/curchorem|कुडचडे/i.test(t)) village = "Curchorem";
+    else if (/canacona|काणकोण/i.test(t)) village = "Canacona";
     else if (/kolhapur|कोल्हापूर/i.test(t)) village = "Kolhapur";
 
     const qtyMatch = text.match(/(\d+(?:\.\d+)?)\s*(quintals?|tonnes?|tons?|kgs?|टन|क्विंटल|किलो|qtl)/i);
@@ -297,7 +300,7 @@ export async function handleApiRequest(path, method, body, query = {}) {
     db.prepare(`
       INSERT INTO listings (id, farmer_id, waste_type, quantity_kg, rate_per_unit, rate_unit, village, collection_point_id, lat, lng, status, notes)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', ?)
-    `).run(newId, farmerId, draft.wasteType, quantityKg, draft.rate, draft.rateUnit || draft.unit || "quintal", draft.village || farmerProfile?.village || "Rewari", collectionPointId || "cp_rewari_central", 28.197, 76.617, draft.rawText || null);
+    `).run(newId, farmerId, draft.wasteType, quantityKg, draft.rate, draft.rateUnit || draft.unit || "quintal", draft.village || farmerProfile?.village || "Vasco", collectionPointId || "cp_rewari_central", 15.398, 73.811, draft.rawText || null);
 
     db.prepare(`
       INSERT INTO audit_log (id, actor, actor_role, action, reference, ai_prepared_summary, confirmed_by, outcome)
@@ -313,9 +316,9 @@ export async function handleApiRequest(path, method, body, query = {}) {
       quantityKg,
       ratePerUnit: draft.rate,
       rateUnit: draft.rateUnit || draft.unit || "quintal",
-      village: draft.village || "Rewari",
+      village: draft.village || "Vasco",
       collectionPointId: collectionPointId || "cp_rewari_central",
-      location: { lat: 28.197, lng: 76.617 },
+      location: { lat: 15.398, lng: 73.811 },
       status: "Active",
       notes: draft.rawText,
       createdAt: new Date().toISOString(),
@@ -397,13 +400,13 @@ export async function handleApiRequest(path, method, body, query = {}) {
 
     db.prepare(`
       INSERT INTO requirements (id, industry_id, waste_type, target_kg, rate_per_unit, rate_unit, deadline, lat, lng, village, status, pool_id, notes)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 28.18, 76.62, ?, 'Open', ?, ?)
-    `).run(reqId, industryId, wasteType, targetKg, rate, rateUnit || unit, deadline, village || "Rewari", poolId, notes || null);
+      VALUES (?, ?, ?, ?, ?, ?, ?, 15.398, 73.811, ?, 'Open', ?, ?)
+    `).run(reqId, industryId, wasteType, targetKg, rate, rateUnit || unit, deadline, village || "Vasco", poolId, notes || null);
 
     db.prepare(`
       INSERT INTO pools (id, requirement_id, industry_id, waste_type, target_kg, committed_kg, rate_per_unit, rate_unit, deadline, lat, lng, village, radius_km, stage, contribution_count)
-      VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, 28.18, 76.62, ?, 35, 'Open for Commitments', 0)
-    `).run(poolId, reqId, industryId, wasteType, targetKg, rate, rateUnit || unit, deadline, village || "Rewari");
+      VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, 15.398, 73.811, ?, 35, 'Open for Commitments', 0)
+    `).run(poolId, reqId, industryId, wasteType, targetKg, rate, rateUnit || unit, deadline, village || "Vasco");
 
     const reqRow = db.prepare("SELECT * FROM requirements WHERE id = ?").get(reqId);
     return {

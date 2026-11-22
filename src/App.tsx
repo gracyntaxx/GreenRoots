@@ -25,6 +25,7 @@ import NotificationsPage from "@/features/notifications/NotificationsPage";
 import CollectionPointsPage from "@/features/collection/CollectionPointsPage";
 import MePage from "@/features/profile/MePage";
 import MyListingsPage from "@/features/listings/MyListingsPage";
+import SupportPage from "@/features/support/SupportPage";
 
 import OverviewPage from "@/features/portal/OverviewPage";
 import RequirementsPage from "@/features/portal/RequirementsPage";
@@ -87,6 +88,7 @@ export default function App() {
             <Route path="collection-points" element={<CollectionPointsPage />} />
             <Route path="me" element={<MePage />} />
             <Route path="listings" element={<MyListingsPage />} />
+            <Route path="support" element={<SupportPage />} />
           </Route>
 
           <Route
@@ -107,6 +109,7 @@ export default function App() {
             <Route path="payments" element={<PaymentsPage />} />
             <Route path="forecast" element={<ForecastPage />} />
             <Route path="profile" element={<IndustryProfilePage />} />
+            <Route path="support" element={<SupportPage />} />
 
             <Route
               path="admin/verification"

@@ -40,10 +40,10 @@ interface Notice {
 }
 
 const QUICK_PRESETS = [
-  { label: "Paddy Straw · 50 Qtl", text: "I have 50 quintals of paddy straw available in Rewari at 1400 rupees per quintal." },
-  { label: "Mustard Stubble · 3 Qtl", text: "I have 3 quintals of mustard stubble in Rewari at 1200 rupees per quintal." },
-  { label: "Cashew Shells · 10 Tonnes", text: "I have 10 tonnes of cashew shells in Ratnagiri at 900 rupees per quintal." },
-  { label: "Wheat Straw · 100 Qtl", text: "I have 100 quintals of wheat straw in Panipat at 2200 rupees per quintal." },
+  { label: "Paddy Straw · 50 Qtl", text: "I have 50 quintals of paddy straw available in Vasco at 1400 rupees per quintal." },
+  { label: "Mustard Stubble · 3 Qtl", text: "I have 3 quintals of mustard stubble in Margao at 1200 rupees per quintal." },
+  { label: "Cashew Shells · 10 Tonnes", text: "I have 10 tonnes of cashew shells in Canacona at 900 rupees per quintal." },
+  { label: "Rice Husk · 100 Qtl", text: "I have 100 quintals of rice husk in Panjim at 2200 rupees per quintal." },
 ];
 
 export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
@@ -633,7 +633,7 @@ export function VoiceSheet({ open, onOpenChange }: { open: boolean; onOpenChange
               id="voice-typed"
               value={transcript}
               onChange={(e) => updateTranscript(e.target.value)}
-              placeholder="e.g. 50 quintals of paddy straw in Rewari at 1400 rupees per quintal"
+              placeholder="e.g. 50 quintals of paddy straw in Vasco at 1400 rupees per quintal"
               className="min-h-32"
             />
             <div className="mt-2 flex items-center justify-between gap-2">

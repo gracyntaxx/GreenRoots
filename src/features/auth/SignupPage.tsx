@@ -39,8 +39,30 @@ const industrySchema = z.object({
   village: z.string().min(1, "Choose the plant location."),
 });
 
-const states = ["Haryana", "Punjab", "Uttar Pradesh", "Rajasthan", "Maharashtra", "Madhya Pradesh"];
-const villages = [...new Set(COLLECTION_POINTS.map((c) => c.village))];
+const states = ["Goa", "Karnataka", "Maharashtra"];
+
+const citiesByState: Record<string, string[]> = {
+  Goa: [
+    "Vasco",
+    "Margao",
+    "Panjim",
+    "Mapusa",
+    "Verna",
+    "Ponda",
+    "Bicholim",
+    "Curchorem",
+    "Canacona",
+    "Porvorim",
+    "Cuncolim",
+    "Valpoi",
+    "Pernem",
+    "Quepem",
+    "Sanguem",
+    "Tivim",
+  ],
+  Karnataka: ["Belagavi", "Karwar", "Hubli", "Dharwad"],
+  Maharashtra: ["Kolhapur", "Sawantwadi", "Sindhudurg", "Ratnagiri"],
+};
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -51,12 +73,14 @@ export default function SignupPage() {
   const language = useUi((s) => s.language);
 
   const [role, setRole] = useState<SignupRole | null>(null);
-  const [state, setState] = useState("Haryana");
+  const [state, setState] = useState("Goa");
   const [form, setForm] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
 
-  const villagesForState = useMemo(() => villages, []);
+  const villagesForState = useMemo(() => {
+    return citiesByState[state] || citiesByState["Goa"];
+  }, [state]);
 
   if (profile) return <Navigate to={homeForRole(profile.role)} replace />;
 
@@ -166,7 +190,7 @@ export default function SignupPage() {
                 Join the verified circular bio-economy.
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-white/80">
-                Whether you are a farmer selling stubble, a buyer sourcing organic coir, or an industrial bio-pellet plant, GreenRoots guarantees transparent weighbridge tracking and PayPal settlement.
+                Whether you are a farmer selling stubble, a buyer sourcing organic coir, or an industrial bio-pellet plant, GreenRoots guarantees transparent weighbridge tracking and secure escrow settlement.
               </p>
             </div>
           </div>
@@ -245,7 +269,7 @@ export default function SignupPage() {
                       id="su-company"
                       value={form.companyName ?? ""}
                       onChange={(e) => set("companyName", e.target.value)}
-                      placeholder="e.g. Panipat Biomass Energy Ltd"
+                      placeholder="e.g. Goa Bio-Energy Ltd"
                     />
                     <FieldError>{errors.companyName}</FieldError>
                   </div>
@@ -287,7 +311,7 @@ export default function SignupPage() {
                       id="su-license"
                       value={form.licenseNumber ?? ""}
                       onChange={(e) => set("licenseNumber", e.target.value)}
-                      placeholder="e.g. HR-PNP-2024-00871"
+                      placeholder="e.g. GA-VRN-2024-00871"
                     />
                     <FieldError>{errors.licenseNumber}</FieldError>
 

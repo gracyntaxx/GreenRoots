@@ -23,7 +23,7 @@ export function WhyItMattersSection() {
       description:
         "Every harvest season, over 35 million tonnes of crop stubble are burned in northern India, triggering acute smog crises. GreenRoots gives farmers a mechanized, profitable alternative by turning waste into valuable industrial feedstock.",
       bulletPoints: [
-        "Prevents severe Air Quality Index (AQI 500+) spikes in Delhi NCR, Haryana & Punjab",
+        "Prevents biomass open-burning and environmental degradation across Goa, Karnataka & Maharashtra",
         "Preserves 100% of soil microbial biodiversity and natural nitrogen-potassium levels",
         "Direct field pick-up reduces farm preparation time by up to 14 days",
       ],
@@ -47,7 +47,7 @@ export function WhyItMattersSection() {
       title: "Guaranteed Farmer Prosperity",
       subtitle: "Turning an expense into an immediate income stream",
       description:
-        "Farmers used to spend ₹2,000–₹3,500 per acre just to burn or dispose of stubble. GreenRoots inverts this economic model: farmers earn verified market rates per quintal, deposited securely through PayPal escrow.",
+        "Farmers used to spend ₹2,000–₹3,500 per acre just to burn or dispose of stubble. GreenRoots inverts this economic model: farmers earn verified market rates per quintal, deposited securely through escrow.",
       bulletPoints: [
         "Transparent real-time market pricing with zero predatory middlemen",
         "Fair platform commission (5%) with largest-remainder exact payouts",

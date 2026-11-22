@@ -342,7 +342,7 @@ export default function IndustryPoolDetailPage() {
               <Wallet className="h-4 w-4 text-navy" /> Pool settlement
             </p>
             <p className="mt-1 max-w-xl text-[12px] leading-relaxed text-muted dark:text-portal-muted">
-              Pay the pool total through PayPal. GreenRoots then automatically prepares farmer-wise payables and initiates payout disbursement.
+              Pay the pool total via secure Escrow. GreenRoots then automatically prepares farmer-wise payables and initiates payout disbursement.
             </p>
           </div>
           <div className="text-right">
@@ -374,9 +374,9 @@ export default function IndustryPoolDetailPage() {
         ) : (
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {isIndustry && (
-              <Button variant="paypal" size="portal" disabled={!canPay || creatingPayment} onClick={startPoolPayment}>
+              <Button variant="primary" size="portal" disabled={!canPay || creatingPayment} onClick={startPoolPayment}>
                 {creatingPayment ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wallet className="h-4 w-4" />}
-                Pay pool via PayPal
+                Pay pool
               </Button>
             )}
             {!isIndustry && (

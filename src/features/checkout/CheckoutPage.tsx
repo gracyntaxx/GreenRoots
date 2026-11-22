@@ -304,8 +304,8 @@ export default function CheckoutPage() {
 
             <Card className="p-4 sm:p-5 shadow-md">
               <div className="flex items-center justify-between border-b border-line pb-3 dark:border-portal-line">
-                <span className="text-base font-bold italic tracking-tight">
-                  Pay<span className="text-[#009CDE]">Pal</span>
+                <span className="text-base font-bold text-forest dark:text-growth flex items-center gap-1.5">
+                  <ShieldCheck className="h-5 w-5" /> Buy (Escrow Protected)
                 </span>
                 <span className="rounded-full bg-forest/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                   Verified
@@ -367,14 +367,14 @@ export default function CheckoutPage() {
 
               <div className="mt-5 sticky bottom-20 sm:static">
                 <Button
-                  variant="paypal"
+                  variant="primary"
                   size="field"
-                  className="w-full shadow-lg"
+                  className="w-full shadow-lg font-bold"
                   disabled={!canPay}
                   onClick={startPayment}
                 >
                   {stage === "creating" ? <Loader2 className="h-5 w-5 animate-spin" /> : <Lock className="h-5 w-5" />}
-                  {stage === "cancelled" || stage === "failed" ? t("checkout.retry") : t("checkout.paypal")}
+                  {stage === "cancelled" || stage === "failed" ? t("checkout.retry") : "Buy"}
                 </Button>
               </div>
 

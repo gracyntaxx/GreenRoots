@@ -36,7 +36,7 @@ export function PoolProgress({
     t("pools.stageOpen") || "1. Open",
     t("pools.stagePooled") || "2. Pooled",
     t("pools.stageReady") || "3. Ready for Pickup",
-    t("pools.stageSettled") || "4. PayPal Settled",
+    t("pools.stageSettled") || "4. Payment Settled",
   ];
 
   return (

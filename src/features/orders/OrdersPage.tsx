@@ -111,7 +111,7 @@ export default function OrdersPage() {
         </div>
 
         <div className="rounded-panel border border-line/80 bg-white/90 p-3.5 backdrop-blur-md shadow-card dark:bg-portal-surface">
-          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted">PayPal Captures</span>
+          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted">Escrow Captures</span>
           <span className="num mt-1 block text-xl font-bold text-forest dark:text-growth">{capturedCount} Captured</span>
           <span className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-growth">
             <ShieldCheck className="h-3 w-3" /> Webhook Verified
@@ -162,7 +162,7 @@ export default function OrdersPage() {
               <thead>
                 <tr className="border-b border-line/80 bg-sage/50 text-[11px] font-bold uppercase tracking-wider text-moss dark:bg-portal-bg dark:text-portal-ink">
                   <th className="py-3.5 px-4">Order / Residue</th>
-                  <th className="py-3.5 px-4">PayPal Ref</th>
+                  <th className="py-3.5 px-4">Payment Ref</th>
                   <th className="py-3.5 px-4 text-right">Gross Amount</th>
                   <th className="py-3.5 px-4 text-right">Platform Fee (5%)</th>
                   <th className="py-3.5 px-4 text-right">Net Payable</th>

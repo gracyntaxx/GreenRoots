@@ -9,6 +9,7 @@ import {
   ChevronRight,
   ClipboardList,
   Flag,
+  Headphones,
   HelpCircle,
   Home,
   Layers,
@@ -66,6 +67,7 @@ const crumbLabels: Record<string, string> = {
   orders: "Orders",
   "collection-points": "Collection Points",
   me: "My Profile",
+  support: "Help & Support",
   checkout: "Checkout",
   overview: "Overview",
   requirements: "Requirements",
@@ -99,6 +101,7 @@ export function AppShell() {
 
   const [voiceOpen, setVoiceOpen] = useState(false);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [guideRole, setGuideRole] = useState<Role | undefined>(undefined);
   const [moreSheetOpen, setMoreSheetOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -119,12 +122,28 @@ export function AppShell() {
 
   useEffect(() => {
     const handleVoice = () => setVoiceOpen(true);
+    const handleGuide = (e: Event) => {
+      const customEvent = e as CustomEvent<{ role?: Role }>;
+      if (customEvent?.detail?.role) {
+        setGuideRole(customEvent.detail.role);
+      }
+      setOnboardingOpen(true);
+    };
     window.addEventListener("greenroots-open-voice", handleVoice);
-    return () => window.removeEventListener("greenroots-open-voice", handleVoice);
+    window.addEventListener("greenroots-open-guide", handleGuide);
+    return () => {
+      window.removeEventListener("greenroots-open-voice", handleVoice);
+      window.removeEventListener("greenroots-open-guide", handleGuide);
+    };
   }, []);
 
   const openVoice = useCallback(() => setVoiceOpen(true), []);
-  const openOnboarding = useCallback(() => setOnboardingOpen(true), []);
+  const openOnboarding = useCallback((r?: Role | unknown) => {
+    if (typeof r === "string" && (r === "farmer" || r === "buyer" || r === "industry" || r === "admin")) {
+      setGuideRole(r);
+    }
+    setOnboardingOpen(true);
+  }, []);
   const api = useMemo(() => ({ openVoice, openOnboarding }), [openVoice, openOnboarding]);
 
   const role: Role = profile?.role ?? "farmer";
@@ -143,6 +162,7 @@ export function AppShell() {
         { to: "/app/orders", label: t("common.orders") || "Orders", icon: ReceiptText },
         { to: "/app/collection-points", label: t("collection.title") || "Collection points", icon: MapPin },
         { to: "/app/me", label: t("common.me") || "Profile", icon: User },
+        { to: "/app/support", label: "Help & Support", icon: Headphones },
       ];
     }
     if (isBuyer) {
@@ -152,6 +172,7 @@ export function AppShell() {
         { to: "/app/pools", label: t("common.pools") || "Pools", icon: Layers },
         { to: "/app/collection-points", label: t("collection.title") || "Collection points", icon: MapPin },
         { to: "/app/me", label: t("common.me") || "Profile", icon: User },
+        { to: "/app/support", label: "Help & Support", icon: Headphones },
       ];
     }
     if (isIndustry) {
@@ -163,6 +184,7 @@ export function AppShell() {
         { to: "/portal/payments", label: "Payments", icon: Wallet },
         { to: "/portal/forecast", label: "Forecast", icon: TrendingUp },
         { to: "/portal/profile", label: "Company profile", icon: Building2 },
+        { to: "/portal/support", label: "Help & Support", icon: Headphones },
       ];
     }
     // Admin
@@ -176,6 +198,7 @@ export function AppShell() {
       { to: "/portal/admin/requirements", label: "Requirements", icon: ClipboardList },
       { to: "/portal/admin/collection-points", label: "Collection points", icon: MapPin },
       { to: "/portal/admin/audit", label: "AI audit log", icon: ScrollText },
+      { to: "/portal/support", label: "Support & Feedback", icon: Headphones },
     ];
   }, [isFarmer, isBuyer, isIndustry, isAdmin, t]);
 
@@ -348,6 +371,13 @@ export function AppShell() {
                 <div className="space-y-1">
                   <button
                     type="button"
+                    onClick={() => navigate(isIndustry || isAdmin ? "/portal/support" : "/app/support")}
+                    className="flex w-full items-center gap-2 rounded px-2 py-1.5 hover:bg-canvas dark:hover:bg-portal-bg text-muted hover:text-ink dark:text-portal-muted dark:hover:text-portal-ink"
+                  >
+                    <Headphones className="h-4 w-4" /> Customer Support &amp; Feedback
+                  </button>
+                  <button
+                    type="button"
                     onClick={openOnboarding}
                     className="flex w-full items-center gap-2 rounded px-2 py-1.5 hover:bg-canvas dark:hover:bg-portal-bg text-muted hover:text-ink dark:text-portal-muted dark:hover:text-portal-ink"
                   >
@@ -400,6 +430,17 @@ export function AppShell() {
 
             {/* Right: Actions */}
             <div className="flex items-center gap-1 sm:gap-2">
+              {/* Step-by-Step Interactive Guide */}
+              <Button
+                variant="outline"
+                size="portal"
+                onClick={() => openOnboarding()}
+                className="hidden md:inline-flex items-center gap-1.5 font-bold text-ink dark:text-portal-ink border-line/80 hover:bg-canvas dark:border-portal-line dark:hover:bg-portal-bg text-xs"
+                title="Open interactive step-by-step user guide"
+              >
+                <HelpCircle className="h-4 w-4 text-forest dark:text-growth" /> Guide
+              </Button>
+
               {/* Farmer Top "Speak" Button on Desktop / Tablet */}
               {isFarmer && (
                 <Button
@@ -568,6 +609,17 @@ export function AppShell() {
               type="button"
               onClick={() => {
                 setMoreSheetOpen(false);
+                navigate(isIndustry || isAdmin ? "/portal/support" : "/app/support");
+              }}
+              className="flex w-full items-center gap-3 rounded-xl border border-line bg-surface p-3 text-left text-sm font-semibold text-ink dark:border-portal-line dark:bg-portal-surface dark:text-portal-ink"
+            >
+              <Headphones className="h-5 w-5 text-muted" /> Customer Support &amp; Feedback
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMoreSheetOpen(false);
                 openOnboarding();
               }}
               className="flex w-full items-center gap-3 rounded-xl border border-line bg-surface p-3 text-left text-sm font-semibold text-ink dark:border-portal-line dark:bg-portal-surface dark:text-portal-ink"
@@ -590,7 +642,7 @@ export function AppShell() {
       {isFarmer && <VoiceSheet open={voiceOpen} onOpenChange={setVoiceOpen} />}
 
       {/* ROLE ONBOARDING DIALOG */}
-      <OnboardingDialog open={onboardingOpen} onOpenChange={setOnboardingOpen} />
+      <OnboardingDialog open={onboardingOpen} onOpenChange={setOnboardingOpen} initialRole={guideRole} />
     </AppShellContext.Provider>
   );
 }

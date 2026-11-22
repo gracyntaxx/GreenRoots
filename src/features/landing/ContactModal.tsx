@@ -45,7 +45,7 @@ export function ContactModal({
               Contact GreenRoots Support
             </h3>
             <p className="mt-1 text-xs text-[#52635A]">
-              Village hubs across Haryana & Punjab · 24/7 Helpline
+              Village hubs across Goa, Karnataka &amp; Maharashtra · 24/7 Helpline
             </p>
           </div>
           <button
@@ -110,7 +110,7 @@ export function ContactModal({
               <textarea
                 rows={3}
                 required
-                placeholder="I have 20 tonnes of paddy straw in Rewari / I represent a biomass boiler plant..."
+                placeholder="I have 20 tonnes of crop residue in Vasco / I represent a biomass plant in Verna..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full rounded-xl border border-[#DCE4DF] px-3.5 py-2.5 text-sm text-[#18261F] placeholder-[#52635A]/50 focus:border-[#1B3B2B] focus:outline-none focus:ring-1 focus:ring-[#1B3B2B]"
@@ -120,15 +120,15 @@ export function ContactModal({
             <div className="rounded-xl bg-[#F1F6F2] p-3 text-xs text-[#52635A] space-y-1.5">
               <div className="flex items-center gap-2">
                 <Phone className="h-3.5 w-3.5 text-[#1B3B2B]" />
-                <span>Helpline: <strong className="text-[#18261F]">+91 98123 45670</strong> (Toll Free)</span>
+                <span>Helpline: <strong className="text-[#18261F]">+91 832 250 1234</strong> (Toll Free)</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-3.5 w-3.5 text-[#1B3B2B]" />
-                <span>Email: <strong className="text-[#18261F]">support@greenroots.agri</strong></span>
+                <span>Email: <strong className="text-[#18261F]">support@greenroots.org</strong></span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-3.5 w-3.5 text-[#1B3B2B]" />
-                <span>Hubs: Rewari Central, Panipat Yard, Sangrur Mandi</span>
+                <span>Hubs: Vasco Port, Margao APMC, Panjim, Verna, Mapusa</span>
               </div>
             </div>
 

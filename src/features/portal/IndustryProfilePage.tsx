@@ -234,7 +234,7 @@ export default function IndustryProfilePage() {
               </div>
             </div>
             <p className="mt-2 text-[11px] leading-relaxed text-muted dark:text-portal-muted">
-              GreenRoots never stores card or bank details. Only PayPal references are kept.
+              GreenRoots never stores card or bank details. Only secure payment references are kept.
             </p>
           </PortalCard>
 

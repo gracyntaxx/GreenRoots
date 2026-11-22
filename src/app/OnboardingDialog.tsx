@@ -1,17 +1,59 @@
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Check, Mic, ShieldCheck } from "lucide-react";
+import {
+  Check,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Compass,
+  FileText,
+  HelpCircle,
+  Lock,
+  MapPin,
+  Mic,
+  PackageCheck,
+  Scale,
+  Search,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  TrendingUp,
+  Truck,
+  Users,
+  Wallet,
+  X,
+} from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/form";
+import { Label } from "@/components/ui/form";
 import { useSession } from "@/store/session";
 import { useUi } from "@/store/ui";
 import { COLLECTION_POINTS } from "@/mocks/seed";
-import { LANGUAGES, type Language } from "@/types";
+import { LANGUAGES, type Language, type Role } from "@/types";
 import { cn } from "@/lib/utils";
 
-export function OnboardingDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+interface GuideStep {
+  stepNumber: number;
+  badge: string;
+  title: string;
+  body: string;
+  highlight: string;
+  tip: string;
+  actionLabel?: string;
+  action?: () => void;
+  icon: any;
+}
+
+export function OnboardingDialog({
+  open,
+  onOpenChange,
+  initialRole,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  initialRole?: Role;
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const profile = useSession((s) => s.profile);
@@ -19,32 +61,174 @@ export function OnboardingDialog({ open, onOpenChange }: { open: boolean; onOpen
   const setOnboardingSeen = useSession((s) => s.setOnboardingSeen);
   const setLanguage = useUi((s) => s.setLanguage);
   const language = useUi((s) => s.language);
-  const [step, setStep] = useState(0);
-  const [village, setVillage] = useState(profile?.village ?? "");
-  const [license, setLicense] = useState("");
 
-  const role = profile?.role ?? "farmer";
-  const steps = useMemo(() => {
-    if (role === "industry") {
-      return [
-        { title: t("onboarding.industryStep1Title"), body: t("onboarding.industryStep1Body") },
-        { title: t("onboarding.industryStep2Title"), body: t("onboarding.industryStep2Body") },
-        { title: t("onboarding.industryStep3Title"), body: t("onboarding.industryStep3Body") },
-      ];
-    }
-    if (role === "buyer") {
-      return [
-        { title: "Find waste near you", body: "Browse real listings from verified farmers. Filter by distance, quantity and price." },
-        { title: "Pay through PayPal", body: "You will review the order, then approve payment securely via PayPal. Verified server-side before release." },
-        { title: "Three statuses, always separate", body: "Fulfilment, payment and farmer payout are shown separately so you always know what is real." },
-      ];
-    }
-    return [
-      { title: t("onboarding.farmerStep1Title"), body: t("onboarding.farmerStep1Body") },
-      { title: t("onboarding.farmerStep2Title"), body: t("onboarding.farmerStep2Body") },
-      { title: t("onboarding.farmerStep3Title"), body: t("onboarding.farmerStep3Body") },
-    ];
-  }, [role, t]);
+  // Allow switching roles within the guide to explore both Farmer and Buyer flows
+  const [selectedRole, setSelectedRole] = useState<Role>(initialRole || profile?.role || "farmer");
+  const [step, setStep] = useState(0);
+  const [village, setVillage] = useState(profile?.village ?? "Vasco");
+
+  const isFarmer = selectedRole === "farmer";
+  const isBuyer = selectedRole === "buyer";
+  const isIndustry = selectedRole === "industry" || selectedRole === "admin";
+
+  // Guide Steps for Farmers: How to list an item & get paid
+  const farmerSteps: GuideStep[] = useMemo(
+    () => [
+      {
+        stepNumber: 1,
+        badge: "Step 1 of 4: Start Listing",
+        title: "Start a Listing with Voice or Form",
+        body: "List your farm residue in under a minute. Tap the prominent green microphone icon or click 'List residue'. You can speak naturally in Konkani, Marathi, Hindi, or English.",
+        highlight: "Voice Input Example: “I have 50 quintals of paddy straw in Vasco at 14 rupees per kilo.”",
+        tip: "Antigravity AI automatically detects your crop type, quantity, and suggested Goa collection point.",
+        actionLabel: "Try Voice Listing",
+        action: () => {
+          onOpenChange(false);
+          setOnboardingSeen(true);
+          navigate("/app/home");
+          setTimeout(() => window.dispatchEvent(new CustomEvent("greenroots-open-voice")), 300);
+        },
+        icon: Mic,
+      },
+      {
+        stepNumber: 2,
+        badge: "Step 2 of 4: Quantity & Price",
+        title: "Set Your Quantity and Expected Price",
+        body: "Review the draft details generated by the assistant. You can declare quantity in kg, quintals, or tonnes, and specify your desired rate.",
+        highlight: "Live mandi benchmark rates for Goa (Vasco, Margao, Panjim) are shown to ensure you get top market value.",
+        tip: "You can edit, refine notes, or set moisture level tolerance before publishing.",
+        actionLabel: "View My Current Listings",
+        action: () => {
+          onOpenChange(false);
+          setOnboardingSeen(true);
+          navigate("/app/listings");
+        },
+        icon: FileText,
+      },
+      {
+        stepNumber: 3,
+        badge: "Step 3 of 4: Drop-off Hub",
+        title: "Select Your Local Goa Collection Point",
+        body: "Choose the most convenient drop-off depot for your delivery: Vasco Port Agro Depot, Margao APMC Yard, Panjim Central Yard, Mapusa Sub-Yard, Verna Industrial Depot, or Ponda Hub.",
+        highlight: "Weighbridge trucks use deterministic route optimization to minimize transport time and queuing.",
+        tip: "Collection points are open 6:00 AM – 8:30 PM with active staff assistance.",
+        actionLabel: "Explore Collection Points",
+        action: () => {
+          onOpenChange(false);
+          setOnboardingSeen(true);
+          navigate("/app/collection-points");
+        },
+        icon: MapPin,
+      },
+      {
+        stepNumber: 4,
+        badge: "Step 4 of 4: Delivery & Payout",
+        title: "Weighbridge Check & Instant Escrow Release",
+        body: "Deliver your residue to the selected hub. The digital weighbridge verifies exact gross and tare weight, then prints a digital slip. Payment is immediately released from escrow directly to you!",
+        highlight: "Zero broker deductions — 100% transparent weighbridge payout directly into your account.",
+        tip: "Every completed delivery boosts your farmer trust score and unlocks priority industrial contracts.",
+        icon: Scale,
+      },
+    ],
+    [navigate, onOpenChange, setOnboardingSeen]
+  );
+
+  // Guide Steps for Buyers: How to browse & buy a listed product
+  const buyerSteps: GuideStep[] = useMemo(
+    () => [
+      {
+        stepNumber: 1,
+        badge: "Step 1 of 4: Browse Market",
+        title: "Explore Fresh Farm Lots in the Marketplace",
+        body: "Open the Marketplace to view active crop residue listings from verified local farmers in Vasco, Margao, Panjim, Mapusa, and neighboring districts.",
+        highlight: "Browse cashew shells, paddy straw, rice husk, bagasse, and mustard stubble with real-time availability.",
+        tip: "Filter by distance, price per kg, minimum lot size, or farmer reputation rating.",
+        actionLabel: "Go to Marketplace",
+        action: () => {
+          onOpenChange(false);
+          setOnboardingSeen(true);
+          navigate("/app/market");
+        },
+        icon: Search,
+      },
+      {
+        stepNumber: 2,
+        badge: "Step 2 of 4: Inspect Listing",
+        title: "Review Lot Details, Quality & Farmer Trust",
+        body: "Click on any residue lot to see photos, declared moisture tolerance, the farmer's delivery track record, and the exact collection hub location.",
+        highlight: "Every farmer displays an empirical trust score (e.g. 4.9 ★) verified through past weighbridge receipts.",
+        tip: "Buyer fee is ₹0 (Free platform access for verified buyers).",
+        icon: ShieldCheck,
+      },
+      {
+        stepNumber: 3,
+        badge: "Step 3 of 4: One-Click 'Buy'",
+        title: "Enter Quantity & Click 'Buy'",
+        body: "Select how much quantity you need (from a few quintals up to the full lot). The final cost is calculated clearly with full price transparency.",
+        highlight: "Click the green 'Buy' button to initiate the purchase with instant Escrow Protection.",
+        tip: "Your money stays safely locked in escrow until the goods are certified at the weighbridge.",
+        icon: ShoppingBag,
+      },
+      {
+        stepNumber: 4,
+        badge: "Step 4 of 4: Weighbridge Pickup",
+        title: "Pick Up at Local Hub & Track Status",
+        body: "Receive your unique Order Reference ID (e.g. ORD-8841). Collect your order at the designated Goa collection depot upon weighbridge certification, or track delivery in real time.",
+        highlight: "Separate status triads track Fulfilment, Payment, and Payout so you always know what is real.",
+        tip: "If a batch fails moisture or purity checks at the weighbridge, buyers receive an instant full refund.",
+        actionLabel: "View Orders Tab",
+        action: () => {
+          onOpenChange(false);
+          setOnboardingSeen(true);
+          navigate("/app/orders");
+        },
+        icon: PackageCheck,
+      },
+    ],
+    [navigate, onOpenChange, setOnboardingSeen]
+  );
+
+  // Guide Steps for Industry: Bulk pooling
+  const industrySteps: GuideStep[] = useMemo(
+    () => [
+      {
+        stepNumber: 1,
+        badge: "Step 1 of 3: Publish Requirements",
+        title: "Create Bulk Industrial Residue Requirements",
+        body: "State your target tonnage (e.g. 500 tonnes paddy straw or bagasse in Verna) and deadline. Antigravity AI automatically parses your contract specs.",
+        highlight: "Single-point procurement for bio-pellet plants, boilers, and green packaging facilities.",
+        tip: "Specify maximum moisture thresholds (e.g. ≤18%) and delivery radii.",
+        icon: FileText,
+      },
+      {
+        stepNumber: 2,
+        badge: "Step 2 of 3: Reverse Auction Pooling",
+        title: "Farmers Pool Stubble to Hit Your Target",
+        body: "Smallholder farmers across Goa villages commit partial lots into your shared pool until the full target tonnage is aggregated.",
+        highlight: "Watch the live pool progress bar fill up in real time with certified farm commitments.",
+        tip: "GreenRoots automatically calculates delivery logistics across collection hubs.",
+        icon: Users,
+      },
+      {
+        stepNumber: 3,
+        badge: "Step 3 of 3: Escrow Settlement",
+        title: "Weighbridge Acceptance & Automated Disbursement",
+        body: "Fund the pool securely. As batches arrive at collection points, certified weights release payments automatically to each farmer.",
+        highlight: "Transparent weighbridge verification eliminates disputes and ensures clean corporate ESG reporting.",
+        tip: "Full audit logs and tax invoices are downloadable anytime from Portal → Payments.",
+        icon: Wallet,
+      },
+    ],
+    []
+  );
+
+  const activeSteps = useMemo(() => {
+    if (isFarmer) return farmerSteps;
+    if (isBuyer) return buyerSteps;
+    return industrySteps;
+  }, [isFarmer, isBuyer, farmerSteps, buyerSteps, industrySteps]);
+
+  const current = activeSteps[Math.min(step, activeSteps.length - 1)];
 
   const finish = () => {
     if (profile && village && village !== profile.village) {
@@ -61,143 +245,241 @@ export function OnboardingDialog({ open, onOpenChange }: { open: boolean; onOpen
     onOpenChange(false);
   };
 
+  const handleRoleSwitch = (r: Role) => {
+    setSelectedRole(r);
+    setStep(0);
+  };
+
   if (!profile) return null;
-  const current = steps[step];
+  const StepIcon = current.icon;
 
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? onOpenChange(true) : skip())}>
-      <DialogContent variant="sheet" className="sm:max-w-md">
-        <DialogHeader>
-          <div className="mb-1 flex items-center gap-1.5">
-            {steps.map((_, i) => (
-              <span
-                key={i}
-                className={cn("h-1.5 rounded-full transition-all", i === step ? "w-6 bg-forest" : "w-1.5 bg-line")}
-                aria-hidden="true"
-              />
-            ))}
-            <span className="ml-auto text-[11px] font-semibold text-muted">
-              {step + 1} / {steps.length}
+      <DialogContent variant="sheet" className="sm:max-w-xl max-h-[90vh] overflow-y-auto p-0">
+        {/* Top Header & Role Switcher */}
+        <div className="bg-gradient-to-r from-[#0E4D2F] via-[#153D2A] to-[#1E3B2B] p-5 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 backdrop-blur-md">
+                <Compass className="h-4 w-4 text-[#78E0A0]" />
+              </span>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#78E0A0]">
+                  Interactive User Guide
+                </p>
+                <h2 className="text-lg font-bold font-heading">How GreenRoots Works</h2>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={skip}
+              className="rounded-full p-1.5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+              aria-label="Close guide"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Role Mode Switcher Tabs */}
+          <div className="mt-4 flex rounded-xl bg-black/25 p-1 text-xs">
+            <button
+              type="button"
+              onClick={() => handleRoleSwitch("farmer")}
+              className={cn(
+                "flex-1 py-1.5 px-2 rounded-lg font-bold transition-all text-center flex items-center justify-center gap-1.5",
+                selectedRole === "farmer"
+                  ? "bg-white text-forest shadow-sm"
+                  : "text-white/80 hover:text-white"
+              )}
+            >
+              <span>👨‍🌾</span>
+              <span>Farmer: How to List</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleRoleSwitch("buyer")}
+              className={cn(
+                "flex-1 py-1.5 px-2 rounded-lg font-bold transition-all text-center flex items-center justify-center gap-1.5",
+                selectedRole === "buyer"
+                  ? "bg-white text-forest shadow-sm"
+                  : "text-white/80 hover:text-white"
+              )}
+            >
+              <span>🛒</span>
+              <span>Buyer: How to Buy</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleRoleSwitch("industry")}
+              className={cn(
+                "flex-1 py-1.5 px-2 rounded-lg font-bold transition-all text-center flex items-center justify-center gap-1.5",
+                selectedRole === "industry" || selectedRole === "admin"
+                  ? "bg-white text-forest shadow-sm"
+                  : "text-white/80 hover:text-white"
+              )}
+            >
+              <span>🏭</span>
+              <span>Industry: Bulk Pools</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Step-by-Step Indicated Progress Bar */}
+        <div className="border-b border-line bg-canvas/70 px-5 py-3 dark:border-portal-line dark:bg-portal-surface">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold text-forest dark:text-growth uppercase tracking-wide">
+              {current.badge}
+            </span>
+            <span className="num text-xs font-bold text-muted dark:text-portal-muted">
+              Step {step + 1} of {activeSteps.length}
             </span>
           </div>
-          <DialogTitle>{current.title}</DialogTitle>
-          <DialogDescription>{current.body}</DialogDescription>
-        </DialogHeader>
 
-        {role === "farmer" && step === 0 && (
-          <div className="grid grid-cols-2 gap-2">
-            {LANGUAGES.map((l) => (
+          {/* Indicated Stepper Dots & Connector */}
+          <div className="flex items-center gap-2">
+            {activeSteps.map((s, idx) => (
               <button
-                key={l.code}
+                key={idx}
                 type="button"
-                onClick={() => setLanguage(l.code as Language)}
-                className={cn(
-                  "flex min-h-14 items-center justify-between rounded-xl border-[1.5px] px-3 text-left",
-                  language === l.code ? "border-forest bg-meadow" : "border-line bg-surface hover:bg-canvas"
-                )}
+                onClick={() => setStep(idx)}
+                className="group flex-1 flex flex-col items-center focus:outline-none"
+                aria-label={`Go to step ${idx + 1}`}
               >
-                <span>
-                  <span className="block text-base font-semibold text-ink">{l.native}</span>
-                  <span className="block text-[11px] text-muted">
-                    {l.label}
-                    {l.partial ? " · partly translated" : ""}
-                  </span>
-                </span>
-                {language === l.code && <Check className="h-4 w-4 text-forest" />}
+                <div
+                  className={cn(
+                    "h-2 w-full rounded-full transition-all duration-300",
+                    idx === step
+                      ? "bg-forest shadow-xs"
+                      : idx < step
+                      ? "bg-forest/60"
+                      : "bg-line dark:bg-portal-line"
+                  )}
+                />
               </button>
             ))}
           </div>
-        )}
+        </div>
 
-        {role === "farmer" && step === 1 && (
-          <div className="rounded-xl border border-line bg-canvas p-4">
-            <p className="text-sm font-semibold text-ink">Say this:</p>
-            <p className="mt-1 text-base font-medium text-ink">
-              “I have 200 kg of rice husk available at this location.”
+        {/* Main Step Content Body */}
+        <div className="p-5 sm:p-6 space-y-4">
+          <div className="flex items-start gap-3.5">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-meadow text-forest border border-forest/20 shadow-xs dark:bg-[#123524] dark:text-growth">
+              <StepIcon className="h-6 w-6" />
+            </div>
+            <div>
+              <span className="inline-block rounded-full bg-meadow px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-forest dark:bg-[#123524] dark:text-growth mb-1">
+                Step {step + 1}
+              </span>
+              <h3 className="font-heading text-lg sm:text-xl font-bold text-ink dark:text-portal-ink">
+                {current.title}
+              </h3>
+              <p className="mt-1 text-sm text-muted dark:text-portal-muted leading-relaxed">
+                {current.body}
+              </p>
+            </div>
+          </div>
+
+          {/* Highlight Callout Box */}
+          <div className="rounded-xl border border-forest/25 bg-meadow/40 p-3.5 text-xs text-forest dark:bg-[#10291B]/80 dark:text-growth">
+            <p className="font-bold flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-forest" />
+              <span>Key Workflow Highlight:</span>
             </p>
-            <Button
-              variant="secondary"
-              size="field"
-              className="mt-3 w-full"
-              onClick={() => {
-                setOnboardingSeen(true);
-                onOpenChange(false);
-                navigate("/app/home");
-                setTimeout(() => window.dispatchEvent(new CustomEvent("greenroots-open-voice")), 250);
-              }}
-            >
-              <Mic className="h-5 w-5" aria-hidden="true" />
-              Try the voice flow
-            </Button>
-          </div>
-        )}
-
-        {role === "farmer" && step === 2 && (
-          <div>
-            <Label htmlFor="onb-village">{t("onboarding.farmerStep3Title")}</Label>
-            <select
-              id="onb-village"
-              value={village}
-              onChange={(e) => setVillage(e.target.value)}
-              className="min-h-14 w-full rounded-field border-[1.5px] border-line bg-surface px-4 text-base text-ink"
-            >
-              <option value="">Choose your village</option>
-              {[...new Set(COLLECTION_POINTS.map((c) => c.village))].map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {role === "industry" && step === 0 && (
-          <div>
-            <Label htmlFor="onb-license">Licence number</Label>
-            <Input
-              id="onb-license"
-              value={license}
-              onChange={(e) => setLicense(e.target.value)}
-              placeholder="e.g. HR-PNP-2024-00871"
-            />
-            <p className="mt-2 flex items-start gap-1.5 text-[12px] text-muted">
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-navy" aria-hidden="true" />
-              This is checked by an admin. You can still browse while it is pending.
+            <p className="mt-1 text-ink dark:text-portal-ink font-medium leading-relaxed">
+              {current.highlight}
             </p>
           </div>
-        )}
 
-        {role === "industry" && step === 2 && (
-          <Button
-            variant="outline"
-            size="field"
-            className="w-full"
-            onClick={() => {
-              finish();
-              navigate("/portal/requirements/new");
-            }}
-          >
-            Preview the requirement flow
-          </Button>
-        )}
+          {/* Pro Tip Box */}
+          <div className="rounded-xl border border-line bg-canvas p-3 text-xs text-muted dark:border-portal-line dark:bg-portal-surface dark:text-portal-muted flex items-start gap-2">
+            <ShieldCheck className="h-4 w-4 text-forest shrink-0 mt-0.5" />
+            <p>
+              <strong className="text-ink dark:text-portal-ink font-semibold">Pro Tip:</strong> {current.tip}
+            </p>
+          </div>
 
-        <div className="mt-5 flex items-center justify-between gap-2">
-          <Button variant="ghost" size="portal" onClick={skip}>
-            {t("onboarding.skip")}
+          {/* Interactive Action Shortcuts if available */}
+          {current.action && current.actionLabel && (
+            <div className="pt-1">
+              <Button
+                variant="outline"
+                size="field"
+                className="w-full border-forest/40 bg-meadow/30 text-forest font-bold hover:bg-meadow"
+                onClick={current.action}
+              >
+                <StepIcon className="h-4 w-4 mr-2" />
+                {current.actionLabel}
+              </Button>
+            </div>
+          )}
+
+          {/* Special Farmer Language Preference Selector on Step 1 */}
+          {isFarmer && step === 0 && (
+            <div className="pt-2 border-t border-line dark:border-portal-line">
+              <Label className="text-xs font-bold mb-2 block">Choose Your Interface Language</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {LANGUAGES.map((l) => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    onClick={() => setLanguage(l.code as Language)}
+                    className={cn(
+                      "flex min-h-11 items-center justify-between rounded-xl border px-3 text-left transition-colors text-xs font-semibold",
+                      language === l.code
+                        ? "border-forest bg-meadow text-forest dark:bg-[#123524] dark:text-growth font-bold"
+                        : "border-line bg-surface text-ink hover:bg-canvas dark:border-portal-line dark:bg-portal-surface dark:text-portal-ink"
+                    )}
+                  >
+                    <span>{l.native}</span>
+                    {language === l.code && <Check className="h-4 w-4 text-forest" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Step Actions */}
+        <div className="border-t border-line bg-canvas/60 px-5 py-4 dark:border-portal-line dark:bg-portal-surface flex items-center justify-between gap-3">
+          <Button variant="ghost" size="portal" onClick={skip} className="text-xs text-muted">
+            Close Guide
           </Button>
-          <div className="flex gap-2">
+
+          <div className="flex items-center gap-2">
             {step > 0 && (
-              <Button variant="outline" size="portal" onClick={() => setStep(step - 1)}>
-                {t("common.back")}
+              <Button
+                variant="outline"
+                size="portal"
+                onClick={() => setStep(step - 1)}
+                className="font-bold flex items-center gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Back
               </Button>
             )}
-            {step < steps.length - 1 ? (
-              <Button variant="primary" size="portal" onClick={() => setStep(step + 1)}>
-                {t("onboarding.next")}
+
+            {step < activeSteps.length - 1 ? (
+              <Button
+                variant="primary"
+                size="portal"
+                onClick={() => setStep(step + 1)}
+                className="font-bold flex items-center gap-1"
+              >
+                Next Step
+                <ChevronRight className="h-4 w-4" />
               </Button>
             ) : (
-              <Button variant="primary" size="portal" onClick={finish}>
-                {t("onboarding.done")}
+              <Button
+                variant="primary"
+                size="portal"
+                onClick={finish}
+                className="font-bold flex items-center gap-1.5"
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                Got it, let's start!
               </Button>
             )}
           </div>

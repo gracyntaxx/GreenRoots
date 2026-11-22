@@ -25,7 +25,7 @@ const quickLaunch = [
   { label: "Speak a listing", detail: "Voice-first harvest draft", icon: Mic, to: "/signup?role=farmer" },
   { label: "Browse marketplace", detail: "Fresh residue lots", icon: PackageSearch, to: "/signup?role=buyer" },
   { label: "Join demand pools", detail: "Pool with your village", icon: Users, to: "/signup?role=farmer" },
-  { label: "Track settlements", detail: "PayPal verified payouts", icon: Wallet, to: "/signup?role=industry" },
+  { label: "Track settlements", detail: "Escrow verified payouts", icon: Wallet, to: "/signup?role=industry" },
 ];
 
 export function LandingHero() {
@@ -45,7 +45,7 @@ export function LandingHero() {
           <div className="lg:col-span-6">
             <div className="eyebrow">
               <Leaf className="h-3.5 w-3.5 text-forest" aria-hidden="true" />
-              Zero stubble burning · Instant PayPal settlement
+              Zero stubble burning · Instant Escrow settlement
             </div>
 
             <h1 className="organic-title mt-5 max-w-2xl text-[42px] font-bold leading-[1.02] sm:text-[58px] lg:text-[66px]">
@@ -168,7 +168,7 @@ export function LandingHero() {
                 </span>
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-muted">Escrow protected</p>
-                  <p className="text-xs font-bold text-moss">PayPal Escrow</p>
+                  <p className="text-xs font-bold text-moss">Buyer &amp; Farmer Escrow</p>
                 </div>
               </div>
             </div>

@@ -4,11 +4,17 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpDown,
+  ChevronDown,
   ChevronRight,
+  Compass,
   Filter,
+  HelpCircle,
   MapPin,
   Mic,
+  PackageCheck,
   Search,
+  ShieldCheck,
+  ShoppingBag,
   Leaf,
   Star,
   X,
@@ -36,7 +42,7 @@ export default function MarketPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const profile = useSession((s) => s.profile)!;
-  const { openVoice } = useFieldShell();
+  const { openVoice, openOnboarding } = useFieldShell();
   const isFarmer = profile.role === "farmer";
 
   const [q, setQ] = useState("");
@@ -92,13 +98,105 @@ export default function MarketPage() {
         <div>
           <span className="eyebrow mb-1.5">Direct Farm Gate</span>
           <h1 className="font-heading text-2xl sm:text-3xl font-bold text-moss dark:text-portal-ink">{t("market.title")}</h1>
-          <p className="mt-1 text-sm text-muted dark:text-portal-muted">Purchase verified agricultural residue directly from local farmers with PayPal Buyer Protection.</p>
+          <p className="mt-1 text-sm text-muted dark:text-portal-muted">Purchase verified agricultural residue directly from local farmers with Escrow Buyer Protection.</p>
         </div>
-        {isFarmer && (
-          <Button variant="primary" size="field" onClick={openVoice} className="shrink-0 font-bold shadow-md">
-            <Mic className="h-4 w-4" /> {t("market.listOnMarket")}
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="field"
+            onClick={() => openOnboarding("buyer")}
+            className="border-forest/30 text-forest font-bold hover:bg-meadow"
+          >
+            <Compass className="h-4 w-4 mr-1.5" /> Buyer Guide
           </Button>
-        )}
+          {isFarmer && (
+            <Button variant="primary" size="field" onClick={openVoice} className="shrink-0 font-bold shadow-md">
+              <Mic className="h-4 w-4 mr-1.5" /> {t("market.listOnMarket")}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Step-by-Step Indicated Guide for Buyers */}
+      <div className="mt-4 rounded-2xl border border-forest/20 bg-gradient-to-br from-emerald-50/70 via-white to-meadow/40 p-4 dark:border-portal-line dark:from-[#0E2419] dark:via-portal-surface dark:to-[#0F2D1E] shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-forest text-white text-xs font-bold shrink-0">
+              <Compass className="h-4 w-4" />
+            </span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-forest dark:text-growth">Indicated Step-by-Step Guide</p>
+              <h2 className="text-sm sm:text-base font-bold text-ink dark:text-portal-ink">How to Buy Listed Residue in 4 Steps</h2>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => openOnboarding("buyer")}
+            className="text-xs font-bold text-forest hover:text-forest hover:bg-meadow/60 dark:text-growth self-start sm:self-auto"
+          >
+            Launch Full Walkthrough &rarr;
+          </Button>
+        </div>
+
+        {/* 4 Step Indicated Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">1</span>
+                <Search className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Browse Goa Lots</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Filter local biomass lots in Vasco, Margao, Panjim, Mapusa &amp; Verna.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">Filter by distance &amp; rate</span>
+          </div>
+
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">2</span>
+                <ShieldCheck className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Inspect Trust &amp; Quality</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Review farmer reputation score, photos, and moisture tolerance specs.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">Empirical farmer scores</span>
+          </div>
+
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">3</span>
+                <ShoppingBag className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Enter Qty &amp; Click 'Buy'</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Select your required quantity. Your payment is held in Escrow protection.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">₹0 buyer fees</span>
+          </div>
+
+          <div className="rounded-xl border border-forest/15 bg-white/80 dark:bg-portal-surface/80 p-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-forest text-white text-[10px] font-bold">4</span>
+                <PackageCheck className="h-4 w-4 text-forest" />
+              </div>
+              <h4 className="text-xs font-bold text-ink dark:text-portal-ink">Weighbridge Pick Up</h4>
+              <p className="mt-1 text-[11px] text-muted dark:text-portal-muted leading-relaxed">
+                Pick up at the depot upon weighbridge certification, or track delivery.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] font-semibold text-forest dark:text-growth">Instant release upon weigh-in</span>
+          </div>
+        </div>
       </div>
 
       <div className="mt-3 flex gap-2">
@@ -329,12 +427,12 @@ export default function MarketPage() {
                       {t("common.view")} Details
                     </Button>
                     <Button
-                      variant="paypal"
+                      variant="primary"
                       size="sm"
                       className="flex-1 font-bold shadow-sm"
                       onClick={() => navigate(`/app/checkout/${l.id}`, { state: { quantityKg: l.quantityKg } })}
                     >
-                      Buy via PayPal
+                      Buy
                     </Button>
                   </div>
                 </div>

@@ -150,7 +150,7 @@ export default function OrderDetailPage() {
               </div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted dark:text-portal-muted">
-              GreenRoots confirms the payment directly with PayPal. A redirect alone is never treated as proof.
+              GreenRoots confirms the payment directly via secure escrow. A redirect alone is never treated as proof.
             </p>
           </Card>
 

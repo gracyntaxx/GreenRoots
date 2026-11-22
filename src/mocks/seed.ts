@@ -22,19 +22,29 @@ const iso = (days: number, hours = 0) =>
 const ago = (mins: number) => new Date(now - mins * 60_000).toISOString();
 
 export const COLLECTION_POINTS: CollectionPoint[] = [
-  { id: "cp_rewari_central", name: "Rewari Central Hub", village: "Rewari", district: "Rewari", state: "Haryana", location: { lat: 28.199, lng: 76.618 }, capacityTonnes: 120, hours: "6:00 AM – 8:00 PM", active: true, dropOffsToday: 14 },
-  { id: "cp_rewari_south", name: "Rewari South Mandi", village: "Bawal", district: "Rewari", state: "Haryana", location: { lat: 28.071, lng: 76.589 }, capacityTonnes: 80, hours: "7:00 AM – 6:00 PM", active: true, dropOffsToday: 9 },
-  { id: "cp_panipat", name: "Panipat Grain Market Yard", village: "Panipat", district: "Panipat", state: "Haryana", location: { lat: 29.388, lng: 76.971 }, capacityTonnes: 200, hours: "5:30 AM – 9:00 PM", active: true, dropOffsToday: 22 },
-  { id: "cp_karnal", name: "Karnal Co-op Yard", village: "Karnal", district: "Karnal", state: "Haryana", location: { lat: 29.691, lng: 76.988 }, capacityTonnes: 150, hours: "6:00 AM – 7:00 PM", active: true, dropOffsToday: 11 },
-  { id: "cp_ludhiana", name: "Ludhiana Village Hub", village: "Jagraon", district: "Ludhiana", state: "Punjab", location: { lat: 30.787, lng: 75.473 }, capacityTonnes: 160, hours: "6:00 AM – 8:00 PM", active: true, dropOffsToday: 17 },
-  { id: "cp_sangrur", name: "Sangrur Mandi Point", village: "Sangrur", district: "Sangrur", state: "Punjab", location: { lat: 30.24, lng: 75.844 }, capacityTonnes: 110, hours: "6:30 AM – 7:30 PM", active: true, dropOffsToday: 8 },
-  { id: "cp_nashik", name: "Nashik Agri Yard", village: "Nashik", district: "Nashik", state: "Maharashtra", location: { lat: 19.999, lng: 73.79 }, capacityTonnes: 140, hours: "6:00 AM – 8:00 PM", active: true, dropOffsToday: 13 },
-  { id: "cp_kolhapur", name: "Kolhapur Sugar Belt Hub", village: "Kolhapur", district: "Kolhapur", state: "Maharashtra", location: { lat: 16.7, lng: 74.243 }, capacityTonnes: 180, hours: "5:00 AM – 9:00 PM", active: false, dropOffsToday: 0 },
+  { id: "cp_rewari_central", name: "Margao APMC Central Hub", village: "Margao", district: "South Goa", state: "Goa", location: { lat: 15.2736, lng: 73.9580 }, capacityTonnes: 180, hours: "6:00 AM – 8:00 PM", active: true, dropOffsToday: 18 },
+  { id: "cp_rewari_south", name: "Vasco Port Agro Depot", village: "Vasco", district: "South Goa", state: "Goa", location: { lat: 15.3982, lng: 73.8113 }, capacityTonnes: 150, hours: "6:00 AM – 7:30 PM", active: true, dropOffsToday: 14 },
+  { id: "cp_panipat", name: "Panjim Central Market Yard", village: "Panjim", district: "North Goa", state: "Goa", location: { lat: 15.4909, lng: 73.8278 }, capacityTonnes: 200, hours: "5:30 AM – 9:00 PM", active: true, dropOffsToday: 22 },
+  { id: "cp_karnal", name: "Mapusa Sub-Yard Co-op", village: "Mapusa", district: "North Goa", state: "Goa", location: { lat: 15.5937, lng: 73.8142 }, capacityTonnes: 150, hours: "6:00 AM – 7:00 PM", active: true, dropOffsToday: 11 },
+  { id: "cp_ludhiana", name: "Verna Industrial Biomass Yard", village: "Verna", district: "South Goa", state: "Goa", location: { lat: 15.3614, lng: 73.9312 }, capacityTonnes: 220, hours: "6:00 AM – 8:00 PM", active: true, dropOffsToday: 24 },
+  { id: "cp_sangrur", name: "Ponda Farm Residue Hub", village: "Ponda", district: "North Goa", state: "Goa", location: { lat: 15.4026, lng: 74.0086 }, capacityTonnes: 130, hours: "6:30 AM – 7:30 PM", active: true, dropOffsToday: 8 },
+  { id: "cp_nashik", name: "Bicholim Agri Collection Center", village: "Bicholim", district: "North Goa", state: "Goa", location: { lat: 15.5912, lng: 73.9515 }, capacityTonnes: 140, hours: "6:00 AM – 8:00 PM", active: true, dropOffsToday: 13 },
+  { id: "cp_kolhapur", name: "Kolhapur Sugar Belt Hub", village: "Kolhapur", district: "Kolhapur", state: "Maharashtra", location: { lat: 16.700, lng: 74.243 }, capacityTonnes: 180, hours: "5:00 AM – 9:00 PM", active: true, dropOffsToday: 9 },
+  { id: "cp_curchorem", name: "Curchorem Biomass Depot", village: "Curchorem", district: "South Goa", state: "Goa", location: { lat: 15.2605, lng: 74.1102 }, capacityTonnes: 110, hours: "6:00 AM – 6:30 PM", active: true, dropOffsToday: 5 },
+  { id: "cp_canacona", name: "Canacona Eco Collection Point", village: "Canacona", district: "South Goa", state: "Goa", location: { lat: 15.0167, lng: 74.0500 }, capacityTonnes: 90, hours: "7:00 AM – 6:00 PM", active: true, dropOffsToday: 4 },
+  { id: "cp_porvorim", name: "Porvorim Greens Hub", village: "Porvorim", district: "North Goa", state: "Goa", location: { lat: 15.5350, lng: 73.8288 }, capacityTonnes: 100, hours: "6:30 AM – 7:30 PM", active: true, dropOffsToday: 7 },
+  { id: "cp_cuncolim", name: "Cuncolim Industrial Yard", village: "Cuncolim", district: "South Goa", state: "Goa", location: { lat: 15.1764, lng: 73.9961 }, capacityTonnes: 120, hours: "6:00 AM – 7:00 PM", active: true, dropOffsToday: 6 },
+  { id: "cp_valpoi", name: "Valpoi Forest & Farm Depot", village: "Valpoi", district: "North Goa", state: "Goa", location: { lat: 15.5311, lng: 74.1337 }, capacityTonnes: 95, hours: "7:00 AM – 6:00 PM", active: true, dropOffsToday: 3 },
+  { id: "cp_pernem", name: "Pernem North Agro Yard", village: "Pernem", district: "North Goa", state: "Goa", location: { lat: 15.7174, lng: 73.7972 }, capacityTonnes: 115, hours: "6:00 AM – 7:00 PM", active: true, dropOffsToday: 5 },
+  { id: "cp_quepem", name: "Quepem Bio-Residue Point", village: "Quepem", district: "South Goa", state: "Goa", location: { lat: 15.2167, lng: 74.0667 }, capacityTonnes: 85, hours: "6:30 AM – 6:30 PM", active: true, dropOffsToday: 4 },
+  { id: "cp_sanguem", name: "Sanguem Agri Mandi", village: "Sanguem", district: "South Goa", state: "Goa", location: { lat: 15.2333, lng: 74.1500 }, capacityTonnes: 90, hours: "6:00 AM – 6:00 PM", active: true, dropOffsToday: 3 },
+  { id: "cp_tivim", name: "Tivim Railhead Collection Hub", village: "Tivim", district: "North Goa", state: "Goa", location: { lat: 15.6167, lng: 73.8333 }, capacityTonnes: 130, hours: "5:30 AM – 8:30 PM", active: true, dropOffsToday: 8 },
+  { id: "cp_belagavi", name: "Belagavi Border APMC Yard", village: "Belagavi", district: "Belagavi", state: "Karnataka", location: { lat: 15.8497, lng: 74.4977 }, capacityTonnes: 200, hours: "5:00 AM – 9:00 PM", active: true, dropOffsToday: 19 },
 ];
 
 export const PROFILES: Profile[] = [
   {
-    id: "farmer_1", name: "Ramesh Yadav", role: "farmer", phone: "9812345670", village: "Rewari", district: "Rewari", state: "Haryana", language: "hi", location: { lat: 28.197, lng: 76.617 }, reputation: 4.6,
+    id: "farmer_1", name: "Ramesh Yadav", role: "farmer", phone: "9812345670", village: "Margao", district: "South Goa", state: "Goa", language: "hi", location: { lat: 15.2736, lng: 73.9580 }, reputation: 4.6,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "38", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "96%", weight: 25 },
@@ -45,7 +55,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "RY", joined: "2023-11-02",
   },
   {
-    id: "farmer_2", name: "Sunita Devi", role: "farmer", phone: "9812345671", village: "Bawal", district: "Rewari", state: "Haryana", language: "hi", location: { lat: 28.075, lng: 76.585 }, reputation: 4.9,
+    id: "farmer_2", name: "Sunita Devi", role: "farmer", phone: "9812345671", village: "Vasco", district: "South Goa", state: "Goa", language: "hi", location: { lat: 15.3982, lng: 73.8113 }, reputation: 4.9,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "61", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "99%", weight: 25 },
@@ -56,7 +66,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "SD", joined: "2023-06-18",
   },
   {
-    id: "farmer_3", name: "Mahender Singh", role: "farmer", phone: "9812345672", village: "Panipat", district: "Panipat", state: "Haryana", language: "hi", location: { lat: 29.39, lng: 76.96 }, reputation: 4.2,
+    id: "farmer_3", name: "Mahender Singh", role: "farmer", phone: "9812345672", village: "Panjim", district: "North Goa", state: "Goa", language: "hi", location: { lat: 15.4909, lng: 73.8278 }, reputation: 4.2,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "22", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "88%", weight: 25 },
@@ -67,7 +77,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "MS", joined: "2024-01-09",
   },
   {
-    id: "farmer_4", name: "Gurpreet Kaur", role: "farmer", phone: "9812345673", village: "Jagraon", district: "Ludhiana", state: "Punjab", language: "pa", location: { lat: 30.787, lng: 75.473 }, reputation: 4.8,
+    id: "farmer_4", name: "Gurpreet Kaur", role: "farmer", phone: "9812345673", village: "Mapusa", district: "North Goa", state: "Goa", language: "pa", location: { lat: 15.5937, lng: 73.8142 }, reputation: 4.8,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "54", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "98%", weight: 25 },
@@ -78,7 +88,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "GK", joined: "2023-04-22",
   },
   {
-    id: "farmer_5", name: "Balwinder Singh", role: "farmer", phone: "9812345674", village: "Sangrur", district: "Sangrur", state: "Punjab", language: "pa", location: { lat: 30.245, lng: 75.842 }, reputation: 4.7,
+    id: "farmer_5", name: "Balwinder Singh", role: "farmer", phone: "9812345674", village: "Verna", district: "South Goa", state: "Goa", language: "pa", location: { lat: 15.3614, lng: 73.9312 }, reputation: 4.7,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "47", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "97%", weight: 25 },
@@ -89,7 +99,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "BS", joined: "2023-09-14",
   },
   {
-    id: "farmer_6", name: "Anil Patil", role: "farmer", phone: "9812345675", village: "Nashik", district: "Nashik", state: "Maharashtra", language: "mr", location: { lat: 19.997, lng: 73.789 }, reputation: 4.3,
+    id: "farmer_6", name: "Anil Patil", role: "farmer", phone: "9812345675", village: "Ponda", district: "North Goa", state: "Goa", language: "mr", location: { lat: 15.4026, lng: 74.0086 }, reputation: 4.3,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "31", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "91%", weight: 25 },
@@ -100,7 +110,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "AP", joined: "2024-02-01",
   },
   {
-    id: "farmer_7", name: "Kavita Shinde", role: "farmer", phone: "9812345676", village: "Kolhapur", district: "Kolhapur", state: "Maharashtra", language: "mr", location: { lat: 16.705, lng: 74.243 }, reputation: 4.5,
+    id: "farmer_7", name: "Kavita Shinde", role: "farmer", phone: "9812345676", village: "Bicholim", district: "North Goa", state: "Goa", language: "mr", location: { lat: 15.5912, lng: 73.9515 }, reputation: 4.5,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "26", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "94%", weight: 25 },
@@ -111,7 +121,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Not set up", verified: false, avatarInitials: "KS", joined: "2024-03-11",
   },
   {
-    id: "farmer_8", name: "Suresh Jadhav", role: "farmer", phone: "9812345677", village: "Ratnagiri", district: "Ratnagiri", state: "Maharashtra", language: "mr", location: { lat: 16.99, lng: 73.312 }, reputation: 4.0,
+    id: "farmer_8", name: "Suresh Jadhav", role: "farmer", phone: "9812345677", village: "Canacona", district: "South Goa", state: "Goa", language: "mr", location: { lat: 15.0167, lng: 74.0500 }, reputation: 4.0,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "12", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "84%", weight: 25 },
@@ -122,7 +132,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "SJ", joined: "2024-05-30",
   },
   {
-    id: "farmer_9", name: "Rajesh Kumar", role: "farmer", phone: "9812345678", village: "Karnal", district: "Karnal", state: "Haryana", language: "hi", location: { lat: 29.686, lng: 76.99 }, reputation: 4.4,
+    id: "farmer_9", name: "Rajesh Kumar", role: "farmer", phone: "9812345678", village: "Belagavi", district: "Belagavi", state: "Karnataka", language: "hi", location: { lat: 15.8497, lng: 74.4977 }, reputation: 4.4,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "29", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "93%", weight: 25 },
@@ -133,7 +143,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "RK", joined: "2023-12-19",
   },
   {
-    id: "farmer_10", name: "Fatima Begum", role: "farmer", phone: "9812345679", village: "Panipat", district: "Panipat", state: "Haryana", language: "hi", location: { lat: 29.377, lng: 76.95 }, reputation: 4.6,
+    id: "farmer_10", name: "Fatima Begum", role: "farmer", phone: "9812345679", village: "Panjim", district: "North Goa", state: "Goa", language: "hi", location: { lat: 15.4909, lng: 73.8278 }, reputation: 4.6,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "35", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "95%", weight: 25 },
@@ -144,7 +154,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "FB", joined: "2023-08-08",
   },
   {
-    id: "farmer_11", name: "Dinesh Rathi", role: "farmer", phone: "9812345680", village: "Rewari", district: "Rewari", state: "Haryana", language: "hi", location: { lat: 28.21, lng: 76.63 }, reputation: 3.9,
+    id: "farmer_11", name: "Dinesh Rathi", role: "farmer", phone: "9812345680", village: "Curchorem", district: "South Goa", state: "Goa", language: "hi", location: { lat: 15.2605, lng: 74.1102 }, reputation: 3.9,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "9", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "80%", weight: 25 },
@@ -155,7 +165,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Not set up", verified: false, avatarInitials: "DR", joined: "2024-07-04",
   },
   {
-    id: "farmer_12", name: "Prakash More", role: "farmer", phone: "9812345681", village: "Nashik", district: "Nashik", state: "Maharashtra", language: "mr", location: { lat: 20.01, lng: 73.77 }, reputation: 4.1,
+    id: "farmer_12", name: "Prakash More", role: "farmer", phone: "9812345681", village: "Porvorim", district: "North Goa", state: "Goa", language: "mr", location: { lat: 15.5350, lng: 73.8288 }, reputation: 4.1,
     reputationFactors: [
       { key: "deliveries", label: "Completed deliveries", value: "18", weight: 30 },
       { key: "ontime", label: "On-time rate", value: "89%", weight: 25 },
@@ -166,7 +176,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "PM", joined: "2024-04-16",
   },
   {
-    id: "buyer_1", name: "Amit Traders", role: "buyer", phone: "9822334455", village: "Rewari", district: "Rewari", state: "Haryana", language: "hi", location: { lat: 28.19, lng: 76.61 }, reputation: 4.5,
+    id: "buyer_1", name: "Amit Traders", role: "buyer", phone: "9822334455", village: "Vasco", district: "South Goa", state: "Goa", language: "hi", location: { lat: 15.3982, lng: 73.8113 }, reputation: 4.5,
     reputationFactors: [
       { key: "deliveries", label: "Completed purchases", value: "24", weight: 30 },
       { key: "ontime", label: "On-time payment rate", value: "100%", weight: 25 },
@@ -177,7 +187,7 @@ export const PROFILES: Profile[] = [
     payoutReadiness: "Ready", verified: true, avatarInitials: "AT", joined: "2023-10-01",
   },
   {
-    id: "industry_1", name: "Panipat Biomass Energy Ltd", role: "industry", email: "procurement@panipatbiomass.example", village: "Panipat", district: "Panipat", state: "Haryana", language: "en", location: { lat: 29.39, lng: 76.963 }, reputation: 4.7,
+    id: "industry_1", name: "Goa Bio-Energy Ltd", role: "industry", email: "procurement@goabiomass.example", village: "Verna", district: "South Goa", state: "Goa", language: "en", location: { lat: 15.3614, lng: 73.9312 }, reputation: 4.7,
     reputationFactors: [
       { key: "deliveries", label: "Completed procurements", value: "42", weight: 30 },
       { key: "ontime", label: "On-time payment rate", value: "98%", weight: 25 },
@@ -185,10 +195,10 @@ export const PROFILES: Profile[] = [
       { key: "repeat", label: "Repeat farmers", value: "31", weight: 15 },
       { key: "disputes", label: "Disputes", value: "1", weight: 10 },
     ],
-    payoutReadiness: "Ready", verified: true, avatarInitials: "PB", joined: "2023-03-12",
+    payoutReadiness: "Ready", verified: true, avatarInitials: "GB", joined: "2023-03-12",
   },
   {
-    id: "industry_2", name: "Haryana Green Fuels", role: "industry", email: "buy@haryanagreenfuels.example", village: "Karnal", district: "Karnal", state: "Haryana", language: "en", location: { lat: 29.69, lng: 76.99 }, reputation: 4.4,
+    id: "industry_2", name: "Goa Green Bio-Fuels", role: "industry", email: "buy@goagreenfuels.example", village: "Mapusa", district: "North Goa", state: "Goa", language: "en", location: { lat: 15.5937, lng: 73.8142 }, reputation: 4.4,
     reputationFactors: [
       { key: "deliveries", label: "Completed procurements", value: "27", weight: 30 },
       { key: "ontime", label: "On-time payment rate", value: "96%", weight: 25 },
@@ -196,10 +206,10 @@ export const PROFILES: Profile[] = [
       { key: "repeat", label: "Repeat farmers", value: "19", weight: 15 },
       { key: "disputes", label: "Disputes", value: "2", weight: 10 },
     ],
-    payoutReadiness: "Ready", verified: true, avatarInitials: "HG", joined: "2023-07-19",
+    payoutReadiness: "Ready", verified: true, avatarInitials: "GG", joined: "2023-07-19",
   },
   {
-    id: "industry_3", name: "Ludhiana Agro Pellets", role: "industry", email: "supply@ludhianaagro.example", village: "Ludhiana", district: "Ludhiana", state: "Punjab", language: "en", location: { lat: 30.901, lng: 75.857 }, reputation: 4.8,
+    id: "industry_3", name: "Verna Agro Pellets", role: "industry", email: "supply@vernaagro.example", village: "Verna", district: "South Goa", state: "Goa", language: "en", location: { lat: 15.3614, lng: 73.9312 }, reputation: 4.8,
     reputationFactors: [
       { key: "deliveries", label: "Completed procurements", value: "58", weight: 30 },
       { key: "ontime", label: "On-time payment rate", value: "99%", weight: 25 },
@@ -207,10 +217,10 @@ export const PROFILES: Profile[] = [
       { key: "repeat", label: "Repeat farmers", value: "44", weight: 15 },
       { key: "disputes", label: "Disputes", value: "0", weight: 10 },
     ],
-    payoutReadiness: "Ready", verified: true, avatarInitials: "LA", joined: "2022-11-23",
+    payoutReadiness: "Ready", verified: true, avatarInitials: "VA", joined: "2022-11-23",
   },
   {
-    id: "industry_4", name: "Nashik Sugarcane Power", role: "industry", email: "biomass@nashikpower.example", village: "Nashik", district: "Nashik", state: "Maharashtra", language: "en", location: { lat: 19.997, lng: 73.789 }, reputation: 4.2,
+    id: "industry_4", name: "Kolhapur Sugarcane Power", role: "industry", email: "biomass@kolhapurpower.example", village: "Kolhapur", district: "Kolhapur", state: "Maharashtra", language: "en", location: { lat: 16.700, lng: 74.243 }, reputation: 4.2,
     reputationFactors: [
       { key: "deliveries", label: "Completed procurements", value: "21", weight: 30 },
       { key: "ontime", label: "On-time payment rate", value: "92%", weight: 25 },
@@ -218,10 +228,10 @@ export const PROFILES: Profile[] = [
       { key: "repeat", label: "Repeat farmers", value: "13", weight: 15 },
       { key: "disputes", label: "Disputes", value: "2", weight: 10 },
     ],
-    payoutReadiness: "Ready", verified: true, avatarInitials: "NS", joined: "2024-01-15",
+    payoutReadiness: "Ready", verified: true, avatarInitials: "KP", joined: "2024-01-15",
   },
   {
-    id: "industry_5", name: "Rewari Bio-Products", role: "industry", email: "info@rewaribio.example", village: "Rewari", district: "Rewari", state: "Haryana", language: "en", location: { lat: 28.2, lng: 76.62 }, reputation: 3.8,
+    id: "industry_5", name: "Margao Bio-Products", role: "industry", email: "info@margaobio.example", village: "Margao", district: "South Goa", state: "Goa", language: "en", location: { lat: 15.2736, lng: 73.9580 }, reputation: 3.8,
     reputationFactors: [
       { key: "deliveries", label: "Completed procurements", value: "2", weight: 30 },
       { key: "ontime", label: "On-time payment rate", value: "—", weight: 25 },
@@ -229,44 +239,44 @@ export const PROFILES: Profile[] = [
       { key: "repeat", label: "Repeat farmers", value: "0", weight: 15 },
       { key: "disputes", label: "Disputes", value: "0", weight: 10 },
     ],
-    payoutReadiness: "Not set up", verified: false, avatarInitials: "RB", joined: "2024-09-02",
+    payoutReadiness: "Not set up", verified: false, avatarInitials: "MB", joined: "2024-09-02",
   },
   {
-    id: "admin_1", name: "Priya Menon", role: "admin", email: "admin@greenroots.example", village: "New Delhi", district: "New Delhi", state: "Delhi", language: "en", location: { lat: 28.6139, lng: 77.209 }, reputation: 5,
+    id: "admin_1", name: "Priya Menon", role: "admin", email: "admin@greenroots.example", village: "Panjim", district: "North Goa", state: "Goa", language: "en", location: { lat: 15.4909, lng: 73.8278 }, reputation: 5,
     reputationFactors: [],
     payoutReadiness: "Ready", verified: true, avatarInitials: "PM", joined: "2023-01-01",
   },
 ];
 
 export const LISTINGS: Listing[] = [
-  { id: "listing_ricehusk_200", farmerId: "farmer_1", farmerName: "Ramesh Yadav", farmerVillage: "Rewari", farmerReputation: 4.6, wasteType: "rice_husk", quantityKg: 200, unit: "kg", ratePerUnit: 8, rateUnit: "kg", location: { lat: 28.197, lng: 76.617 }, village: "Rewari", collectionPointId: "cp_rewari_central", status: "Active", createdAt: ago(120), updatedAt: ago(14), source: "voice", aiConfidence: 0.92, notes: "Dry husk stored under cover." },
-  { id: "listing_mustard_1", farmerId: "farmer_2", farmerName: "Sunita Devi", farmerVillage: "Bawal", farmerReputation: 4.9, wasteType: "mustard_stubble", quantityKg: 5000, unit: "quintal", ratePerUnit: 1200, rateUnit: "quintal", location: { lat: 28.075, lng: 76.585 }, village: "Bawal", collectionPointId: "cp_rewari_south", status: "Active", createdAt: ago(300), updatedAt: ago(40), source: "voice", aiConfidence: 0.88 },
-  { id: "listing_paddy_1", farmerId: "farmer_3", farmerName: "Mahender Singh", farmerVillage: "Panipat", farmerReputation: 4.2, wasteType: "paddy_straw", quantityKg: 12000, unit: "tonne", ratePerUnit: 2300, rateUnit: "tonne", location: { lat: 29.39, lng: 76.96 }, village: "Panipat", collectionPointId: "cp_panipat", status: "Active", createdAt: ago(500), updatedAt: ago(90), source: "manual" },
-  { id: "listing_wheat_1", farmerId: "farmer_4", farmerName: "Gurpreet Kaur", farmerVillage: "Jagraon", farmerReputation: 4.8, wasteType: "wheat_straw", quantityKg: 18000, unit: "tonne", ratePerUnit: 1800, rateUnit: "tonne", location: { lat: 30.787, lng: 75.473 }, village: "Jagraon", collectionPointId: "cp_ludhiana", status: "Reserved", createdAt: ago(700), updatedAt: ago(200), source: "text" },
-  { id: "listing_sugarcane_1", farmerId: "farmer_5", farmerName: "Balwinder Singh", farmerVillage: "Sangrur", farmerReputation: 4.7, wasteType: "sugarcane_trash", quantityKg: 9000, unit: "tonne", ratePerUnit: 1500, rateUnit: "tonne", location: { lat: 30.245, lng: 75.842 }, village: "Sangrur", collectionPointId: "cp_sangrur", status: "Active", createdAt: ago(800), updatedAt: ago(60), source: "manual" },
-  { id: "listing_cashew_1", farmerId: "farmer_8", farmerName: "Suresh Jadhav", farmerVillage: "Ratnagiri", farmerReputation: 4.0, wasteType: "cashew_shell", quantityKg: 1200, unit: "quintal", ratePerUnit: 900, rateUnit: "quintal", location: { lat: 16.99, lng: 73.312 }, village: "Ratnagiri", collectionPointId: "cp_kolhapur", status: "Active", createdAt: ago(900), updatedAt: ago(150), source: "voice", aiConfidence: 0.79 },
-  { id: "listing_cotton_1", farmerId: "farmer_6", farmerName: "Anil Patil", farmerVillage: "Nashik", farmerReputation: 4.3, wasteType: "cotton_stalk", quantityKg: 15000, unit: "tonne", ratePerUnit: 1200, rateUnit: "tonne", location: { lat: 19.997, lng: 73.789 }, village: "Nashik", collectionPointId: "cp_nashik", status: "Active", createdAt: ago(1000), updatedAt: ago(180), source: "manual" },
-  { id: "listing_groundnut_1", farmerId: "farmer_12", farmerName: "Prakash More", farmerVillage: "Nashik", farmerReputation: 4.1, wasteType: "groundnut_shell", quantityKg: 2400, unit: "quintal", ratePerUnit: 800, rateUnit: "quintal", location: { lat: 20.01, lng: 73.77 }, village: "Nashik", collectionPointId: "cp_nashik", status: "Active", createdAt: ago(1100), updatedAt: ago(220), source: "text" },
-  { id: "listing_bagasse_1", farmerId: "farmer_7", farmerName: "Kavita Shinde", farmerVillage: "Kolhapur", farmerReputation: 4.5, wasteType: "bagasse", quantityKg: 22000, unit: "tonne", ratePerUnit: 1100, rateUnit: "tonne", location: { lat: 16.705, lng: 74.243 }, village: "Kolhapur", collectionPointId: "cp_kolhapur", status: "Sold", createdAt: ago(1400), updatedAt: ago(400), source: "manual" },
-  { id: "listing_paddy_2", farmerId: "farmer_10", farmerName: "Fatima Begum", farmerVillage: "Panipat", farmerReputation: 4.6, wasteType: "paddy_straw", quantityKg: 7500, unit: "tonne", ratePerUnit: 2400, rateUnit: "tonne", location: { lat: 29.377, lng: 76.95 }, village: "Panipat", collectionPointId: "cp_panipat", status: "Active", createdAt: ago(1600), updatedAt: ago(30), source: "voice", aiConfidence: 0.91 },
+  { id: "listing_ricehusk_200", farmerId: "farmer_1", farmerName: "Ramesh Yadav", farmerVillage: "Margao", farmerReputation: 4.6, wasteType: "rice_husk", quantityKg: 200, unit: "kg", ratePerUnit: 8, rateUnit: "kg", location: { lat: 15.2736, lng: 73.9580 }, village: "Margao", collectionPointId: "cp_rewari_central", status: "Active", createdAt: ago(120), updatedAt: ago(14), source: "voice", aiConfidence: 0.92, notes: "Dry husk stored under cover." },
+  { id: "listing_mustard_1", farmerId: "farmer_2", farmerName: "Sunita Devi", farmerVillage: "Vasco", farmerReputation: 4.9, wasteType: "mustard_stubble", quantityKg: 5000, unit: "quintal", ratePerUnit: 1200, rateUnit: "quintal", location: { lat: 15.3982, lng: 73.8113 }, village: "Vasco", collectionPointId: "cp_rewari_south", status: "Active", createdAt: ago(300), updatedAt: ago(40), source: "voice", aiConfidence: 0.88 },
+  { id: "listing_paddy_1", farmerId: "farmer_3", farmerName: "Mahender Singh", farmerVillage: "Panjim", farmerReputation: 4.2, wasteType: "paddy_straw", quantityKg: 12000, unit: "tonne", ratePerUnit: 2300, rateUnit: "tonne", location: { lat: 15.4909, lng: 73.8278 }, village: "Panjim", collectionPointId: "cp_panipat", status: "Active", createdAt: ago(500), updatedAt: ago(90), source: "manual" },
+  { id: "listing_wheat_1", farmerId: "farmer_4", farmerName: "Gurpreet Kaur", farmerVillage: "Mapusa", farmerReputation: 4.8, wasteType: "wheat_straw", quantityKg: 18000, unit: "tonne", ratePerUnit: 1800, rateUnit: "tonne", location: { lat: 15.5937, lng: 73.8142 }, village: "Mapusa", collectionPointId: "cp_karnal", status: "Reserved", createdAt: ago(700), updatedAt: ago(200), source: "text" },
+  { id: "listing_sugarcane_1", farmerId: "farmer_5", farmerName: "Balwinder Singh", farmerVillage: "Verna", farmerReputation: 4.7, wasteType: "sugarcane_trash", quantityKg: 9000, unit: "tonne", ratePerUnit: 1500, rateUnit: "tonne", location: { lat: 15.3614, lng: 73.9312 }, village: "Verna", collectionPointId: "cp_ludhiana", status: "Active", createdAt: ago(800), updatedAt: ago(60), source: "manual" },
+  { id: "listing_cashew_1", farmerId: "farmer_8", farmerName: "Suresh Jadhav", farmerVillage: "Canacona", farmerReputation: 4.0, wasteType: "cashew_shell", quantityKg: 1200, unit: "quintal", ratePerUnit: 900, rateUnit: "quintal", location: { lat: 15.0167, lng: 74.0500 }, village: "Canacona", collectionPointId: "cp_canacona", status: "Active", createdAt: ago(900), updatedAt: ago(150), source: "voice", aiConfidence: 0.79 },
+  { id: "listing_cotton_1", farmerId: "farmer_6", farmerName: "Anil Patil", farmerVillage: "Ponda", farmerReputation: 4.3, wasteType: "cotton_stalk", quantityKg: 15000, unit: "tonne", ratePerUnit: 1200, rateUnit: "tonne", location: { lat: 15.4026, lng: 74.0086 }, village: "Ponda", collectionPointId: "cp_sangrur", status: "Active", createdAt: ago(1000), updatedAt: ago(180), source: "manual" },
+  { id: "listing_groundnut_1", farmerId: "farmer_12", farmerName: "Prakash More", farmerVillage: "Porvorim", farmerReputation: 4.1, wasteType: "groundnut_shell", quantityKg: 2400, unit: "quintal", ratePerUnit: 800, rateUnit: "quintal", location: { lat: 15.5350, lng: 73.8288 }, village: "Porvorim", collectionPointId: "cp_porvorim", status: "Active", createdAt: ago(1100), updatedAt: ago(220), source: "text" },
+  { id: "listing_bagasse_1", farmerId: "farmer_7", farmerName: "Kavita Shinde", farmerVillage: "Bicholim", farmerReputation: 4.5, wasteType: "bagasse", quantityKg: 22000, unit: "tonne", ratePerUnit: 1100, rateUnit: "tonne", location: { lat: 15.5912, lng: 73.9515 }, village: "Bicholim", collectionPointId: "cp_nashik", status: "Sold", createdAt: ago(1400), updatedAt: ago(400), source: "manual" },
+  { id: "listing_paddy_2", farmerId: "farmer_10", farmerName: "Fatima Begum", farmerVillage: "Panjim", farmerReputation: 4.6, wasteType: "paddy_straw", quantityKg: 7500, unit: "tonne", ratePerUnit: 2400, rateUnit: "tonne", location: { lat: 15.4909, lng: 73.8278 }, village: "Panjim", collectionPointId: "cp_panipat", status: "Active", createdAt: ago(1600), updatedAt: ago(30), source: "voice", aiConfidence: 0.91 },
 ];
 
 export const REQUIREMENTS: Requirement[] = [
-  { id: "req_paddy_panipat", industryId: "industry_1", industryName: "Panipat Biomass Energy Ltd", industryVerified: true, wasteType: "paddy_straw", targetKg: 100000, ratePerUnit: 2300, rateUnit: "tonne", deadline: iso(3), location: { lat: 29.39, lng: 76.963 }, village: "Panipat", notes: "Dry straw, moisture below 18%.", moisturePreference: "≤18%", status: "Open", createdAt: ago(4000), poolId: "pool_paddy_panipat" },
-  { id: "req_mustard_rewari", industryId: "industry_5", industryName: "Rewari Bio-Products", industryVerified: false, wasteType: "mustard_stubble", targetKg: 50000, ratePerUnit: 1200, rateUnit: "quintal", deadline: iso(6), location: { lat: 28.2, lng: 76.62 }, village: "Rewari", status: "Open", createdAt: ago(3000), poolId: "pool_mustard_rewari" },
-  { id: "req_husk_karnal", industryId: "industry_2", industryName: "Haryana Green Fuels", industryVerified: true, wasteType: "rice_husk", targetKg: 20000, ratePerUnit: 950, rateUnit: "quintal", deadline: iso(9), location: { lat: 29.69, lng: 76.99 }, village: "Karnal", notes: "Clean husk, no stones.", status: "Open", createdAt: ago(2600), poolId: "pool_husk_karnal" },
-  { id: "req_wheat_ludhiana", industryId: "industry_3", industryName: "Ludhiana Agro Pellets", industryVerified: true, wasteType: "wheat_straw", targetKg: 80000, ratePerUnit: 1800, rateUnit: "tonne", deadline: iso(-4), location: { lat: 30.901, lng: 75.857 }, village: "Ludhiana", status: "Fulfilled", createdAt: ago(20000), poolId: "pool_wheat_ludhiana" },
-  { id: "req_sugarcane_nashik", industryId: "industry_4", industryName: "Nashik Sugarcane Power", industryVerified: true, wasteType: "sugarcane_trash", targetKg: 120000, ratePerUnit: 1500, rateUnit: "tonne", deadline: iso(1), location: { lat: 19.997, lng: 73.789 }, village: "Nashik", status: "Open", createdAt: ago(5000), poolId: "pool_sugarcane_nashik" },
-  { id: "req_cotton_sangrur", industryId: "industry_3", industryName: "Ludhiana Agro Pellets", industryVerified: true, wasteType: "cotton_stalk", targetKg: 40000, ratePerUnit: 1200, rateUnit: "tonne", deadline: iso(5), location: { lat: 30.245, lng: 75.842 }, village: "Sangrur", status: "Open", createdAt: ago(2200), poolId: "pool_cotton_sangrur" },
+  { id: "req_paddy_panipat", industryId: "industry_1", industryName: "Goa Bio-Energy Ltd", industryVerified: true, wasteType: "paddy_straw", targetKg: 100000, ratePerUnit: 2300, rateUnit: "tonne", deadline: iso(3), location: { lat: 15.4909, lng: 73.8278 }, village: "Panjim", notes: "Dry straw, moisture below 18%.", moisturePreference: "≤18%", status: "Open", createdAt: ago(4000), poolId: "pool_paddy_panipat" },
+  { id: "req_mustard_rewari", industryId: "industry_5", industryName: "Margao Bio-Products", industryVerified: false, wasteType: "mustard_stubble", targetKg: 50000, ratePerUnit: 1200, rateUnit: "quintal", deadline: iso(6), location: { lat: 15.2736, lng: 73.9580 }, village: "Margao", status: "Open", createdAt: ago(3000), poolId: "pool_mustard_rewari" },
+  { id: "req_husk_karnal", industryId: "industry_2", industryName: "Goa Green Bio-Fuels", industryVerified: true, wasteType: "rice_husk", targetKg: 20000, ratePerUnit: 950, rateUnit: "quintal", deadline: iso(9), location: { lat: 15.5937, lng: 73.8142 }, village: "Mapusa", notes: "Clean husk, no stones.", status: "Open", createdAt: ago(2600), poolId: "pool_husk_karnal" },
+  { id: "req_wheat_ludhiana", industryId: "industry_3", industryName: "Verna Agro Pellets", industryVerified: true, wasteType: "wheat_straw", targetKg: 80000, ratePerUnit: 1800, rateUnit: "tonne", deadline: iso(-4), location: { lat: 15.3614, lng: 73.9312 }, village: "Verna", status: "Fulfilled", createdAt: ago(20000), poolId: "pool_wheat_ludhiana" },
+  { id: "req_sugarcane_nashik", industryId: "industry_4", industryName: "Kolhapur Sugar Belt Power", industryVerified: true, wasteType: "sugarcane_trash", targetKg: 120000, ratePerUnit: 1500, rateUnit: "tonne", deadline: iso(1), location: { lat: 16.700, lng: 74.243 }, village: "Kolhapur", status: "Open", createdAt: ago(5000), poolId: "pool_sugarcane_nashik" },
+  { id: "req_cotton_sangrur", industryId: "industry_3", industryName: "Verna Agro Pellets", industryVerified: true, wasteType: "cotton_stalk", targetKg: 40000, ratePerUnit: 1200, rateUnit: "tonne", deadline: iso(5), location: { lat: 15.3614, lng: 73.9312 }, village: "Verna", status: "Open", createdAt: ago(2200), poolId: "pool_cotton_sangrur" },
 ];
 
 export const POOLS: Pool[] = [
-  { id: "pool_paddy_panipat", requirementId: "req_paddy_panipat", industryId: "industry_1", industryName: "Panipat Biomass Energy Ltd", industryVerified: true, wasteType: "paddy_straw", targetKg: 100000, committedKg: 62000, ratePerUnit: 2300, rateUnit: "tonne", deadline: iso(3), location: { lat: 29.39, lng: 76.963 }, village: "Panipat", status: "Open", radiusKm: 35, expanded: false, contributionCount: 7, createdAt: ago(4000) },
-  { id: "pool_mustard_rewari", requirementId: "req_mustard_rewari", industryId: "industry_5", industryName: "Rewari Bio-Products", industryVerified: false, wasteType: "mustard_stubble", targetKg: 50000, committedKg: 50000, ratePerUnit: 1200, rateUnit: "quintal", deadline: iso(6), location: { lat: 28.2, lng: 76.62 }, village: "Rewari", status: "Ready for Pickup", radiusKm: 35, expanded: false, contributionCount: 5, createdAt: ago(3000) },
-  { id: "pool_husk_karnal", requirementId: "req_husk_karnal", industryId: "industry_2", industryName: "Haryana Green Fuels", industryVerified: true, wasteType: "rice_husk", targetKg: 20000, committedKg: 8000, ratePerUnit: 950, rateUnit: "quintal", deadline: iso(9), location: { lat: 29.69, lng: 76.99 }, village: "Karnal", status: "Open", radiusKm: 35, expanded: true, expandedToKm: 60, contributionCount: 3, createdAt: ago(2600) },
-  { id: "pool_wheat_ludhiana", requirementId: "req_wheat_ludhiana", industryId: "industry_3", industryName: "Ludhiana Agro Pellets", industryVerified: true, wasteType: "wheat_straw", targetKg: 80000, committedKg: 80000, ratePerUnit: 1800, rateUnit: "tonne", deadline: iso(-4), location: { lat: 30.901, lng: 75.857 }, village: "Ludhiana", status: "Settled", radiusKm: 35, expanded: false, contributionCount: 4, createdAt: ago(20000) },
-  { id: "pool_sugarcane_nashik", requirementId: "req_sugarcane_nashik", industryId: "industry_4", industryName: "Nashik Sugarcane Power", industryVerified: true, wasteType: "sugarcane_trash", targetKg: 120000, committedKg: 30000, ratePerUnit: 1500, rateUnit: "tonne", deadline: iso(1), location: { lat: 19.997, lng: 73.789 }, village: "Nashik", status: "Open", radiusKm: 35, expanded: false, contributionCount: 2, createdAt: ago(5000) },
-  { id: "pool_cotton_sangrur", requirementId: "req_cotton_sangrur", industryId: "industry_3", industryName: "Ludhiana Agro Pellets", industryVerified: true, wasteType: "cotton_stalk", targetKg: 40000, committedKg: 40000, ratePerUnit: 1200, rateUnit: "tonne", deadline: iso(5), location: { lat: 30.245, lng: 75.842 }, village: "Sangrur", status: "Ready for Pickup", radiusKm: 35, expanded: false, contributionCount: 4, createdAt: ago(2200) },
+  { id: "pool_paddy_panipat", requirementId: "req_paddy_panipat", industryId: "industry_1", industryName: "Goa Bio-Energy Ltd", industryVerified: true, wasteType: "paddy_straw", targetKg: 100000, committedKg: 62000, ratePerUnit: 2300, rateUnit: "tonne", deadline: iso(3), location: { lat: 15.4909, lng: 73.8278 }, village: "Panjim", status: "Open", radiusKm: 35, expanded: false, contributionCount: 7, createdAt: ago(4000) },
+  { id: "pool_mustard_rewari", requirementId: "req_mustard_rewari", industryId: "industry_5", industryName: "Margao Bio-Products", industryVerified: false, wasteType: "mustard_stubble", targetKg: 50000, committedKg: 50000, ratePerUnit: 1200, rateUnit: "quintal", deadline: iso(6), location: { lat: 15.2736, lng: 73.9580 }, village: "Margao", status: "Ready for Pickup", radiusKm: 35, expanded: false, contributionCount: 5, createdAt: ago(3000) },
+  { id: "pool_husk_karnal", requirementId: "req_husk_karnal", industryId: "industry_2", industryName: "Goa Green Bio-Fuels", industryVerified: true, wasteType: "rice_husk", targetKg: 20000, committedKg: 8000, ratePerUnit: 950, rateUnit: "quintal", deadline: iso(9), location: { lat: 15.5937, lng: 73.8142 }, village: "Mapusa", status: "Open", radiusKm: 35, expanded: true, expandedToKm: 60, contributionCount: 3, createdAt: ago(2600) },
+  { id: "pool_wheat_ludhiana", requirementId: "req_wheat_ludhiana", industryId: "industry_3", industryName: "Verna Agro Pellets", industryVerified: true, wasteType: "wheat_straw", targetKg: 80000, committedKg: 80000, ratePerUnit: 1800, rateUnit: "tonne", deadline: iso(-4), location: { lat: 15.3614, lng: 73.9312 }, village: "Verna", status: "Settled", radiusKm: 35, expanded: false, contributionCount: 4, createdAt: ago(20000) },
+  { id: "pool_sugarcane_nashik", requirementId: "req_sugarcane_nashik", industryId: "industry_4", industryName: "Kolhapur Sugar Belt Power", industryVerified: true, wasteType: "sugarcane_trash", targetKg: 120000, committedKg: 30000, ratePerUnit: 1500, rateUnit: "tonne", deadline: iso(1), location: { lat: 16.700, lng: 74.243 }, village: "Kolhapur", status: "Open", radiusKm: 35, expanded: false, contributionCount: 2, createdAt: ago(5000) },
+  { id: "pool_cotton_sangrur", requirementId: "req_cotton_sangrur", industryId: "industry_3", industryName: "Verna Agro Pellets", industryVerified: true, wasteType: "cotton_stalk", targetKg: 40000, committedKg: 40000, ratePerUnit: 1200, rateUnit: "tonne", deadline: iso(5), location: { lat: 15.3614, lng: 73.9312 }, village: "Verna", status: "Ready for Pickup", radiusKm: 35, expanded: false, contributionCount: 4, createdAt: ago(2200) },
 ];
 
 const contrib = (
@@ -280,36 +290,36 @@ const contrib = (
 });
 
 export const CONTRIBUTIONS: PoolContribution[] = [
-  contrib("pc_1", "pool_paddy_panipat", "farmer_3", "Mahender Singh", "Panipat", 4.2, 15000, 2.3, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_2", "pool_paddy_panipat", "farmer_10", "Fatima Begum", "Panipat", 4.6, 12000, 2.3, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_3", "pool_paddy_panipat", "farmer_9", "Rajesh Kumar", "Karnal", 4.4, 10000, 2.3, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_4", "pool_paddy_panipat", "farmer_2", "Sunita Devi", "Bawal", 4.9, 8000, 2.3, "cp_rewari_south", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_5", "pool_paddy_panipat", "farmer_1", "Ramesh Yadav", "Rewari", 4.6, 7000, 2.3, "cp_rewari_central", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_6", "pool_paddy_panipat", "farmer_11", "Dinesh Rathi", "Rewari", 3.9, 6000, 2.3, "cp_rewari_central", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_7", "pool_paddy_panipat", "farmer_3", "Mahender Singh", "Panipat", 4.2, 4000, 2.3, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_1", "pool_paddy_panipat", "farmer_3", "Mahender Singh", "Panjim", 4.2, 15000, 2.3, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_2", "pool_paddy_panipat", "farmer_10", "Fatima Begum", "Panjim", 4.6, 12000, 2.3, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_3", "pool_paddy_panipat", "farmer_9", "Rajesh Kumar", "Mapusa", 4.4, 10000, 2.3, "cp_karnal", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_4", "pool_paddy_panipat", "farmer_2", "Sunita Devi", "Vasco", 4.9, 8000, 2.3, "cp_rewari_south", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_5", "pool_paddy_panipat", "farmer_1", "Ramesh Yadav", "Margao", 4.6, 7000, 2.3, "cp_rewari_central", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_6", "pool_paddy_panipat", "farmer_11", "Dinesh Rathi", "Curchorem", 3.9, 6000, 2.3, "cp_curchorem", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_7", "pool_paddy_panipat", "farmer_3", "Mahender Singh", "Panjim", 4.2, 4000, 2.3, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
 
-  contrib("pc_8", "pool_mustard_rewari", "farmer_2", "Sunita Devi", "Bawal", 4.9, 20000, 12, "cp_rewari_south", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
-  contrib("pc_9", "pool_mustard_rewari", "farmer_1", "Ramesh Yadav", "Rewari", 4.6, 12000, 12, "cp_rewari_central", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
-  contrib("pc_10", "pool_mustard_rewari", "farmer_11", "Dinesh Rathi", "Rewari", 3.9, 8000, 12, "cp_rewari_central", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
-  contrib("pc_11", "pool_mustard_rewari", "farmer_3", "Mahender Singh", "Panipat", 4.2, 6000, 12, "cp_panipat", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
-  contrib("pc_12", "pool_mustard_rewari", "farmer_9", "Rajesh Kumar", "Karnal", 4.4, 4000, 12, "cp_karnal", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
+  contrib("pc_8", "pool_mustard_rewari", "farmer_2", "Sunita Devi", "Vasco", 4.9, 20000, 12, "cp_rewari_south", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
+  contrib("pc_9", "pool_mustard_rewari", "farmer_1", "Ramesh Yadav", "Margao", 4.6, 12000, 12, "cp_rewari_central", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
+  contrib("pc_10", "pool_mustard_rewari", "farmer_11", "Dinesh Rathi", "Curchorem", 3.9, 8000, 12, "cp_curchorem", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
+  contrib("pc_11", "pool_mustard_rewari", "farmer_3", "Mahender Singh", "Panjim", 4.2, 6000, 12, "cp_panipat", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
+  contrib("pc_12", "pool_mustard_rewari", "farmer_9", "Rajesh Kumar", "Mapusa", 4.4, 4000, 12, "cp_karnal", "Ready for Pickup", "Awaiting Approval", "Not Yet Due"),
 
-  contrib("pc_13", "pool_husk_karnal", "farmer_9", "Rajesh Kumar", "Karnal", 4.4, 4000, 9.5, "cp_karnal", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_14", "pool_husk_karnal", "farmer_1", "Ramesh Yadav", "Rewari", 4.6, 2500, 9.5, "cp_rewari_central", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_15", "pool_husk_karnal", "farmer_10", "Fatima Begum", "Panipat", 4.6, 1500, 9.5, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_13", "pool_husk_karnal", "farmer_9", "Rajesh Kumar", "Mapusa", 4.4, 4000, 9.5, "cp_karnal", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_14", "pool_husk_karnal", "farmer_1", "Ramesh Yadav", "Margao", 4.6, 2500, 9.5, "cp_rewari_central", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_15", "pool_husk_karnal", "farmer_10", "Fatima Begum", "Panjim", 4.6, 1500, 9.5, "cp_panipat", "Pending", "Initiated", "Not Yet Due"),
 
-  contrib("pc_16", "pool_wheat_ludhiana", "farmer_5", "Balwinder Singh", "Sangrur", 4.7, 30000, 1.8, "cp_sangrur", "Completed", "Captured", "Completed", 30000),
-  contrib("pc_17", "pool_wheat_ludhiana", "farmer_4", "Gurpreet Kaur", "Jagraon", 4.8, 25000, 1.8, "cp_ludhiana", "Completed", "Captured", "Completed", 25000),
-  contrib("pc_18", "pool_wheat_ludhiana", "farmer_1", "Ramesh Yadav", "Rewari", 4.6, 15000, 1.8, "cp_rewari_central", "Completed", "Captured", "Simulated", 15000),
-  contrib("pc_19", "pool_wheat_ludhiana", "farmer_2", "Sunita Devi", "Bawal", 4.9, 10000, 1.8, "cp_rewari_south", "Completed", "Captured", "Pending", 10000),
+  contrib("pc_16", "pool_wheat_ludhiana", "farmer_5", "Balwinder Singh", "Verna", 4.7, 30000, 1.8, "cp_ludhiana", "Completed", "Captured", "Completed", 30000),
+  contrib("pc_17", "pool_wheat_ludhiana", "farmer_4", "Gurpreet Kaur", "Mapusa", 4.8, 25000, 1.8, "cp_karnal", "Completed", "Captured", "Completed", 25000),
+  contrib("pc_18", "pool_wheat_ludhiana", "farmer_1", "Ramesh Yadav", "Margao", 4.6, 15000, 1.8, "cp_rewari_central", "Completed", "Captured", "Simulated", 15000),
+  contrib("pc_19", "pool_wheat_ludhiana", "farmer_2", "Sunita Devi", "Vasco", 4.9, 10000, 1.8, "cp_rewari_south", "Completed", "Captured", "Pending", 10000),
 
-  contrib("pc_20", "pool_sugarcane_nashik", "farmer_6", "Anil Patil", "Nashik", 4.3, 18000, 1.5, "cp_nashik", "Pending", "Initiated", "Not Yet Due"),
-  contrib("pc_21", "pool_sugarcane_nashik", "farmer_12", "Prakash More", "Nashik", 4.1, 12000, 1.5, "cp_nashik", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_20", "pool_sugarcane_nashik", "farmer_6", "Anil Patil", "Ponda", 4.3, 18000, 1.5, "cp_sangrur", "Pending", "Initiated", "Not Yet Due"),
+  contrib("pc_21", "pool_sugarcane_nashik", "farmer_12", "Prakash More", "Porvorim", 4.1, 12000, 1.5, "cp_porvorim", "Pending", "Initiated", "Not Yet Due"),
 
-  contrib("pc_22", "pool_cotton_sangrur", "farmer_5", "Balwinder Singh", "Sangrur", 4.7, 16000, 1.2, "cp_sangrur", "Ready for Pickup", "Approved", "Not Yet Due"),
-  contrib("pc_23", "pool_cotton_sangrur", "farmer_4", "Gurpreet Kaur", "Jagraon", 4.8, 12000, 1.2, "cp_ludhiana", "Ready for Pickup", "Approved", "Not Yet Due"),
-  contrib("pc_24", "pool_cotton_sangrur", "farmer_9", "Rajesh Kumar", "Karnal", 4.4, 8000, 1.2, "cp_karnal", "Ready for Pickup", "Approved", "Not Yet Due"),
-  contrib("pc_25", "pool_cotton_sangrur", "farmer_10", "Fatima Begum", "Panipat", 4.6, 4000, 1.2, "cp_panipat", "Ready for Pickup", "Approved", "Not Yet Due"),
+  contrib("pc_22", "pool_cotton_sangrur", "farmer_5", "Balwinder Singh", "Verna", 4.7, 16000, 1.2, "cp_ludhiana", "Ready for Pickup", "Approved", "Not Yet Due"),
+  contrib("pc_23", "pool_cotton_sangrur", "farmer_4", "Gurpreet Kaur", "Mapusa", 4.8, 12000, 1.2, "cp_karnal", "Ready for Pickup", "Approved", "Not Yet Due"),
+  contrib("pc_24", "pool_cotton_sangrur", "farmer_9", "Rajesh Kumar", "Mapusa", 4.4, 8000, 1.2, "cp_karnal", "Ready for Pickup", "Approved", "Not Yet Due"),
+  contrib("pc_25", "pool_cotton_sangrur", "farmer_10", "Fatima Begum", "Panjim", 4.6, 4000, 1.2, "cp_panipat", "Ready for Pickup", "Approved", "Not Yet Due"),
 ];
 
 export const PAYABLES: FarmerPayable[] = CONTRIBUTIONS.filter(
@@ -467,18 +477,18 @@ export const AUDIT_LOG: AiActionAudit[] = [
 ];
 
 export const DEMO_ACCOUNTS = [
-  { role: "farmer" as const, label: "Farmer", name: "Ramesh Yadav", id: "farmer_1", detail: "Rewari, Haryana · 4.6 ★", icon: "sprout" },
-  { role: "buyer" as const, label: "Buyer", name: "Amit Traders", id: "buyer_1", detail: "Rewari, Haryana · 4.5 ★", icon: "shopping" },
-  { role: "industry" as const, label: "Industry", name: "Panipat Biomass Energy Ltd", id: "industry_1", detail: "Verified · Panipat", icon: "factory" },
-  { role: "admin" as const, label: "Admin", name: "Priya Menon", id: "admin_1", detail: "GreenRoots operations", icon: "shield" },
+  { role: "farmer" as const, label: "Farmer", name: "Ramesh Yadav", id: "farmer_1", detail: "Margao, Goa · 4.6 ★", icon: "sprout" },
+  { role: "buyer" as const, label: "Buyer", name: "Amit Traders", id: "buyer_1", detail: "Vasco, Goa · 4.5 ★", icon: "shopping" },
+  { role: "industry" as const, label: "Industry", name: "Goa Bio-Energy Ltd", id: "industry_1", detail: "Verified · Verna, Goa", icon: "factory" },
+  { role: "admin" as const, label: "Admin", name: "Priya Menon", id: "admin_1", detail: "GreenRoots operations · Goa Desk", icon: "shield" },
 ];
 
 export const SEASONAL_ALERT = {
-  title: "Paddy straw demand expected to rise in 3 weeks around Rewari",
-  body: "Harvest begins soon. Biomass plants in Panipat and Karnal are likely to need more supply. Prepare your stubble now.",
+  title: "Cashew & paddy residue demand expected to rise in 3 weeks around Goa",
+  body: "Harvest season approaches. Biomass plants across Verna, Vasco, and Margao are expanding collection. Prepare your crop residue now.",
   checklist: [
     "Keep bales dry and covered",
-    "Confirm your nearest collection point is open",
+    "Confirm your nearest Goa collection point is open",
     "Check your payout readiness in Me → Payouts",
     "List your expected quantity before harvest",
   ],

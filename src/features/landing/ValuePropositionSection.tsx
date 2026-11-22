@@ -5,7 +5,7 @@ export function ValuePropositionSection() {
     {
       number: "01",
       title: "Farmers List Crop Scrap & Stubble",
-      desc: "Farmers speak in their regional dialect (Hindi, Punjabi, English) to instantly generate verified listing drafts for paddy straw, wheat stubble, mustard, and bagasse.",
+      desc: "Farmers speak in their regional dialect (Konkani, Marathi, Hindi, English) to instantly generate verified listing drafts for cashew shells, paddy straw, bagasse, and crop residue.",
     },
     {
       number: "02",
@@ -14,7 +14,7 @@ export function ValuePropositionSection() {
     },
     {
       number: "03",
-      title: "Weighbridge Check & PayPal Settlement",
+      title: "Weighbridge Check & Escrow Settlement",
       desc: "Residue is delivered to village collection points. Verified weights release guaranteed payments from escrow directly to the farmer.",
     },
   ];

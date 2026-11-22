@@ -44,7 +44,7 @@ export default function PaymentsPage() {
     <PageContainer>
       <PortalPageHeader
         title="Payments & payouts"
-        description="Every pool settlement uses PayPal. A redirect is never treated as proof; the capture reference comes from PayPal."
+        description="Every pool settlement uses secure escrow. A redirect is never treated as proof; the capture reference comes from the verified processor."
       />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -167,7 +167,7 @@ export default function PaymentsPage() {
                           <div className="flex flex-col items-start gap-1">
                             <StatusChip status={p.status} size="sm" />
                             {(p.status === "Approved" || p.status === "Initiated") && (
-                              <span className="text-[10px] font-semibold text-settle">Awaiting PayPal verification</span>
+                              <span className="text-[10px] font-semibold text-settle">Awaiting escrow verification</span>
                             )}
                           </div>
                         </TD>
@@ -280,7 +280,7 @@ export default function PaymentsPage() {
       )}
 
       <p className="mt-3 text-[11px] leading-relaxed text-muted dark:text-portal-muted">
-        GreenRoots never stores card or bank details. Only the PayPal order and capture references are kept. Admin
+        GreenRoots never stores card or bank details. Only secure order and capture references are kept. Admin
         authorizes and disburses each farmer payout via the verified banking network.
       </p>
     </PageContainer>

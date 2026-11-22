@@ -7,6 +7,7 @@ import {
   Bell,
   ChevronRight,
   FileText,
+  Headphones,
   HelpCircle,
   Info,
   Languages,
@@ -50,11 +51,12 @@ export default function MePage() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [name, setName] = useState(profile.name);
   const [village, setVillage] = useState(profile.village);
+  const [state, setState] = useState(profile.state || "Goa");
 
   const isFarmer = profile.role === "farmer";
 
   const saveProfile = () => {
-    setProfile({ ...profile, name: name.trim() || profile.name, village });
+    setProfile({ ...profile, name: name.trim() || profile.name, village, state });
     setEditOpen(false);
     pushToast({ title: "Profile updated", variant: "success" });
   };
@@ -263,6 +265,10 @@ export default function MePage() {
               <Bell className="h-5 w-5 text-muted" /> {t("common.notifications")}
               <ChevronRight className="ml-auto h-4 w-4 text-muted" />
             </Link>
+            <Link to="/app/support" className="flex min-h-14 items-center gap-3 px-4 text-sm font-semibold text-ink dark:text-portal-ink hover:bg-canvas dark:hover:bg-portal-bg transition-colors">
+              <Headphones className="h-5 w-5 text-forest" /> Customer Support &amp; Feedback
+              <ChevronRight className="ml-auto h-4 w-4 text-muted" />
+            </Link>
             <button
               type="button"
               onClick={openOnboarding}
@@ -297,7 +303,17 @@ export default function MePage() {
               <Input id="edit-name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="edit-village">Village</Label>
+              <Label htmlFor="edit-state">State</Label>
+              <Select id="edit-state" value={state} onChange={(e) => setState(e.target.value)}>
+                {["Goa", "Karnataka", "Maharashtra"].map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="edit-village">City / Region</Label>
               <Select id="edit-village" value={village} onChange={(e) => setVillage(e.target.value)}>
                 {[...new Set(COLLECTION_POINTS.map((c) => c.village))].map((v) => (
                   <option key={v} value={v}>

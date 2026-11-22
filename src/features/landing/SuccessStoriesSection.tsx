@@ -4,53 +4,53 @@ export function SuccessStoriesSection() {
   const avatars = [
     {
       name: "Rubin Ahmed",
-      role: "Operations Manager, Panipat Biomass",
+      role: "Operations Manager, Goa Bio-Energy (Verna)",
       img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
       active: true,
     },
     {
       name: "Ramesh Yadav",
-      role: "Farmer, Rewari (38 Deliveries)",
+      role: "Farmer, Margao (38 Deliveries)",
       img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Sunita Devi",
-      role: "Farmer, Bawal (61 Deliveries)",
+      role: "Farmer, Vasco (61 Deliveries)",
       img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Gurpreet Kaur",
-      role: "Farmer, Ludhiana (4.8 Rating)",
+      role: "Farmer, Mapusa (4.8 Rating)",
       img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Amit Kumar",
-      role: "Procurement Lead, Amit Traders",
+      role: "Procurement Lead, Amit Traders (Vasco)",
       img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Fatima Begum",
-      role: "Farmer, Panipat (4.6 Rating)",
+      role: "Farmer, Panjim (4.6 Rating)",
       img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Balwinder Singh",
-      role: "Aggregator, Sangrur",
+      role: "Aggregator, Ponda",
       img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Anil Patil",
-      role: "Farmer, Nashik",
+      role: "Farmer, Bicholim",
       img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Mahender Singh",
-      role: "Farmer, Panipat",
+      role: "Farmer, Panjim",
       img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
     },
     {
       name: "Rajesh Kumar",
-      role: "Farmer, Karnal",
+      role: "Farmer, Curchorem",
       img: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&q=80",
     },
   ];
@@ -91,7 +91,7 @@ export function SuccessStoriesSection() {
           </div>
 
           <blockquote className="mt-5 font-heading text-lg sm:text-xl lg:text-2xl font-bold leading-snug text-[#18261F]">
-            “GreenRoots completely solved our biomass supply chain volatility. Before, procuring 10,000 tonnes of paddy straw meant dealing with dozens of unreliable brokers. Now, reverse-auction pooling delivers certified moisture-tested residue straight to our boilers with automated PayPal escrow release.”
+            “GreenRoots completely solved our biomass supply chain volatility. Before, procuring 10,000 tonnes of paddy straw meant dealing with dozens of unreliable brokers. Now, reverse-auction pooling delivers certified moisture-tested residue straight to our boilers with automated escrow release.”
           </blockquote>
 
           <div className="mt-8 flex items-center justify-between border-t border-[#DCE4DF] pt-6 flex-wrap gap-4">

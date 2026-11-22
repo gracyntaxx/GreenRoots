@@ -127,7 +127,7 @@ export function StatusTriad({
             </p>
             <ul className="mt-3 space-y-1.5 text-[13px] text-muted dark:text-portal-muted">
               <li><strong className="text-ink dark:text-portal-ink">Fulfilment:</strong> has the waste reached the collection point?</li>
-              <li><strong className="text-ink dark:text-portal-ink">Payment:</strong> has PayPal verified the industry or buyer's money?</li>
+              <li><strong className="text-ink dark:text-portal-ink">Payment:</strong> has escrow verified the industry or buyer's money?</li>
               <li><strong className="text-ink dark:text-portal-ink">Payout:</strong> has the farmer actually been paid?</li>
             </ul>
           </PopoverContent>

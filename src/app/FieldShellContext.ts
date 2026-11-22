@@ -1,8 +1,9 @@
 import { createContext, useContext } from "react";
+import type { Role } from "@/types";
 
 export interface AppShellApi {
   openVoice: () => void;
-  openOnboarding: () => void;
+  openOnboarding: (role?: Role | unknown) => void;
 }
 
 export const AppShellContext = createContext<AppShellApi>({
