@@ -28,6 +28,7 @@ import { PageContainer } from "@/components/shared/PageContainer";
 import { Input, Label } from "@/components/ui/form";
 import { Skeleton, EmptyState } from "@/components/ui/misc";
 import { PayPalSandboxModal } from "./PayPalSandboxModal";
+import { OrderInvoice } from "@/components/shared/OrderInvoice";
 import { useConnectivity } from "@/lib/connectivity";
 import { WASTE_LABELS, type Order, type Payment } from "@/types";
 import { formatMoney } from "@/lib/money";
@@ -179,27 +180,60 @@ export default function CheckoutPage() {
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="mb-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-muted hover:text-forest dark:text-portal-muted dark:hover:text-growth"
+        className="no-print mb-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-muted hover:text-forest dark:text-portal-muted dark:hover:text-growth"
       >
         <ArrowLeft className="h-4 w-4" /> {t("common.back")}
       </button>
 
       {stage === "success" && order ? (
-        <Card className="mx-auto max-w-xl p-6 sm:p-8 text-center shadow-lg">
-          <CheckCircle2 className="mx-auto h-14 w-14 text-forest dark:text-growth" aria-hidden="true" />
-          <h1 className="mt-3 text-2xl font-bold text-ink dark:text-portal-ink">{t("checkout.captured")}</h1>
-          <p className="mt-1 text-sm text-muted dark:text-portal-muted">{t("checkout.capturedBody")}</p>
-          <p className="num mt-2 text-xs font-semibold text-muted dark:text-portal-muted">Order ID: {order.id}</p>
-          <StatusTriad
-            fulfilment={order.fulfilment}
-            payment={order.payment}
-            payout={order.payout}
-            className="mt-6 text-left"
+        <div className="space-y-6">
+          {/* Success Banner */}
+          <div className="no-print rounded-2xl border border-forest/30 bg-meadow/60 p-4 sm:p-5 dark:border-forest/20 dark:bg-[#123524]/60">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-forest text-white shadow-sm">
+                  <CheckCircle2 className="h-6 w-6" />
+                </div>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-ink dark:text-portal-ink font-heading">
+                    Payment Confirmed · Order Placed!
+                  </h1>
+                  <p className="text-xs sm:text-sm text-muted dark:text-portal-muted mt-0.5">
+                    Your escrow payment has been secured and the official Tax Invoice has been generated below.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/app/orders/${order.id}`)}
+                  className="font-semibold"
+                >
+                  View Order Details ↗
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate("/app/market")}
+                  className="font-semibold"
+                >
+                  Marketplace
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Generated Official Tax Invoice */}
+          <OrderInvoice
+            order={order}
+            collectionPoint={point}
+            buyerProfile={profile}
+            showDoneButton={true}
+            onClose={() => navigate(`/app/orders/${order.id}`)}
           />
-          <Button variant="primary" size="field" className="mt-6 w-full" onClick={() => navigate(`/app/orders/${order.id}`)}>
-            {t("checkout.viewOrder")}
-          </Button>
-        </Card>
+        </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-5">
           {/* Left Column: Order items and pickup */}

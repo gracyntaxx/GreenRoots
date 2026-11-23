@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, BadgeCheck, MapPin, ReceiptText } from "lucide-react";
+import { ArrowLeft, BadgeCheck, FileText, MapPin, ReceiptText } from "lucide-react";
 import { useSession } from "@/store/session";
 import { orderService } from "@/services/orderService";
 import { collectionService } from "@/services/collectionService";
 import { StatusTriad } from "@/components/shared/StatusTriad";
 import { SandboxStrip } from "@/components/shared/Marks";
 import { QrSlip } from "@/components/shared/QrSlip";
+import { OrderInvoiceModal } from "@/components/shared/OrderInvoice";
 import { QtyText } from "@/components/shared/Numbers";
 import { WasteImage } from "@/components/shared/WasteImage";
 import { Card } from "@/components/ui/card";
@@ -30,6 +32,7 @@ export default function OrderDetailPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const profile = useSession((s) => s.profile)!;
+  const [invoiceOpen, setInvoiceOpen] = useState(false);
 
   const order = useQuery({ queryKey: ["order", orderId], queryFn: () => orderService.get(orderId!), enabled: !!orderId });
   const points = useQuery({
@@ -152,6 +155,17 @@ export default function OrderDetailPage() {
             <p className="mt-3 text-xs leading-relaxed text-muted dark:text-portal-muted">
               GreenRoots confirms the payment directly via secure escrow. A redirect alone is never treated as proof.
             </p>
+
+            <div className="mt-4 pt-3 border-t border-line dark:border-portal-line">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full font-semibold border-forest/30 text-forest hover:bg-forest/5 dark:border-growth/30 dark:text-growth"
+                onClick={() => setInvoiceOpen(true)}
+              >
+                <FileText className="h-4 w-4 mr-1.5" /> View / Print Tax Invoice
+              </Button>
+            </div>
           </Card>
 
           {point && (
@@ -203,6 +217,14 @@ export default function OrderDetailPage() {
           </Card>
         </div>
       </div>
+
+      <OrderInvoiceModal
+        open={invoiceOpen}
+        onOpenChange={setInvoiceOpen}
+        order={o}
+        collectionPoint={point}
+        buyerProfile={profile}
+      />
     </PageContainer>
   );
 }

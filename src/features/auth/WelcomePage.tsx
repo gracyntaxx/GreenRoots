@@ -13,6 +13,7 @@ import { SmartPackagingSection } from "@/features/landing/SmartPackagingSection"
 import { LandingFooter } from "@/features/landing/LandingFooter";
 import { LanguageModal } from "@/features/landing/LanguageModal";
 import { ContactModal } from "@/features/landing/ContactModal";
+import { ChatbotWidget } from "@/features/landing/ChatbotWidget";
 
 export default function WelcomePage() {
   const profile = useSession((s) => s.profile);
@@ -56,6 +57,9 @@ export default function WelcomePage() {
       {/* Interactive Modals */}
       <LanguageModal open={langModalOpen} onClose={() => setLangModalOpen(false)} />
       <ContactModal open={contactModalOpen} onClose={() => setContactModalOpen(false)} />
+
+      {/* Floating Multilingual AI Chatbot */}
+      <ChatbotWidget />
     </div>
   );
 }
